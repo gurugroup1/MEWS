@@ -14,16 +14,9 @@ public class App {
     @Autowired
     private ApplicationConfiguration applicationConfiguration;
     public static void main(String[] args) {
-        // Create the Spring Boot application context
         ConfigurableApplicationContext context = SpringApplication.run(App.class, args);
-
-        // Get an instance of the MewsConnectorService bean
         MewsConnectorService mewsConnectorService = context.getBean(MewsConnectorService.class);
-
-        // Call the addReservation method
         mewsConnectorService.addReservation();
-
-        // Close the application context
         context.close();
     }
 }
