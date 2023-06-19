@@ -12,7 +12,7 @@ public class MewsController {
     public MewsReservation processMewsRecord(String record) throws JsonProcessingException {
         MewsReservation mewsReservation = new MewsReservation();
         mewsReservation.setCustomerId(record);
-        mewsReservation.getMewsPersonCounts(record);
+//        mewsReservation.getMewsPersonCounts(record);
         mewsReservation.setCustomerId(record);
         mewsReservation.setCustomerId(record);
         mewsReservation.setCustomerId(record);

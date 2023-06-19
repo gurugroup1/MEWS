@@ -25,7 +25,6 @@ public class WebhookController {
 
     public WebhookController() {
         this.salesforceConnectorService = new SalesforceConnectorService();
-//        this.thynkMessageController = new ThynkMessageController();
         this.mewsController = new MewsController();
         this.secretKeyManagerController = new SecretKeyManagerController();
         this.salesforceController = new SalesforceController(this.secretKeyManagerController,this.salesforceConnectorService);
