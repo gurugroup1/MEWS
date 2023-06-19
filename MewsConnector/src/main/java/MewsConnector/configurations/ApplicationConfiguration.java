@@ -59,14 +59,6 @@ public class ApplicationConfiguration {
         return getProperty("salesforce_token_secret_manager");
     }
 
-    public static String getStayntouchCredentialsSecretName() {
-        return getProperty("stayntouch_credentials_secret_manager");
-    }
-
-    public static String getStayntouchTokenSecretName() {
-        return getProperty("stayntouch_token_secret_manager");
-    }
-
     public static String getThynkMessageApiSource() {
         return getProperty("tm_api_source");
     }
