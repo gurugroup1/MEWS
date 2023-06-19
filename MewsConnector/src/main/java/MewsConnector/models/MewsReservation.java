@@ -15,13 +15,13 @@ public class MewsReservation {
     private Date endUtc;
 
     @JsonProperty("CustomerId")
-    private UUID customerId;
+    private String customerId;
 
     @JsonProperty("RequestedCategoryId")
-    private UUID requestedCategoryId;
+    private String requestedCategoryId;
 
     @JsonProperty("RateId")
-    private UUID rateId;
+    private String rateId;
 
     @JsonProperty("PersonCounts")
     private List<MewsPersonCount> mewsPersonCounts;
@@ -42,27 +42,27 @@ public class MewsReservation {
         this.endUtc = endUtc;
     }
 
-    public UUID getCustomerId() {
+    public String getCustomerId() {
         return customerId;
     }
 
-    public void setCustomerId(UUID customerId) {
+    public void setCustomerId(String customerId) {
         this.customerId = customerId;
     }
 
-    public UUID getRequestedCategoryId() {
+    public String getRequestedCategoryId() {
         return requestedCategoryId;
     }
 
-    public void setRequestedCategoryId(UUID requestedCategoryId) {
+    public void setRequestedCategoryId(String requestedCategoryId) {
         this.requestedCategoryId = requestedCategoryId;
     }
 
-    public UUID getRateId() {
+    public String getRateId() {
         return rateId;
     }
 
-    public void setRateId(UUID rateId) {
+    public void setRateId(String rateId) {
         this.rateId = rateId;
     }
 
