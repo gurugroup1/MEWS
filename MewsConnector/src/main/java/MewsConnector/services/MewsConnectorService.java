@@ -1,6 +1,7 @@
 package MewsConnector.services;
 
-import MewsConnector.models.MewsReservation;
+import MewsConnector.models.MewsReservationRequest;
+import MewsConnector.models.MewsReservationResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import okhttp3.*;
@@ -21,10 +22,10 @@ public class MewsConnectorService {
         this.objectMapper = new ObjectMapper();
     }
 
-    public String pushReservationsToMews(MewsReservation mewsRecord) {
+    public String pushReservationsToMews(MewsReservationRequest request) {
         try {
             ObjectWriter ow = objectMapper.writer().withDefaultPrettyPrinter();
-            String jsonStr = ow.writeValueAsString(mewsRecord);
+            String jsonStr = ow.writeValueAsString(request);
             return executePostRequest(jsonStr);
         } catch (Exception e) {
             return String.format("{\"error\":\"error in response\", \"message\": \"%s\"}", e.getMessage());
@@ -35,7 +36,7 @@ public class MewsConnectorService {
         try {
             MediaType mediaType = MediaType.parse("application/json");
             String requestBodyString = jsonStr;
-
+            System.out.println("Response Code: " + jsonStr);
             Request request = new Request.Builder()
                     .url(String.format(applicationConfiguration.getMewsApiUrl() + "/reservations/add"))
                     .method("POST", RequestBody.create(mediaType, requestBodyString))

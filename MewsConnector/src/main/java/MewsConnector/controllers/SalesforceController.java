@@ -25,7 +25,7 @@ public class SalesforceController {
         this.salesforceConnectorService = Objects.requireNonNull(salesforceConnectorService, "Salesforce connector service must not be null");
     }
 
-    public String getReservationsFromSalesforce( String sfAccessToken) throws JsonProcessingException {
+    public String getReservationsFromSalesforce(String sfAccessToken) throws JsonProcessingException {
         return salesforceConnectorService.getReservationsFromSalesforce(
                 Objects.requireNonNull(sfAccessToken, "Salesforce access token must not be null")
         );

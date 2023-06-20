@@ -1,7 +1,7 @@
 package MewsConnector;
 
 
-import MewsConnector.models.MewsReservation;
+import MewsConnector.models.SalesforceReservationResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,9 +16,11 @@ public class Handler {
         logger.info("************** Start Processing WebHook **************");
         try {
             WebhookController webhookController = new WebhookController();
-            String salesforceResponse = webhookController.getSalesforceRecord();
-            MewsReservation mewsResponse = webhookController.processMewsData(salesforceResponse);
-            System.out.println(mewsResponse);
+            SalesforceReservationResponse salesforceResponse = webhookController.getSalesforceRecord();
+            System.out.println("salesforceResponse");
+            System.out.println(salesforceResponse);
+            webhookController.processMewsData(salesforceResponse);
+//            System.out.println(mewsResponse);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
