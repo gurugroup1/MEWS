@@ -19,7 +19,7 @@ public class Handler implements RequestHandler<SQSEvent, Void> {
         try {
             WebhookController webhookController = new WebhookController();
             String bookingId = webhookController.extractEventData(event);
-            SalesforceBookingResponse salesforceResponse = webhookController.getSalesforceRecord(bookingId);
+            String salesforceResponse = webhookController.startSalesforceProcess(bookingId);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
