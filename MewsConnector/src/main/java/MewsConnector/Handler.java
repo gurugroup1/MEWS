@@ -1,26 +1,25 @@
 package MewsConnector;
 
-
-import MewsConnector.models.SalesforceReservationResponse;
+import MewsConnector.models.SalesforceBookingResponse;
+import com.amazonaws.services.lambda.runtime.Context;
+import com.amazonaws.services.lambda.runtime.RequestHandler;
+import com.amazonaws.services.lambda.runtime.events.SQSEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import MewsConnector.controllers.WebhookController;
 @Component
-public class Handler {
+public class Handler implements RequestHandler<SQSEvent, Void> {
 
     @Autowired
-    public Void handleRequest() {
+    public Void handleRequest(SQSEvent event, Context context) {
         Logger logger = LoggerFactory.getLogger(getClass());
         logger.info("************** Start Processing WebHook **************");
         try {
             WebhookController webhookController = new WebhookController();
-            SalesforceReservationResponse salesforceResponse = webhookController.getSalesforceRecord();
-            System.out.println("salesforceResponse");
-            System.out.println(salesforceResponse);
-            webhookController.processMewsData(salesforceResponse);
-//            System.out.println(mewsResponse);
+            String bookingId = webhookController.extractEventData(event);
+            SalesforceBookingResponse salesforceResponse = webhookController.getSalesforceRecord(bookingId);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

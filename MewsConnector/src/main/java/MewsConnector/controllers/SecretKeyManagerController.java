@@ -37,7 +37,7 @@ public class SecretKeyManagerController {
 
     @GetMapping("/salesforce/token")
     public String getSalesforceToken() throws JsonProcessingException {
-        return "{\"access_token\":\"00D3X000004Vip4!AQUAQPcMnZy.jKL.DsKtCVs3WYLzNLEnJTOVJkMgg5vX5PiKSoVCfLK_1tC4WNBjlvLevWl8NaxKo7RVkRWlSf6hkVB3W7Id\",\"instance_url\":\"https://thdemo-dev-ed.my.salesforce.com\",\"id\":\"https://login.salesforce.com/id/00D3X000004Vip4UAC/0053X00000GiWcKQAV\",\"token_type\":\"Bearer\",\"issued_at\":\"1685017817987\",\"signature\":\"6GCS9RJDoPrSLpPH9pVMdDtnWYd2bMP6ZRiXffP7Kqg=\",\"created_at\":\"1685017493\",\"expires_in\":\"7200\"}\n";
+        return "{\"access_token\":\"00DFg0000002xSD!AQEAQKC5t05UVHKVky7USL9JBg7KiKqwHN5GrmWga3js92o8.jYe1aX71k6RTM38c_WyfzQrtrJ0Es0WTDPcITzCCmhGOF9o\",\"signature\":\"VnqpkIirDzIY7dGNy/CzUbxKziCk33Bveolm04494iA=\",\"instance_url\":\"https://postillion-hotels--postfull.sandbox.my.salesforce.com\",\"created_at\":1687860426,\"id\":\"https://test.salesforce.com/id/00DFg0000002xSDMAY/005090000039vkAAAQ\",\"token_type\":\"Bearer\",\"issued_at\":\"1687860426728\",\"expires_in\":7200}";
     }
 
     @PutMapping("/salesforce/token/update")

@@ -12,7 +12,7 @@ import java.util.Properties;
 @Configuration
 public class ApplicationConfiguration {
 
-    //   private static final String PROPERTIES_FILE = System.getenv("AWS_PROFILE");
+//       private static final String PROPERTIES_FILE = System.getenv("AWS_PROFILE");
     private static final String PROPERTIES_FILE = "application-test.properties";
     private static Properties properties;
 
@@ -58,60 +58,33 @@ public class ApplicationConfiguration {
     public static String getSalesforceTokenSecretName() {
         return getProperty("salesforce_token_secret_manager");
     }
-
-    public static String getThynkMessageApiSource() {
-        return getProperty("tm_api_source");
-    }
-
-    public static String getThynkMessageSyncStatus() {
-        return getProperty("tm_sync_status");
-    }
-
-    public static String getThynkMessageSetSyncRecord() {
-        return getProperty("tm_set_synced_record");
-    }
-
-    public static String getThynkMessageSetTargetMethod() {
-        return getProperty("tm_set_target_method");
-    }
-
-    public static String getThynkMessageSetTargetEndPoint() {
-        return getProperty("tm_set_target_endpoint");
-    }
-
-    public static String getThynkMessageSetType() {
-        return getProperty("tm_set_type");
-    }
-
-    public static String getThynkMessageSetObjectType() {
-        return getProperty("tm_set_object_type");
-    }
     public static String getSalesforceSObjectUrl() {
         return getProperty("salesforce_object_url");
     }
     public static String getSalesforceSObjectrUrlPrefix() {
         return getProperty("salesforce_object_url_prefix");
     }
-    public static String getSalesforceObjectNameTMQ() {
-        return getProperty("salesforce_object_name_tmq");
+    public static String getSalesforceBookingObject() {
+        return getProperty("salesforce_booking_object");
     }
-
+    public static String getSalesforceAccountObject() {
+        return getProperty("salesforce_account_object");
+    }
+    public static String getSalesforceCompanyContactObject() {
+        return getProperty("salesforce_company_contact_object");
+    }
     public static String getMewsClientName() {
         return getProperty("mews.clientName");
     }
-
     public static String getMewsClientToken() {
         return getProperty("mews.clientToken");
     }
-
     public static String getMewsAccessToken() {
         return getProperty("mews.accessToken");
     }
-
     public static String getMewsApiUrl() {
         return getProperty("mews.apiUrl");
     }
-
     @Bean
     public SalesforceConnectorService salesforceConnectorService() {
         return new SalesforceConnectorService();

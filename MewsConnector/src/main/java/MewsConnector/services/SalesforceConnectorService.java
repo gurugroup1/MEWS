@@ -21,18 +21,18 @@ public class SalesforceConnectorService {
         this.httpClient = new OkHttpClient.Builder().build();
     }
 
-    public String getReservationsFromSalesforce(String sfAccessToken) {
+    public String getBookingFromSalesforce(String object,String sfAccessToken, String bookingId) {
         try {
             ObjectWriter ow = objectMapper.writer().withDefaultPrettyPrinter();
-            return executeGetSObject( sfAccessToken);
+            return executeGetSObject(object, sfAccessToken,bookingId);
         } catch (Exception e) {
             return String.format("{\"error\":\"error in response\", \"message\": \"%s\"}", e.getMessage());
         }
     }
 
-    private String executeGetSObject(String sfAccessToken) throws IOException {
+    private String executeGetSObject(String object,String sfAccessToken, String bookingId) throws IOException {
         Request request = new Request.Builder()
-                .url(String.format(applicationConfiguration.getSalesforceSObjectrUrlPrefix(), applicationConfiguration.getSalesforceSObjectUrl(), applicationConfiguration.getSalesforceObjectNameTMQ()+"/a0fFg0000001idJIAQ"))
+                .url(String.format(applicationConfiguration.getSalesforceSObjectrUrlPrefix(), applicationConfiguration.getSalesforceSObjectUrl(), object +"/"+bookingId))
                 .method("GET", null)
                 .addHeader("Content-Type", "application/json")
                 .addHeader("Authorization", "Bearer " + sfAccessToken)
