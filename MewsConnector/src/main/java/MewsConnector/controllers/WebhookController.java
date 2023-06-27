@@ -27,7 +27,7 @@ public class WebhookController {
     public WebhookController() {
         this.salesforceConnectorService = new SalesforceConnectorService();
         this.MewsConnectorService = new MewsConnectorService();
-        this.mewsController = new MewsController();
+        this.mewsController = new MewsController(this.MewsConnectorService);
         this.secretKeyManagerController = new SecretKeyManagerController();
         this.salesforceController = new SalesforceController(this.secretKeyManagerController,this.salesforceConnectorService);
         this.authController = new AuthController(this.secretKeyManagerController,this.salesforceConnectorService);
@@ -55,20 +55,26 @@ public class WebhookController {
 
     public String startSalesforceProcess(String bookingId) throws CustomException, JsonProcessingException {
         SalesforceBookingResponse booking =  this.getSalesforceRecord(bookingId);
-        SalesforceAccountResponse account =  this.getSalesforceAccountRecord(booking);
-        SalesforceContactResponse contact =  this.getSalesforceContactRecord(booking);
-        MewsCompanyRequest mewsCompanyRequest = this.mewsController.createCompanyPayload(booking,account,contact);
-        logger.info("MEWS Company Request: " + mewsCompanyRequest);
+        logger.info(booking.getId());
+
+//        SalesforceAccountResponse account =  this.getSalesforceAccountRecord(booking);
+//        logger.info(account.getName());
+//        SalesforceContactResponse contact =  this.getSalesforceContactRecord(booking);
+
+//        MewsCompanyRequest mewsCompanyRequest = this.mewsController.createCompanyPayload(booking.getQuote_Notes__c(),account.getName(),account,contact);
+//        logger.info("MEWS Company Request: " + mewsCompanyRequest);
+//
+//        this.addCompanyInMews(mewsCompanyRequest);
         return  null;
     }
 
     public SalesforceBookingResponse getSalesforceRecord(String bookingId) throws CustomException, JsonProcessingException {
-        SalesforceTokenResponse salesforceToken;
-        try {
-            salesforceToken = authController.retrieveSalesforceTokenFromAWS();
-        } catch (Exception e) {
-            throw new CustomException("Unable to retrieve Salesforce token", e);
-        }
+//        SalesforceTokenResponse salesforceToken;
+//        try {
+//            salesforceToken = authController.retrieveSalesforceTokenFromAWS();
+//        } catch (Exception e) {
+//            throw new CustomException("Unable to retrieve Salesforce token", e);
+//        }
 
         String bookingResponse = salesforceController.getBookingFromSalesforce(
                 applicationConfiguration.getSalesforceBookingObject(),
@@ -85,9 +91,7 @@ public class WebhookController {
         } catch (IOException e) {
             throw new CustomException("Unable to parse Salesforce Booking Response", e);
         }
-
-        // Similar error handling can be added for remaining service calls
-
+        logger.info("Salesforce Booking Response: " + bookingObject.getId());
         return bookingObject;
     }
 
@@ -107,7 +111,7 @@ public class WebhookController {
         } catch (IOException e) {
             throw new CustomException("Unable to parse Salesforce Account Response", e);
         }
-
+        logger.info(accountObject.getName());
         return accountObject;
     }
 
@@ -129,6 +133,22 @@ public class WebhookController {
         }
 
         return contactObject;
+    }
+
+    public String addCompanyInMews(MewsCompanyRequest mewsCompanyRequest) throws CustomException, JsonProcessingException {
+        String companyResponse = mewsController.addCompany(mewsCompanyRequest);
+
+        logger.info("Mews Company Response: " + companyResponse);
+
+//        ObjectMapper objectMapper = new ObjectMapper();
+//        SalesforceContactResponse contactObject;
+//        try {
+//            contactObject = objectMapper.readValue(contactResponse, SalesforceContactResponse.class);
+//        } catch (IOException e) {
+//            throw new CustomException("Unable to parse Salesforce Contact Response", e);
+//        }
+
+        return "companyResponse";
     }
 
 }

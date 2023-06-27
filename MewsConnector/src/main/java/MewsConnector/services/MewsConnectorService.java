@@ -1,5 +1,6 @@
 package MewsConnector.services;
 
+import MewsConnector.models.MewsCompanyRequest;
 import MewsConnector.models.MewsReservationRequest;
 import MewsConnector.models.MewsReservationResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -22,7 +23,7 @@ public class MewsConnectorService {
         this.objectMapper = new ObjectMapper();
     }
 
-    public String pushReservationsToMews(MewsReservationRequest request) {
+    public String pushCompanyToMews(MewsCompanyRequest request) {
         try {
             ObjectWriter ow = objectMapper.writer().withDefaultPrettyPrinter();
             String jsonStr = ow.writeValueAsString(request);
@@ -38,7 +39,7 @@ public class MewsConnectorService {
             String requestBodyString = jsonStr;
             System.out.println("Response Code: " + jsonStr);
             Request request = new Request.Builder()
-                    .url(String.format(applicationConfiguration.getMewsApiUrl() + "/reservations/add"))
+                    .url(String.format(applicationConfiguration.getMewsApiUrl() + "/companies/add"))
                     .method("POST", RequestBody.create(mediaType, requestBodyString))
                     .addHeader("Content-Type", "application/json")
                     .addHeader("Authorization", "Bearer " + getMewsAccessToken())

@@ -240,7 +240,7 @@ public class MewsCompanyRequest {
             this.Basic = Basic;
         }
     }
-    public class Options {
+    public static class Options {
         private boolean Invoiceable;
         private boolean AddFeesToInvoices;
 
