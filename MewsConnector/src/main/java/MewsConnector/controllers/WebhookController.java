@@ -54,17 +54,18 @@ public class WebhookController {
     }
 
     public String startSalesforceProcess(String bookingId) throws CustomException, JsonProcessingException {
-        SalesforceBookingResponse booking =  this.getSalesforceRecord(bookingId);
+        SalesforceBookingResponse booking = this.getSalesforceRecord(bookingId);
         logger.info(booking.getId());
 
-//        SalesforceAccountResponse account =  this.getSalesforceAccountRecord(booking);
-//        logger.info(account.getName());
-//        SalesforceContactResponse contact =  this.getSalesforceContactRecord(booking);
+        SalesforceAccountResponse account =  this.getSalesforceAccountRecord(booking);
+        logger.info(account.getName());
 
-//        MewsCompanyRequest mewsCompanyRequest = this.mewsController.createCompanyPayload(booking.getQuote_Notes__c(),account.getName(),account,contact);
-//        logger.info("MEWS Company Request: " + mewsCompanyRequest);
-//
-//        this.addCompanyInMews(mewsCompanyRequest);
+        SalesforceContactResponse contact =  this.getSalesforceContactRecord(booking);
+
+        MewsCompanyRequest mewsCompanyRequest = this.mewsController.createCompanyPayload(booking,account,contact);
+        logger.info("MEWS Company Request: " + mewsCompanyRequest);
+
+        this.addCompanyInMews(mewsCompanyRequest);
         return  null;
     }
 
@@ -78,9 +79,14 @@ public class WebhookController {
 
         String bookingResponse = salesforceController.getBookingFromSalesforce(
                 applicationConfiguration.getSalesforceBookingObject(),
-                "00DFg0000002xSD!AQEAQKC5t05UVHKVky7USL9JBg7KiKqwHN5GrmWga3js92o8.jYe1aX71k6RTM38c_WyfzQrtrJ0Es0WTDPcITzCCmhGOF9o",
+                "00DFg0000002xSD!AQEAQHAPwf_0RFbwJu9vzYDJxWDMtFPbgqhoCsiRamFtFVLjvP7tRAbguA6UKySkKgqndZZ5FMkFyGM5gNkRquYbQgGVviCb",
                 bookingId
         );
+
+        if (bookingResponse == null || bookingResponse.isEmpty()) {
+            logger.error("Received empty Salesforce booking response.");
+//            throw new CustomException("Received empty Salesforce booking response.");
+        }
 
         logger.info("Salesforce Booking Response: " + bookingResponse);
 
@@ -98,7 +104,7 @@ public class WebhookController {
     public SalesforceAccountResponse getSalesforceAccountRecord(SalesforceBookingResponse bookingObject) throws CustomException, JsonProcessingException {
         String accountResponse = salesforceController.getBookingFromSalesforce(
                 applicationConfiguration.getSalesforceAccountObject(),
-                "00DFg0000002xSD!AQEAQKC5t05UVHKVky7USL9JBg7KiKqwHN5GrmWga3js92o8.jYe1aX71k6RTM38c_WyfzQrtrJ0Es0WTDPcITzCCmhGOF9o",
+                "00DFg0000002xSD!AQEAQHAPwf_0RFbwJu9vzYDJxWDMtFPbgqhoCsiRamFtFVLjvP7tRAbguA6UKySkKgqndZZ5FMkFyGM5gNkRquYbQgGVviCb",
                 bookingObject.getThn__Company__c()
         );
 
@@ -111,14 +117,14 @@ public class WebhookController {
         } catch (IOException e) {
             throw new CustomException("Unable to parse Salesforce Account Response", e);
         }
-        logger.info(accountObject.getName());
+
         return accountObject;
     }
 
     public SalesforceContactResponse getSalesforceContactRecord(SalesforceBookingResponse bookingObject) throws CustomException, JsonProcessingException {
         String contactResponse = salesforceController.getBookingFromSalesforce(
                 applicationConfiguration.getSalesforceCompanyContactObject(),
-                "00DFg0000002xSD!AQEAQKC5t05UVHKVky7USL9JBg7KiKqwHN5GrmWga3js92o8.jYe1aX71k6RTM38c_WyfzQrtrJ0Es0WTDPcITzCCmhGOF9o",
+                "00DFg0000002xSD!AQEAQHAPwf_0RFbwJu9vzYDJxWDMtFPbgqhoCsiRamFtFVLjvP7tRAbguA6UKySkKgqndZZ5FMkFyGM5gNkRquYbQgGVviCb",
                 bookingObject.getThn__Company_Contact__c()
         );
 

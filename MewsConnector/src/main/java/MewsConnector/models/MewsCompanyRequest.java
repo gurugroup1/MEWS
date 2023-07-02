@@ -1,31 +1,79 @@
 package MewsConnector.models;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class MewsCompanyRequest {
+    @JsonProperty("Client")
     private String Client;
+
+    @JsonProperty("AccessToken")
     private String AccessToken;
+
+    @JsonProperty("ClientToken")
     private String ClientToken;
+
+    @JsonProperty("Name")
     private String Name;
-    Options OptionsObject;
+
+    @JsonProperty("OptionsObject")
+    private Options OptionsObject;
+
+    @JsonProperty("MotherCompanyId")
     private String MotherCompanyId = null;
+
+    @JsonProperty("Identifier")
     private String Identifier = null;
+
+    @JsonProperty("TaxIdentifier")
     private String TaxIdentifier = null;
+
+    @JsonProperty("AdditionalTaxIdentifier")
     private String AdditionalTaxIdentifier = null;
+
+    @JsonProperty("BillingCode")
     private String BillingCode = null;
+
+    @JsonProperty("AccountingCode")
     private String AccountingCode = null;
+
+    @JsonProperty("Address")
     private String Address = null;
+
+    @JsonProperty("InvoiceDueInterval")
     private String InvoiceDueInterval;
+
+    @JsonProperty("Telephone")
     private String Telephone;
+
+    @JsonProperty("ContacPerson")
     private String ContacPerson;
+
+    @JsonProperty("Contact")
     private String Contact;
+
+    @JsonProperty("Notes")
     private String Notes;
+
+    @JsonProperty("Iata")
     private String Iata;
+
+    @JsonProperty("Department")
     private String Department;
+
+    @JsonProperty("DunsNumber")
     private String DunsNumber;
+
+    @JsonProperty("CreditRatingObject")
     CreditRating CreditRatingObject;
+
+    @JsonProperty("ExternalIdentifier")
     private String ExternalIdentifier;
+
+    @JsonProperty("ReferenceIdentifier")
     private String ReferenceIdentifier;
+
+    @JsonProperty("WebsiteUrl")
     private String WebsiteUrl;
 
 

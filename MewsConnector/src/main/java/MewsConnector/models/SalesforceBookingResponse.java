@@ -1,274 +1,807 @@
 package MewsConnector.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import org.json.JSONPropertyName;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class SalesforceBookingResponse {
-    Attributes AttributesObject;
+    @JsonProperty("AttributesObject")
+    private Attributes AttributesObject;
+
+    @JsonProperty("Id")
     private String Id;
+
+    @JsonProperty("OwnerId")
     private String OwnerId;
+
+    @JsonProperty("IsDeleted")
     private boolean IsDeleted;
+
+    @JsonProperty("Name")
     private String Name;
+
+    @JsonProperty("CurrencyIsoCode")
     private String CurrencyIsoCode;
+
+    @JsonProperty("RecordTypeId")
     private String RecordTypeId;
+
+    @JsonProperty("CreatedDate")
     private String CreatedDate;
+
+    @JsonProperty("CreatedById")
     private String CreatedById;
+
+    @JsonProperty("LastModifiedDate")
     private String LastModifiedDate;
+
+    @JsonProperty("LastModifiedById")
     private String LastModifiedById;
+
+    @JsonProperty("SystemModstamp")
     private String SystemModstamp;
+
+    @JsonProperty("LastActivityDate")
     private String LastActivityDate;
+
+    @JsonProperty("LastViewedDate")
     private String LastViewedDate;
+
+    @JsonProperty("LastReferencedDate")
     private String LastReferencedDate;
+
+    @JsonProperty("thn__Accomodation_Notes__c")
     private String thn__Accomodation_Notes__c = null;
+
+    @JsonProperty("thn__Agent_Contact__c")
     private String thn__Agent_Contact__c = null;
+
+    @JsonProperty("thn__Agent__c")
     private String thn__Agent__c = null;
+
+    @JsonProperty("thn__Arrival_Date__c")
     private String thn__Arrival_Date__c;
+
+    @JsonProperty("thn__Arrival_Day__c")
     private String thn__Arrival_Day__c;
+
+    @JsonProperty("thn__Bill_to__c")
     private String thn__Bill_to__c = null;
+
+    @JsonProperty("thn__Billing_Account__c")
     private String thn__Billing_Account__c;
+
+    @JsonProperty("thn__Billing_Address__c")
     private String thn__Billing_Address__c;
+
+    @JsonProperty("thn__Business_Segment__c")
     private String thn__Business_Segment__c = null;
+
+    @JsonProperty("thn__Catering_Notes__c")
     private String thn__Catering_Notes__c = null;
+
+    @JsonProperty("thn__Channel__c")
     private String thn__Channel__c = null;
+
+    @JsonProperty("thn__Closed_Status__c")
     private String thn__Closed_Status__c;
+
+    @JsonProperty("thn__Comment__c")
     private String thn__Comment__c = null;
+
+    @JsonProperty("thn__Company_Contact__c")
     private String thn__Company_Contact__c;
+
+    @JsonProperty("thn__Company__c")
     private String thn__Company__c;
+
+    @JsonProperty("thn__Days_until_Arrival__c")
     private float thn__Days_until_Arrival__c;
+
+    @JsonProperty("thn__Departure_Date__c")
     private String thn__Departure_Date__c;
+
+    @JsonProperty("thn__Departure_Day__c")
     private String thn__Departure_Day__c;
+
+    @JsonProperty("thn__Deposit_Pay_Date__c")
     private String thn__Deposit_Pay_Date__c;
+
+    @JsonProperty("thn__Deposit__c")
     private float thn__Deposit__c;
+
+    @JsonProperty("thn__Dietary_Requirements__c")
     private String thn__Dietary_Requirements__c = null;
+
+    @JsonProperty("thn__Duration__c")
     private float thn__Duration__c;
+
+    @JsonProperty("thn__FS_DatesCreated__c")
     private boolean thn__FS_DatesCreated__c;
+
+    @JsonProperty("thn__Hotel__c")
     private String thn__Hotel__c;
+
+    @JsonProperty("thn__Internal_Notes__c")
     private String thn__Internal_Notes__c = null;
+
+    @JsonProperty("thn__Invoicing_Details__c")
     private String thn__Invoicing_Details__c = null;
+
+    @JsonProperty("thn__Is_Confirmed__c")
     private boolean thn__Is_Confirmed__c;
+
+    @JsonProperty("thn__Lost_Refused_Remarks__c")
     private String thn__Lost_Refused_Remarks__c = null;
+
+    @JsonProperty("thn__Mews_Group_Id__c")
     private String thn__Mews_Group_Id__c;
+
+    @JsonProperty("thn__No_VAT__c")
     private boolean thn__No_VAT__c;
+
+    @JsonProperty("thn__Pax__c")
     private float thn__Pax__c;
+
+    @JsonProperty("thn__Probability__c")
     private String thn__Probability__c = null;
+
+    @JsonProperty("thn__Reason_Lost_Cancelled__c")
     private String thn__Reason_Lost_Cancelled__c = null;
+
+    @JsonProperty("thn__Request_Date__c")
     private String thn__Request_Date__c;
+
+    @JsonProperty("thn__Reservation_Guest__c")
     private String thn__Reservation_Guest__c;
+
+    @JsonProperty("thn__SendToMews__c")
     private boolean thn__SendToMews__c;
+
+    @JsonProperty("thn__Source__c")
     private String thn__Source__c;
+
+    @JsonProperty("thn__Stage__c")
     private String thn__Stage__c;
+
+    @JsonProperty("thn__Structured_Reference__c")
     private String thn__Structured_Reference__c = null;
+
+    @JsonProperty("thn__Subtype__c")
     private String thn__Subtype__c = null;
+
+    @JsonProperty("thn__Total_Amount_excl_Tax__c")
     private float thn__Total_Amount_excl_Tax__c;
+
+    @JsonProperty("thn__Total_Amount_incl_Tax__c")
     private float thn__Total_Amount_incl_Tax__c;
+
+    @JsonProperty("thn__Type__c")
     private String thn__Type__c;
+
+    @JsonProperty("thn__ZT_Calculate_subtotals__c")
     private boolean thn__ZT_Calculate_subtotals__c;
+
+    @JsonProperty("thn__Hotel_Rooms_Amount__c")
     private float thn__Hotel_Rooms_Amount__c;
+
+    @JsonProperty("thn__Meeting_Rooms_Amount__c")
     private float thn__Meeting_Rooms_Amount__c;
+
+    @JsonProperty("thn__Number_of_Packs__c")
     private float thn__Number_of_Packs__c;
+
+    @JsonProperty("thn__Products_Amount__c")
     private float thn__Products_Amount__c;
+
+    @JsonProperty("thn__Total_Tax__c")
     private float thn__Total_Tax__c;
+
+    @JsonProperty("thn__Market_Segment__c")
     private String thn__Market_Segment__c = null;
+
+    @JsonProperty("thn__Offer_Date__c")
     private String thn__Offer_Date__c = null;
+
+    @JsonProperty("thn__Release_Date__c")
     private String thn__Release_Date__c;
+
+    @JsonProperty("thn__Signature_Date__c")
     private String thn__Signature_Date__c = null;
+
+    @JsonProperty("thn__Purchase_order__c")
     private String thn__Purchase_order__c = null;
+
+    @JsonProperty("thn__Send_and_sign_time_tag__c")
     private String thn__Send_and_sign_time_tag__c = null;
+
+    @JsonProperty("thn__Signature_Name__c")
     private String thn__Signature_Name__c = null;
+
+    @JsonProperty("thn__Signature_Title__c")
     private String thn__Signature_Title__c = null;
+
+    @JsonProperty("thn__Signature_URL__c")
     private String thn__Signature_URL__c = null;
+
+    @JsonProperty("thn__Request__c")
     private String thn__Request__c = null;
+
+    @JsonProperty("thn__Balance__c")
     private float thn__Balance__c;
+
+    @JsonProperty("thn__Brief__c")
     private String thn__Brief__c = null;
+
+    @JsonProperty("thn__Cancellation_to_be_reported__c")
     private String thn__Cancellation_to_be_reported__c = null;
+
+    @JsonProperty("thn__Create_Invoice__c")
     private boolean thn__Create_Invoice__c;
+
+    @JsonProperty("thn__Credit_to_be_reported__c")
     private String thn__Credit_to_be_reported__c = null;
+
+    @JsonProperty("thn__Invoiced_Amount_HT__c")
     private String thn__Invoiced_Amount_HT__c = null;
+
+    @JsonProperty("thn__Invoiced_Amount__c")
     private String thn__Invoiced_Amount__c = null;
+
+    @JsonProperty("thn__Invoiced_Amount_excl_Tax__c")
     private String thn__Invoiced_Amount_excl_Tax__c = null;
+
+    @JsonProperty("thn__Invoiced_to_be_reported__c")
     private String thn__Invoiced_to_be_reported__c = null;
+
+    @JsonProperty("thn__Paid_Amount__c")
     private String thn__Paid_Amount__c = null;
+
+    @JsonProperty("thn__Paid_Amount_on_Invoices__c")
     private String thn__Paid_Amount_on_Invoices__c = null;
+
+    @JsonProperty("thn__Won__c")
     private boolean thn__Won__c;
+
+    @JsonProperty("thn__ZT_Hotel_Name__c")
     private String thn__ZT_Hotel_Name__c = null;
+
+    @JsonProperty("thn__Total_VAT_Amount__c")
     private float thn__Total_VAT_Amount__c;
+
+    @JsonProperty("thn__ACCOUNT_NAME__c")
     private String thn__ACCOUNT_NAME__c;
+
+    @JsonProperty("thn__ARRIVAL_DATE2__c")
     private String thn__ARRIVAL_DATE2__c;
+
+    @JsonProperty("thn__AVG_RATE__c")
     private String thn__AVG_RATE__c = null;
+
+    @JsonProperty("thn__BEV_REVENUE__c")
     private String thn__BEV_REVENUE__c = null;
+
+    @JsonProperty("thn__BLOCKED__c")
     private String thn__BLOCKED__c = null;
+
+    @JsonProperty("thn__Beverage__c")
     private String thn__Beverage__c = null;
+
+    @JsonProperty("thn__CAT_MGR__c")
     private String thn__CAT_MGR__c;
+
+    @JsonProperty("thn__CAT_REVENUE__c")
     private String thn__CAT_REVENUE__c = null;
+
+    @JsonProperty("thn__CXL_REASON__c")
     private String thn__CXL_REASON__c = null;
+
+    @JsonProperty("thn__DECISION_DATE2__c")
     private String thn__DECISION_DATE2__c = null;
+
+    @JsonProperty("thn__DENIED_REASON__c")
     private String thn__DENIED_REASON__c = null;
+
+    @JsonProperty("thn__DEPARTURE_DATE2__c")
     private String thn__DEPARTURE_DATE2__c;
+
+    @JsonProperty("thn__FOOD_REVENUE__c")
     private String thn__FOOD_REVENUE__c = null;
+
+    @JsonProperty("thn__Food__c")
     private String thn__Food__c = null;
+
+    @JsonProperty("thn__INSERT_DATE2__c")
     private String thn__INSERT_DATE2__c;
+
+    @JsonProperty("thn__LOST_REASON__c")
     private String thn__LOST_REASON__c = null;
+
+    @JsonProperty("thn__MYCE_Quote_Id__c")
     private String thn__MYCE_Quote_Id__c = null;
+
+    @JsonProperty("thn__Markup__c")
     private boolean thn__Markup__c;
+
+    @JsonProperty("thn__Meeting_Room__c")
     private String thn__Meeting_Room__c = null;
+
+    @JsonProperty("thn__NET_ADR__c")
     private String thn__NET_ADR__c = null;
+
+    @JsonProperty("thn__OFFER_SENT2__c")
     private String thn__OFFER_SENT2__c = null;
+
+    @JsonProperty("thn__ORIGINAL__c")
     private String thn__ORIGINAL__c = null;
+
+    @JsonProperty("thn__OTHERS__c")
     private String thn__OTHERS__c = null;
+
+    @JsonProperty("thn__Other__c")
     private String thn__Other__c = null;
+
+    @JsonProperty("thn__PICKED_UP_NET_ADR__c")
     private String thn__PICKED_UP_NET_ADR__c = null;
+
+    @JsonProperty("thn__PICKED_UP__c")
     private String thn__PICKED_UP__c = null;
+
+    @JsonProperty("thn__ROOM_MGR__c")
     private String thn__ROOM_MGR__c;
+
+    @JsonProperty("thn__ROOM_RENTAL__c")
     private String thn__ROOM_RENTAL__c = null;
+
+    @JsonProperty("thn__Room__c")
     private String thn__Room__c = null;
+
+    @JsonProperty("thn__SAL_MGR__c")
     private String thn__SAL_MGR__c;
+
+    @JsonProperty("thn__SOURCE_MARKET__c")
     private String thn__SOURCE_MARKET__c = null;
+
+    @JsonProperty("Quote_Number__c")
     private String Quote_Number__c;
+
+    @JsonProperty("thn__CUTOFF_DATE2__c")
     private String thn__CUTOFF_DATE2__c;
+
+    @JsonProperty("thn__CUTOFF_DATE__c")
     private String thn__CUTOFF_DATE__c;
+
+    @JsonProperty("thn__D1__c")
     private String thn__D1__c;
+
+    @JsonProperty("thn__D2__c")
     private String thn__D2__c;
+
+    @JsonProperty("thn__D3__c")
     private String thn__D3__c;
+
+    @JsonProperty("thn__D4__c")
     private String thn__D4__c;
+
+    @JsonProperty("thn__DECISION_DATE__c")
     private String thn__DECISION_DATE__c = null;
+
+    @JsonProperty("thn__DX__c")
     private String thn__DX__c;
+
+    @JsonProperty("thn__Generate_Rooming_List__c")
     private boolean thn__Generate_Rooming_List__c;
+
+    @JsonProperty("thn__INSERT_DATE__c")
     private String thn__INSERT_DATE__c;
+
+    @JsonProperty("thn__OFFER_SENT__c")
     private String thn__OFFER_SENT__c = null;
+
+    @JsonProperty("thn__TW__c")
     private float thn__TW__c;
+
+    @JsonProperty("thn__W1__c")
     private float thn__W1__c;
+
+    @JsonProperty("thn__W2__c")
     private float thn__W2__c;
+
+    @JsonProperty("thn__W3__c")
     private float thn__W3__c;
+
+    @JsonProperty("thn__W4__c")
     private float thn__W4__c;
+
+    @JsonProperty("thn__Hotels__c")
     private String thn__Hotels__c;
+
+    @JsonProperty("thn__Resort__c")
     private String thn__Resort__c = null;
+
+    @JsonProperty("thn__ZT_Count_MR__c")
     private float thn__ZT_Count_MR__c;
+
+    @JsonProperty("thn__ZT_Count_QP__c")
     private float thn__ZT_Count_QP__c;
+
+    @JsonProperty("thn__Number_Of_Nights__c")
     private String thn__Number_Of_Nights__c = null;
+
+    @JsonProperty("thn__Discount_Percent__c")
     private float thn__Discount_Percent__c;
+
+    @JsonProperty("thn__Public_URL__c")
     private String thn__Public_URL__c = null;
+
+    @JsonProperty("Competitor__c")
     private String Competitor__c = null;
+
+    @JsonProperty("Other_reason_lost_turndown_Cancelled__c")
     private String Other_reason_lost_turndown_Cancelled__c = null;
+
+    @JsonProperty("thn__Language__c")
     private String thn__Language__c;
+
+    @JsonProperty("Account_reference__c")
     private String Account_reference__c = null;
+
+    @JsonProperty("Origin__c")
     private String Origin__c;
+
+    @JsonProperty("Internal__c")
     private String Internal__c = null;
+
+    @JsonProperty("Dietary_Requirements2__c")
     private String Dietary_Requirements2__c = null;
+
+    @JsonProperty("Payment_methode__c")
     private String Payment_methode__c;
+
+    @JsonProperty("Signage__c")
     private String Signage__c = null;
+
+    @JsonProperty("Deposit2__c")
     private String Deposit2__c = null;
+
+    @JsonProperty("Deposit_3__c")
     private String Deposit_3__c = null;
+
+    @JsonProperty("Deposit_2_Pay_Date__c")
     private String Deposit_2_Pay_Date__c = null;
+
+    @JsonProperty("Deposit_3_Pay_Date__c")
     private String Deposit_3_Pay_Date__c = null;
+
+    @JsonProperty("Onsite_Contact__c")
     private String Onsite_Contact__c = null;
+
+    @JsonProperty("Onsite_Contact_Phone__c")
     private String Onsite_Contact_Phone__c = null;
+
+    @JsonProperty("days__c")
     private float days__c;
+
+    @JsonProperty("Package_Amount_inc__c")
     private float Package_Amount_inc__c;
+
+    @JsonProperty("Package_Amount__c")
     private float Package_Amount__c;
+
+    @JsonProperty("Start_time__c")
     private String Start_time__c;
+
+    @JsonProperty("Option_date__c")
     private String Option_date__c;
+
+    @JsonProperty("Total_rooms_booked__c")
     private float Total_rooms_booked__c;
+
+    @JsonProperty("Quote_Notes__c")
     private String Quote_Notes__c = null;
+
+    @JsonProperty("Excl_Tax__c")
     private boolean Excl_Tax__c;
+
+    @JsonProperty("Discount_Meeting_rooms__c")
     private float Discount_Meeting_rooms__c;
+
+    @JsonProperty("Discount_Hotel_rooms__c")
     private float Discount_Hotel_rooms__c;
+
+    @JsonProperty("Discount_AV__c")
     private float Discount_AV__c;
+
+    @JsonProperty("Discount_No_AV__c")
     private float Discount_No_AV__c;
+
+    @JsonProperty("Discount_packages__c")
     private float Discount_packages__c;
+
+    @JsonProperty("Hide_floorplans__c")
     private boolean Hide_floorplans__c;
+
+    @JsonProperty("Deposit_1_VAT__c")
     private float Deposit_1_VAT__c;
+
+    @JsonProperty("Deposit_2_VAT__c")
     private String Deposit_2_VAT__c = null;
+
+    @JsonProperty("Deposit_3_VAT__c")
     private String Deposit_3_VAT__c = null;
+
+    @JsonProperty("Deposit_1_Amount__c")
     private float Deposit_1_Amount__c;
+
+    @JsonProperty("Deposit_2_Amount__c")
     private String Deposit_2_Amount__c = null;
+
+    @JsonProperty("Deposit_3_Amount__c")
     private String Deposit_3_Amount__c = null;
+
+    @JsonProperty("PO_Number__c")
     private String PO_Number__c = null;
+
+    @JsonProperty("Logo_URL__c")
     private String Logo_URL__c;
+
+    @JsonProperty("Hotel_Rooms_Amount_inc__c")
     private float Hotel_Rooms_Amount_inc__c;
+
+    @JsonProperty("Meeting_Rooms_Amount_inc__c")
     private float Meeting_Rooms_Amount_inc__c;
+
+    @JsonProperty("Products_Amount_Inc__c")
     private float Products_Amount_Inc__c;
+
+    @JsonProperty("Request_AR__c")
     private boolean Request_AR__c;
+
+    @JsonProperty("Afwijkende_voorwaarden__c")
     private boolean Afwijkende_voorwaarden__c;
+
+    @JsonProperty("LS_reference__c")
     private String LS_reference__c = null;
+
+    @JsonProperty("AR_Nummer__c")
     private String AR_Nummer__c = null;
+
+    @JsonProperty("Image_header__c")
     private String Image_header__c;
+
+    @JsonProperty("Image_header2__c")
     private String Image_header2__c;
+
+    @JsonProperty("Image_header3__c")
     private String Image_header3__c;
+
+    @JsonProperty("Image_header4__c")
     private String Image_header4__c;
+
+    @JsonProperty("Image_header5__c")
     private String Image_header5__c;
+
+    @JsonProperty("Image_header6__c")
     private String Image_header6__c;
+
+    @JsonProperty("Generate_Offer__c")
     private boolean Generate_Offer__c;
+
+    @JsonProperty("Last_Offer_Generation__c")
     private String Last_Offer_Generation__c = null;
+
+    @JsonProperty("Rooms_amount_total__c")
     private float Rooms_amount_total__c;
+
+    @JsonProperty("ADR_Incl__c")
     private String ADR_Incl__c = null;
+
+    @JsonProperty("thn__Clone__c")
     private boolean thn__Clone__c;
+
+    @JsonProperty("Hide_about_us__c")
     private boolean Hide_about_us__c;
+
+    @JsonProperty("Hide_picture_page__c")
     private boolean Hide_picture_page__c;
+
+    @JsonProperty("Proforma_referentie__c")
     private String Proforma_referentie__c;
+
+    @JsonProperty("Unique_number_proforma__c")
     private float Unique_number_proforma__c;
+
+    @JsonProperty("thn__Accomodation_NotesLong__c")
     private String thn__Accomodation_NotesLong__c = null;
+
+    @JsonProperty("thn__Catering_NotesLong__c")
     private String thn__Catering_NotesLong__c = null;
+
+    @JsonProperty("thn__Internal_NotesLong__c")
     private String thn__Internal_NotesLong__c;
+
+    @JsonProperty("thn__Reservation_Guest_Name__c")
     private String thn__Reservation_Guest_Name__c = null;
+
+    @JsonProperty("Locale_for_Documents__c")
     private String Locale_for_Documents__c;
+
+    @JsonProperty("Company_short_name__c")
     private String Company_short_name__c;
+
+    @JsonProperty("thn__Comm_Activity__c")
     private String thn__Comm_Activity__c = null;
+
+    @JsonProperty("thn__Comm_Beverage__c")
     private String thn__Comm_Beverage__c = null;
+
+    @JsonProperty("thn__Comm_Equipment__c")
     private String thn__Comm_Equipment__c = null;
+
+    @JsonProperty("thn__Comm_Food__c")
     private String thn__Comm_Food__c = null;
+
+    @JsonProperty("thn__Comm_Hotel_Rooms__c")
     private String thn__Comm_Hotel_Rooms__c = null;
+
+    @JsonProperty("thn__Comm_Meeting_Rooms__c")
     private String thn__Comm_Meeting_Rooms__c = null;
+
+    @JsonProperty("thn__Comm_Other__c")
     private String thn__Comm_Other__c = null;
+
+    @JsonProperty("thn__Comm_Package__c")
     private String thn__Comm_Package__c = null;
+
+    @JsonProperty("thn__Commission_to__c")
     private String thn__Commission_to__c = null;
+
+    @JsonProperty("thn__Commissionable__c")
     private boolean thn__Commissionable__c;
+
+    @JsonProperty("thn__Last_Sync__c")
     private String thn__Last_Sync__c = null;
+
+    @JsonProperty("thn__Last_sync_status__c")
     private String thn__Last_sync_status__c = null;
+
+    @JsonProperty("thn__Option_date__c")
     private String thn__Option_date__c = null;
+
+    @JsonProperty("thn__Send_Failed_Reservations__c")
     private boolean thn__Send_Failed_Reservations__c;
+
+    @JsonProperty("thn__Sync_Error_Message__c")
     private String thn__Sync_Error_Message__c = null;
+
+    @JsonProperty("thn__Sync_with_Meeting_Package__c")
     private boolean thn__Sync_with_Meeting_Package__c;
+
+    @JsonProperty("thn__Total_Commission_on_Quote__c")
     private float thn__Total_Commission_on_Quote__c;
+
+    @JsonProperty("thn__Create_PMS_Block__c")
     private boolean thn__Create_PMS_Block__c;
+
+    @JsonProperty("thn__Shoulder_End_Date__c")
     private String thn__Shoulder_End_Date__c;
+
+    @JsonProperty("thn__Shoulder_Start_Date__c")
     private String thn__Shoulder_Start_Date__c;
+
+    @JsonProperty("thn__Total_incl_Tax__c")
     private float thn__Total_incl_Tax__c;
+
+    @JsonProperty("thn__Total_Hotel_Room_incl_Tax__c")
     private float thn__Total_Hotel_Room_incl_Tax__c;
+
+    @JsonProperty("thn__Total_Meeting_Room_incl_Tax__c")
     private float thn__Total_Meeting_Room_incl_Tax__c;
+
+    @JsonProperty("thn__Total_Product_incl_Tax__c")
     private float thn__Total_Product_incl_Tax__c;
+
+    @JsonProperty("thn__ZT_Count_HR__c")
     private float thn__ZT_Count_HR__c;
+
+    @JsonProperty("Release_Date_formula__c")
     private String Release_Date_formula__c;
+
+    @JsonProperty("Guest_Quote_Name__c")
     private String Guest_Quote_Name__c;
+
+    @JsonProperty("thn__Release_date_formula__c")
     private String thn__Release_date_formula__c;
+
+    @JsonProperty("thn__PMS_Warning__c")
     private boolean thn__PMS_Warning__c;
+
+    @JsonProperty("thn__Potential_max_revenue_field__c")
     private float thn__Potential_max_revenue_field__c;
+
+    @JsonProperty("thn__Potential_max_revenue_MR__c")
     private float thn__Potential_max_revenue_MR__c;
+
+    @JsonProperty("thn__Potential_max_revenue_Package__c")
     private float thn__Potential_max_revenue_Package__c;
+
+    @JsonProperty("thn__Potential_max_revenue_Product__c")
     private float thn__Potential_max_revenue_Product__c;
+
+    @JsonProperty("thn__Total_paid__c")
     private float thn__Total_paid__c;
+
+    @JsonProperty("thn__Complimentary__c")
     private boolean thn__Complimentary__c;
+
+    @JsonProperty("thn__InventoryBlockType__c")
     private String thn__InventoryBlockType__c;
+
+    @JsonProperty("thn__PMS_Company__c")
     private String thn__PMS_Company__c;
+
+    @JsonProperty("thn__PMS_Group__c")
     private String thn__PMS_Group__c;
+
+    @JsonProperty("thn__PMS_Source__c")
     private String thn__PMS_Source__c = null;
+
+    @JsonProperty("thn__PMS_Travel_Agent__c")
     private String thn__PMS_Travel_Agent__c = null;
+
+    @JsonProperty("thn__SendToPMS__c")
     private boolean thn__SendToPMS__c;
+
+    @JsonProperty("thn__Guarantee_Code__c")
     private String thn__Guarantee_Code__c;
+
+    @JsonProperty("thn__Origin__c")
     private String thn__Origin__c = null;
+
+    @JsonProperty("thn__Dietary_Requirements_Long__c")
     private String thn__Dietary_Requirements_Long__c = null;
+
+    @JsonProperty("Status__c")
     private String Status__c;
+
+    @JsonProperty("Has_Error__c")
     private boolean Has_Error__c;
+
+    @JsonProperty("thn__Block_Rate__c")
     private String thn__Block_Rate__c;
+
+    @JsonProperty("thn__InvoicingDetails__c")
     private String thn__InvoicingDetails__c = null;
+
+    @JsonProperty("Rating_Stars__c")
     private String Rating_Stars__c;
+
+    @JsonProperty("thn__Individual_Pickup__c")
     private boolean thn__Individual_Pickup__c;
+
+    @JsonProperty("thn__Send_Failed_PMS_Block__c")
     private boolean thn__Send_Failed_PMS_Block__c;
+
+    @JsonProperty("thn__Package_Amount_Incl_Tax__c")
     private float thn__Package_Amount_Incl_Tax__c;
+
+    @JsonProperty("thn__Package_Amount__c")
     private float thn__Package_Amount__c;
+
+    @JsonProperty("thn__Tax_Calculation_Log__c")
     private String thn__Tax_Calculation_Log__c = null;
+
+    @JsonProperty("thn__Tax_Group_Type__c")
     private String thn__Tax_Group_Type__c;
+
+    @JsonProperty("thn__Tax_Last_Calculated_Date__c")
     private String thn__Tax_Last_Calculated_Date__c = null;
+
+    @JsonProperty("thn__Expanded_status__c")
     private String thn__Expanded_status__c;
+
+    @JsonProperty("thn__Locale_for_Documents__c")
     private String thn__Locale_for_Documents__c = null;
 
 

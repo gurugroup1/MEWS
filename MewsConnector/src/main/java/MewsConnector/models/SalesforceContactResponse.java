@@ -1,86 +1,244 @@
 package MewsConnector.models;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class SalesforceContactResponse {
-    Attributes AttributesObject;
+    @JsonProperty("Attributes")
+    private Attributes AttributesObject;
+
+    @JsonProperty("Id")
     private String Id;
+
+    @JsonProperty("IsDeleted")
     private boolean IsDeleted;
+
+    @JsonProperty("MasterRecordId")
     private String MasterRecordId = null;
+
+    @JsonProperty("AccountId")
     private String AccountId;
+
+    @JsonProperty("LastName")
     private String LastName;
+
+    @JsonProperty("FirstName")
     private String FirstName = null;
+
+    @JsonProperty("Salutation")
     private String Salutation = null;
+
+    @JsonProperty("Name")
     private String Name;
+
+    @JsonProperty("OtherStreet")
     private String OtherStreet = null;
+
+    @JsonProperty("OtherCity")
     private String OtherCity = null;
+
+    @JsonProperty("OtherState")
     private String OtherState = null;
+
+    @JsonProperty("OtherPostalCode")
     private String OtherPostalCode = null;
+
+    @JsonProperty("OtherCountry")
     private String OtherCountry = null;
+
+    @JsonProperty("OtherStateCode")
     private String OtherStateCode = null;
+
+    @JsonProperty("OtherCountryCode")
     private String OtherCountryCode = null;
+
+    @JsonProperty("OtherLatitude")
     private String OtherLatitude = null;
+
+    @JsonProperty("OtherLongitude")
     private String OtherLongitude = null;
+
+    @JsonProperty("OtherGeocodeAccuracy")
     private String OtherGeocodeAccuracy = null;
+
+    @JsonProperty("OtherAddress")
     private String OtherAddress = null;
+
+    @JsonProperty("MailingStreet")
     private String MailingStreet = null;
+
+    @JsonProperty("MailingCity")
     private String MailingCity = null;
+
+    @JsonProperty("MailingState")
     private String MailingState = null;
+
+    @JsonProperty("MailingPostalCode")
     private String MailingPostalCode = null;
+
+    @JsonProperty("MailingCountry")
     private String MailingCountry = null;
+
+    @JsonProperty("MailingStateCode")
     private String MailingStateCode = null;
+
+    @JsonProperty("MailingCountryCode")
     private String MailingCountryCode = null;
+
+    @JsonProperty("MailingLatitude")
     private String MailingLatitude = null;
+
+    @JsonProperty("MailingLongitude")
     private String MailingLongitude = null;
+
+    @JsonProperty("MailingGeocodeAccuracy")
     private String MailingGeocodeAccuracy = null;
+
+    @JsonProperty("MailingAddress")
     private String MailingAddress = null;
+
+    @JsonProperty("Phone")
     private String Phone = null;
+
+    @JsonProperty("Fax")
     private String Fax = null;
+
+    @JsonProperty("MobilePhone")
     private String MobilePhone = null;
+
+    @JsonProperty("HomePhone")
     private String HomePhone = null;
+
+    @JsonProperty("OtherPhone")
     private String OtherPhone = null;
+
+    @JsonProperty("AssistantPhone")
     private String AssistantPhone = null;
+
+    @JsonProperty("ReportsToId")
     private String ReportsToId = null;
+
+    @JsonProperty("Email")
     private String Email;
+
+    @JsonProperty("Title")
     private String Title = null;
+
+    @JsonProperty("Department")
     private String Department = null;
+
+    @JsonProperty("AssistantName")
     private String AssistantName = null;
+
+    @JsonProperty("LeadSource")
     private String LeadSource = null;
+
+    @JsonProperty("Birthdate")
     private String Birthdate = null;
+
+    @JsonProperty("Description")
     private String Description = null;
+
+    @JsonProperty("CurrencyIsoCode")
     private String CurrencyIsoCode;
+
+    @JsonProperty("OwnerId")
     private String OwnerId;
+
+    @JsonProperty("CreatedDate")
     private String CreatedDate;
+
+    @JsonProperty("CreatedById")
     private String CreatedById;
+
+    @JsonProperty("LastModifiedDate")
     private String LastModifiedDate;
+
+    @JsonProperty("LastModifiedById")
     private String LastModifiedById;
+
+    @JsonProperty("SystemModstamp")
     private String SystemModstamp;
+
+    @JsonProperty("LastActivityDate")
     private String LastActivityDate = null;
+
+    @JsonProperty("LastCURequestDate")
     private String LastCURequestDate = null;
+
+    @JsonProperty("LastCUUpdateDate")
     private String LastCUUpdateDate = null;
+
+    @JsonProperty("LastViewedDate")
     private String LastViewedDate;
+
+    @JsonProperty("LastReferencedDate")
     private String LastReferencedDate;
+
+    @JsonProperty("EmailBouncedReason")
     private String EmailBouncedReason = null;
+
+    @JsonProperty("EmailBouncedDate")
     private String EmailBouncedDate = null;
+
+    @JsonProperty("IsEmailBounced")
     private boolean IsEmailBounced;
+
+    @JsonProperty("PhotoUrl")
     private String PhotoUrl;
+
+    @JsonProperty("Jigsaw")
     private String Jigsaw = null;
+
+    @JsonProperty("JigsawContactId")
     private String JigsawContactId = null;
+
+    @JsonProperty("IndividualId")
     private String IndividualId = null;
+
+    @JsonProperty("thn__Create_Guest__c")
     private boolean thn__Create_Guest__c;
+
+    @JsonProperty("thn__Guest__c")
     private String thn__Guest__c;
+
+    @JsonProperty("thn__Hotel__c")
     private String thn__Hotel__c;
+
+    @JsonProperty("thn__Contact_ID__c")
     private String thn__Contact_ID__c;
+
+    @JsonProperty("Contact_Number__c")
     private String Contact_Number__c;
+
+    @JsonProperty("Invite_to_client_event__c")
     private boolean Invite_to_client_event__c;
+
+    @JsonProperty("Type__c")
     private String Type__c;
+
+    @JsonProperty("Loyalty__c")
     private String Loyalty__c = null;
+
+    @JsonProperty("LinkedIn__c")
     private String LinkedIn__c = null;
+
+    @JsonProperty("thn__Language__c")
     private String thn__Language__c = null;
+
+    @JsonProperty("thn__Nationality__c")
     private String thn__Nationality__c = null;
+
+    @JsonProperty("thn__UpdateFromGuest__c")
     private boolean thn__UpdateFromGuest__c;
+
+    @JsonProperty("thn__Is_Active__c")
     private boolean thn__Is_Active__c;
+
+    @JsonProperty("thn__Inactive_Reason__c")
     private String thn__Inactive_Reason__c = null;
+
+    @JsonProperty("thn__Send_To_Pms__c")
     private boolean thn__Send_To_Pms__c;
 
 

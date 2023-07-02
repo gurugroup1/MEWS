@@ -1,121 +1,349 @@
 package MewsConnector.models;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class SalesforceAccountResponse {
-    Attributes AttributesObject;
+    @JsonProperty("Attributes")
+    private Attributes AttributesObject;
+
+    @JsonProperty("Id")
     private String Id;
+
+    @JsonProperty("IsDeleted")
     private boolean IsDeleted;
+
+    @JsonProperty("MasterRecordId")
     private String MasterRecordId = null;
+
+    @JsonProperty("Name")
     private String Name;
+
+    @JsonProperty("Type")
     private String Type = null;
+
+    @JsonProperty("RecordTypeId")
     private String RecordTypeId;
+
+    @JsonProperty("ParentId")
     private String ParentId = null;
+
+    @JsonProperty("BillingStreet")
     private String BillingStreet = null;
+
+    @JsonProperty("BillingCity")
     private String BillingCity = null;
+
+    @JsonProperty("BillingState")
     private String BillingState = null;
+
+    @JsonProperty("BillingPostalCode")
     private String BillingPostalCode = null;
+
+    @JsonProperty("BillingCountry")
     private String BillingCountry = null;
+
+    @JsonProperty("BillingStateCode")
     private String BillingStateCode = null;
+
+    @JsonProperty("BillingCountryCode")
     private String BillingCountryCode = null;
+
+    @JsonProperty("BillingLatitude")
     private String BillingLatitude = null;
+
+    @JsonProperty("BillingLongitude")
     private String BillingLongitude = null;
+
+    @JsonProperty("BillingGeocodeAccuracy")
     private String BillingGeocodeAccuracy = null;
+
+    @JsonProperty("BillingAddress")
     private String BillingAddress = null;
+
+    @JsonProperty("ShippingStreet")
     private String ShippingStreet = null;
+
+    @JsonProperty("ShippingCity")
     private String ShippingCity = null;
+
+    @JsonProperty("ShippingState")
     private String ShippingState = null;
+
+    @JsonProperty("ShippingPostalCode")
     private String ShippingPostalCode = null;
+
+    @JsonProperty("ShippingCountry")
     private String ShippingCountry = null;
+
+    @JsonProperty("ShippingStateCode")
     private String ShippingStateCode = null;
+
+    @JsonProperty("ShippingCountryCode")
     private String ShippingCountryCode = null;
+
+    @JsonProperty("ShippingLatitude")
     private String ShippingLatitude = null;
+
+    @JsonProperty("ShippingLongitude")
     private String ShippingLongitude = null;
+
+    @JsonProperty("ShippingGeocodeAccuracy")
     private String ShippingGeocodeAccuracy = null;
+
+    @JsonProperty("ShippingAddress")
     private String ShippingAddress = null;
+
+    @JsonProperty("Phone")
     private String Phone = null;
+
+    @JsonProperty("Fax")
     private String Fax = null;
+
+    @JsonProperty("AccountNumber")
     private String AccountNumber = null;
+
+    @JsonProperty("Website")
     private String Website = null;
+
+    @JsonProperty("PhotoUrl")
     private String PhotoUrl;
+
+    @JsonProperty("Sic")
     private String Sic = null;
+
+    @JsonProperty("Industry")
     private String Industry = null;
+
+    @JsonProperty("AnnualRevenue")
     private String AnnualRevenue = null;
+
+    @JsonProperty("NumberOfEmployees")
     private String NumberOfEmployees = null;
+
+    @JsonProperty("Ownership")
     private String Ownership = null;
+
+    @JsonProperty("TickerSymbol")
     private String TickerSymbol = null;
+
+    @JsonProperty("Description")
     private String Description = null;
+
+    @JsonProperty("Rating")
     private String Rating = null;
+
+    @JsonProperty("Site")
     private String Site = null;
+
+    @JsonProperty("CurrencyIsoCode")
     private String CurrencyIsoCode;
+
+    @JsonProperty("OwnerId")
     private String OwnerId;
+
+    @JsonProperty("CreatedDate")
     private String CreatedDate;
+
+    @JsonProperty("CreatedById")
     private String CreatedById;
+
+    @JsonProperty("LastModifiedDate")
     private String LastModifiedDate;
+
+    @JsonProperty("LastModifiedById")
     private String LastModifiedById;
+
+    @JsonProperty("SystemModstamp")
     private String SystemModstamp;
+
+    @JsonProperty("LastActivityDate")
     private String LastActivityDate = null;
+
+    @JsonProperty("LastViewedDate")
     private String LastViewedDate;
+
+    @JsonProperty("LastReferencedDate")
     private String LastReferencedDate;
+
+    @JsonProperty("Jigsaw")
     private String Jigsaw = null;
+
+    @JsonProperty("JigsawCompanyId")
     private String JigsawCompanyId = null;
+
+    @JsonProperty("AccountSource")
     private String AccountSource = null;
+
+    @JsonProperty("SicDesc")
     private String SicDesc = null;
+
+    @JsonProperty("thn__AR_Number__c")
     private String thn__AR_Number__c = null;
+
+    @JsonProperty("thn__Accounting_Code__c")
     private String thn__Accounting_Code__c = null;
+
+    @JsonProperty("thn__Additional_Tax_Identifier__c")
     private String thn__Additional_Tax_Identifier__c = null;
+
+    @JsonProperty("thn__BillingCode__c")
     private String thn__BillingCode__c = null;
+
+    @JsonProperty("thn__Billing_name__c")
     private String thn__Billing_name__c = null;
+
+    @JsonProperty("thn__CustomerPriority__c")
     private String thn__CustomerPriority__c = null;
+
+    @JsonProperty("thn__Electronic_Invoice_Identifier__c")
     private String thn__Electronic_Invoice_Identifier__c = null;
+
+    @JsonProperty("thn__Hotel__c")
     private String thn__Hotel__c;
+
+    @JsonProperty("thn__Identifier__c")
     private String thn__Identifier__c = null;
+
+    @JsonProperty("thn__Is_Active__c")
     private boolean thn__Is_Active__c;
+
+    @JsonProperty("thn__Is_Parent__c")
     private boolean thn__Is_Parent__c;
+
+    @JsonProperty("thn__Mews_Error_Message__c")
     private String thn__Mews_Error_Message__c = null;
+
+    @JsonProperty("thn__Mews_Id__c")
     private String thn__Mews_Id__c;
+
+    @JsonProperty("thn__Number__c")
     private String thn__Number__c;
+
+    @JsonProperty("thn__NumberofLocations__c")
     private String thn__NumberofLocations__c = null;
+
+    @JsonProperty("thn__Send_to_Mews__c")
     private boolean thn__Send_to_Mews__c;
+
+    @JsonProperty("thn__Status__c")
     private String thn__Status__c;
+
+    @JsonProperty("thn__Subtype__c")
     private String thn__Subtype__c = null;
+
+    @JsonProperty("thn__TaxIdentifier__c")
     private String thn__TaxIdentifier__c = null;
+
+    @JsonProperty("thn__Type__c")
     private String thn__Type__c;
+
+    @JsonProperty("thn__IATA__c")
     private String thn__IATA__c = null;
+
+    @JsonProperty("thn__Notes__c")
     private String thn__Notes__c = null;
+
+    @JsonProperty("thn__Beverage__c")
     private String thn__Beverage__c = null;
+
+    @JsonProperty("thn__Food__c")
     private String thn__Food__c = null;
+
+    @JsonProperty("thn__Meeting_Room__c")
     private String thn__Meeting_Room__c = null;
+
+    @JsonProperty("thn__Other__c")
     private String thn__Other__c = null;
+
+    @JsonProperty("thn__Room__c")
     private String thn__Room__c = null;
+
+    @JsonProperty("thn__Account_ID__c")
     private String thn__Account_ID__c;
+
+    @JsonProperty("Account_Number__c")
     private String Account_Number__c;
+
+    @JsonProperty("Stage__c")
     private String Stage__c = null;
+
+    @JsonProperty("Tier__c")
     private String Tier__c = null;
+
+    @JsonProperty("AR_nummer_aanvragen__c")
     private boolean AR_nummer_aanvragen__c;
+
+    @JsonProperty("Payment_term__c")
     private float Payment_term__c;
+
+    @JsonProperty("Company_VAT_Number__c")
     private String Company_VAT_Number__c = null;
+
+    @JsonProperty("thn__Comm_Activity__c")
     private String thn__Comm_Activity__c = null;
+
+    @JsonProperty("Company_industry__c")
     private String Company_industry__c = null;
+
+    @JsonProperty("Quote_info__c")
     private String Quote_info__c = null;
+
+    @JsonProperty("Sales_Area__c")
     private String Sales_Area__c;
+
+    @JsonProperty("Account_Status__c")
     private String Account_Status__c = null;
+
+    @JsonProperty("thn__Comm_Equipment__c")
     private String thn__Comm_Equipment__c = null;
+
+    @JsonProperty("thn__Comm_Packages__c")
     private String thn__Comm_Packages__c = null;
+
+    @JsonProperty("thn__Markup__c")
     private boolean thn__Markup__c;
+
+    @JsonProperty("thn__UpdateFields__c")
     private boolean thn__UpdateFields__c;
+
+    @JsonProperty("thn__Sync_Status__c")
     private String thn__Sync_Status__c;
+
+    @JsonProperty("Origin__c")
     private String Origin__c;
+
+    @JsonProperty("type_other__c")
     private String type_other__c = null;
+
+    @JsonProperty("thn__Copy_Billing_address__c")
     private boolean thn__Copy_Billing_address__c;
+
+    @JsonProperty("thn__Corporate_Id__c")
     private String thn__Corporate_Id__c = null;
+
+    @JsonProperty("thn__Email__c")
     private String thn__Email__c = null;
+
+    @JsonProperty("thn__PrimaryCity__c")
     private String thn__PrimaryCity__c = null;
+
+    @JsonProperty("thn__PrimaryCountryCode__c")
     private String thn__PrimaryCountryCode__c = null;
+
+    @JsonProperty("thn__PrimaryCountry__c")
     private String thn__PrimaryCountry__c = null;
+
+    @JsonProperty("thn__PrimaryPostalCode__c")
     private String thn__PrimaryPostalCode__c = null;
+
+    @JsonProperty("thn__PrimaryState__c")
     private String thn__PrimaryState__c = null;
+
+    @JsonProperty("thn__PrimaryStreet__c")
     private String thn__PrimaryStreet__c = null;
+
+    @JsonProperty("thn__Send_To_Pms__c")
     private boolean thn__Send_To_Pms__c;
 
 
