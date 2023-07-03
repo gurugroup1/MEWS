@@ -6,7 +6,7 @@ Resources:
       MemorySize: 5888
       Handler: MewsConnector.Handler
       CodeUri: Function
-      Runtime: java8.al2
+      Runtime: java11
       Architectures:
       - x86_64
     Metadata:

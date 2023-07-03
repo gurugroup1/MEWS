@@ -40,8 +40,8 @@ public class MewsCompanyRequest {
     @JsonProperty("Address")
     private String Address = null;
 
-    @JsonProperty("InvoiceDueInterval")
-    private String InvoiceDueInterval;
+//    @JsonProperty("InvoiceDueInterval")
+//    private String InvoiceDueInterval;
 
     @JsonProperty("Telephone")
     private String Telephone;
@@ -127,9 +127,9 @@ public class MewsCompanyRequest {
         return Address;
     }
 
-    public String getInvoiceDueInterval() {
-        return InvoiceDueInterval;
-    }
+//    public String getInvoiceDueInterval() {
+//        return InvoiceDueInterval;
+//    }
 
     public String getTelephone() {
         return Telephone;
@@ -225,9 +225,9 @@ public class MewsCompanyRequest {
         this.Address = Address;
     }
 
-    public void setInvoiceDueInterval(String InvoiceDueInterval) {
-        this.InvoiceDueInterval = InvoiceDueInterval;
-    }
+//    public void setInvoiceDueInterval(String InvoiceDueInterval) {
+//        this.InvoiceDueInterval = InvoiceDueInterval;
+//    }
 
     public void setTelephone(String Telephone) {
         this.Telephone = Telephone;

@@ -21,7 +21,7 @@ public class SalesforceConnectorService {
         this.httpClient = new OkHttpClient.Builder().build();
     }
 
-    public String getBookingFromSalesforce(String object,String sfAccessToken, String bookingId) {
+    public String getDataFromSalesforce(String object,String sfAccessToken, String bookingId) {
         try {
             ObjectWriter ow = objectMapper.writer().withDefaultPrettyPrinter();
             return executeGetSObject(object, sfAccessToken,bookingId);

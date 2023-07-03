@@ -73,6 +73,13 @@ public class ApplicationConfiguration {
     public static String getSalesforceCompanyContactObject() {
         return getProperty("salesforce_company_contact_object");
     }
+    public static String getSalesforceRateObject() {
+        return getProperty("salesforce_rate_object");
+    }
+
+    public static String getSalesforcePropertyObject() {
+        return getProperty("salesforce_property_object");
+    }
     public static String getMewsClientName() {
         return getProperty("mews.clientName");
     }

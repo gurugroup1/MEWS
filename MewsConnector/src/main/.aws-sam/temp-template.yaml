@@ -6,6 +6,6 @@ Resources:
       MemorySize: 5888
       Handler: MewsConnector.Handler
       CodeUri: E:\Repository\ThynkCloud\MEWS\MewsConnector
-      Runtime: java8.al2
+      Runtime: java11
       Architectures:
         - x86_64

@@ -1,8 +1,6 @@
 package MewsConnector.services;
 
-import MewsConnector.models.MewsCompanyRequest;
-import MewsConnector.models.MewsReservationRequest;
-import MewsConnector.models.MewsReservationResponse;
+import MewsConnector.models.*;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import okhttp3.*;
@@ -27,34 +25,50 @@ public class MewsConnectorService {
         try {
             ObjectWriter ow = objectMapper.writer().withDefaultPrettyPrinter();
             String jsonStr = ow.writeValueAsString(request);
-            return executePostRequest(jsonStr);
+            return executePostRequest(jsonStr,"companies");
         } catch (Exception e) {
             return String.format("{\"error\":\"error in response\", \"message\": \"%s\"}", e.getMessage());
         }
     }
 
-    public String executePostRequest(String jsonStr) throws IOException {
+    public String pushBookerToMews(MewsBookerRequest request) {
+        try {
+            ObjectWriter ow = objectMapper.writer().withDefaultPrettyPrinter();
+            String jsonStr = ow.writeValueAsString(request);
+            return executePostRequest(jsonStr,"customers");
+        } catch (Exception e) {
+            return String.format("{\"error\":\"error in response\", \"message\": \"%s\"}", e.getMessage());
+        }
+    }
+
+    public String pushAvailabilityBlockerToMews(MewsAvailabilityBlockRequest request) {
+        try {
+            ObjectWriter ow = objectMapper.writer().withDefaultPrettyPrinter();
+            String jsonStr = ow.writeValueAsString(request);
+            return executePostRequest(jsonStr,"availabilityBlocks");
+        } catch (Exception e) {
+            return String.format("{\"error\":\"error in response\", \"message\": \"%s\"}", e.getMessage());
+        }
+    }
+
+    public String executePostRequest(String jsonStr,String object) throws IOException {
         try {
             MediaType mediaType = MediaType.parse("application/json");
-            String requestBodyString = jsonStr;
-            System.out.println("Response Code: " + jsonStr);
             Request request = new Request.Builder()
-                    .url(String.format(applicationConfiguration.getMewsApiUrl() + "/companies/add"))
-                    .method("POST", RequestBody.create(mediaType, requestBodyString))
+                    .url(String.format(applicationConfiguration.getMewsApiUrl() + "/"+object+"/add"))
+                    .method("POST", RequestBody.create(mediaType, jsonStr))
                     .addHeader("Content-Type", "application/json")
                     .addHeader("Authorization", "Bearer " + getMewsAccessToken())
                     .build();
             OkHttpClient httpClient = new OkHttpClient.Builder()
                     .followRedirects(false)
                     .build();
-
+                System.out.println("jsonStr" + jsonStr);
             try (Response calloutResponse = httpClient.newCall(request).execute()) {
-                System.out.println("Response Code: " + calloutResponse.code());
-                System.out.println("Response Body: " + calloutResponse.body().string());
-
                 if (!calloutResponse.isSuccessful()) {
                     throw new IOException("Unexpected code " + calloutResponse);
                 }
+                System.out.println("Body" + calloutResponse.body().string());
                 return calloutResponse.body().string();
             }
         } catch (IOException e) {
