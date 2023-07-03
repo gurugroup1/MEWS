@@ -65,7 +65,7 @@ public class MewsController {
         mewsBookerRequest.setNationalityCode(contact.getThn__Nationality__c());
         mewsBookerRequest.setBirthDate(contact.getBirthdate());
         mewsBookerRequest.setEmail(contact.getEmail());
-//        mewsBookerRequest.setEmail("doe1@gmail.com");
+//      mewsBookerRequest.setEmail("doe1@gmail.com");
         mewsBookerRequest.setPhone(contact.getPhone());
         mewsBookerRequest.setLoyaltyCode(contact.getLoyalty__c());
 
@@ -96,7 +96,7 @@ public class MewsController {
         availabilityBlock.setLastTimeUnitStartUtc("2023-07-20T00:00:00+2");
         availabilityBlock.setReleasedUtc("2023-07-20T00:00:00+2");
         availabilityBlock.setNotes(book.getQuote_Notes__c());
-//        availabilityBlock.setState(book.getStatus__c());
+//      availabilityBlock.setState(book.getStatus__c());
         availabilityBlock.setState("Confirmed");
 
         budget.setValue((int) book.getThn__Package_Amount__c());

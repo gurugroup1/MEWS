@@ -81,12 +81,6 @@ public class WebhookController {
     }
 
     public SalesforceBookingResponse getSalesforceBookingRecord(String bookingId) throws CustomException, JsonProcessingException {
-//        SalesforceTokenResponse salesforceToken;
-//        try {
-//            salesforceToken = authController.retrieveSalesforceTokenFromAWS();
-//        } catch (Exception e) {
-//            throw new CustomException("Unable to retrieve Salesforce token", e);
-//        }
 
         String bookingResponse = salesforceController.getRecordFromSalesforce(
                 applicationConfiguration.getSalesforceBookingObject(),
@@ -96,7 +90,6 @@ public class WebhookController {
 
         if (bookingResponse == null || bookingResponse.isEmpty()) {
             logger.error("Received empty Salesforce booking response.");
-//            throw new CustomException("Received empty Salesforce booking response.");
         }
 
         logger.info("Salesforce Booking Response: " + bookingResponse);

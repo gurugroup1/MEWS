@@ -46,7 +46,6 @@ public class SalesforceConnectorService {
         }
     }
 
-
     public String getAccessTokenFromSalesforce(SecretKeyAWS secretKey) {
         try {
             RequestBody body = new MultipartBody.Builder().setType(MultipartBody.FORM)
