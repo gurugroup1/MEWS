@@ -72,10 +72,12 @@ public class MewsConnectorService {
             String responseBody = calloutResponse.body().string();
             System.out.println("Success Body " + object + " : " + responseBody);
 
+
             if (responseBody.isEmpty() || responseBody.equals("{}")) {
                 // Handle empty response body here
-                // You can throw a custom exception or handle it accordingly
-                throw new IOException("Empty response body received");
+                // You can log a message or perform any other desired actions
+                System.out.println("Empty response body received");
+                return responseBody;
             }
 
             return responseBody;

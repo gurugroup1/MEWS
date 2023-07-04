@@ -3,11 +3,14 @@ package middleware.controllers;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import middleware.configurations.ApplicationConfiguration;
+import middleware.entity.Log;
 import middleware.models.*;
 import middleware.services.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.*;
 
@@ -25,15 +28,17 @@ public class WebhookController {
     private SecretKeyManagerController secretKeyManagerController;
     private SalesforceConnectorService salesforceConnectorService;
     private MewsConnectorService MewsConnectorService;
+    private final ApplicationContext context;
 
 
-    public WebhookController() {
+    public WebhookController(ApplicationContext context) {
         this.salesforceConnectorService = new SalesforceConnectorService(applicationConfiguration);
         this.MewsConnectorService = new MewsConnectorService();
         this.mewsController = new MewsController(this.MewsConnectorService);
         this.secretKeyManagerController = new SecretKeyManagerController();
         this.salesforceController = new SalesforceController(this.secretKeyManagerController,this.salesforceConnectorService);
         this.authController = new AuthController(applicationConfiguration, this.secretKeyManagerController,this.salesforceConnectorService);
+        this.context = context;
     }
 
     @PostMapping("/booking/")
@@ -83,7 +88,7 @@ public class WebhookController {
             e.printStackTrace();
         }
 
-        return null;
+        return "Success";
     }
 
     public MewsCompanyResponse addCompanyInMews(MewsCompanyRequest payload) throws Exception {
@@ -142,7 +147,7 @@ public class WebhookController {
 
     private <T> T retrieveAndParseResponse(String parameter, Class<T> responseClass, String object) throws Exception {
         SalesforceTokenResponse salesforceToken = retrieveSalesforceToken();
-
+        CacheService cacheService = context.getBean(CacheService.class);
         String response = salesforceController.getRecordFromSalesforce(
                 object,
                 salesforceToken.getAccess_token(),
@@ -161,6 +166,16 @@ public class WebhookController {
 
         ObjectMapper objectMapper = new ObjectMapper();
         try {
+            Log log = new Log();
+            log.setObject("Booking");
+            T parsedResponse = objectMapper.readValue(response, responseClass);
+            String payload = objectMapper.writeValueAsString(parsedResponse);
+            log.setPayload(payload);
+
+            log.setError("");
+            log.setStatus("Success");
+            log.setStatus_code("200");
+            cacheService.addLog(log);
             // Parse the response
             return objectMapper.readValue(response, responseClass);
         } catch (IOException e) {

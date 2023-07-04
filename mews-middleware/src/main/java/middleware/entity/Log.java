@@ -1,6 +1,7 @@
 package middleware.entity;
 
 import javax.persistence.*;
+import java.nio.charset.StandardCharsets;
 
 @Entity
 @Table(name = "logs")
@@ -9,7 +10,9 @@ public class Log {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String object;
-    private String payload;
+    @Lob
+    @Column(columnDefinition = "BLOB") // Use BLOB column type
+    private byte[] payload;
     private String status;
     private String status_code;
     private String error;
@@ -31,13 +34,7 @@ public class Log {
         this.object = object;
     }
 
-    public String getPayload() {
-        return payload;
-    }
 
-    public void setPayload(String payload) {
-        this.payload = payload;
-    }
 
     public String getStatus() {
         return status;
@@ -61,5 +58,14 @@ public class Log {
 
     public void setError(String error) {
         this.error = error;
+    }
+
+    public void setPayload(String payloadString) {
+        this.payload = payloadString.getBytes(StandardCharsets.UTF_8);
+    }
+
+    // Helper method to convert bytes to JSON string
+    public String getPayload() {
+        return new String(this.payload, StandardCharsets.UTF_8);
     }
 }
