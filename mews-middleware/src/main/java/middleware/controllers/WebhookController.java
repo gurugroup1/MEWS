@@ -68,9 +68,9 @@ public class WebhookController {
 
                 MewsAvailabilityBlockResponse availabilityBlock = this.addAvailabilityBlockInMews(mewsAvailabilityBlockRequest);
 
-//                MewsUpdateAvailabilityRequest mewsUpdateAvailabilityRequest = this.mewsController.createUpdateAvailabilityPayload(booking,rate,property,booker);
-//
-//                this.mewsController.updateAvailability(mewsUpdateAvailabilityRequest);
+                MewsUpdateAvailabilityRequest mewsUpdateAvailabilityRequest = this.mewsController.createUpdateAvailabilityPayload(booking,rate,property,booker);
+
+                this.mewsController.updateAvailability(mewsUpdateAvailabilityRequest);
 
                 MewsUpdateRateRequest mewsUpdateRateRequest = this.mewsController.createUpdateRatePayload(booking,rate,property,booker);
 
