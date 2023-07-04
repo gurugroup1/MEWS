@@ -32,13 +32,19 @@ public class SecretKeyManagerController {
 
     @GetMapping("/salesforce/credentials")
     public String getSalesforceCredentials() {
-         return "{\"salesforceAuthUrl\":\"https://postillion-hotels--postfull.sandbox.my.salesforce.com/services/oauth2/token\",\"salesforceUsername\":\"interface@postillion.cloud.postfull\",\"salesforcePassword\":\"Welcome2023\",\"salesforceClientId\":\"3MVG9DMdJCij4PmHod5DlGRstr_2V36OMgmiew_8wSXSghX.9q8cuFW7uq93vaZmBpE.ge8nPaQh1vq9FasQM\",\"salesforceClientSecret\":\"2AC2E5DDEBAD06C0728F4AA67FD7C26FD244F31AF4083833BAA8154E770F8DD9\",\"salesforceGrantType\":\"password\"}\n";
+        AWSSecretsManager client = AWSSecretsManagerClientBuilder.standard().withRegion(Regions.US_EAST_1).build();
+        GetSecretValueRequest request = new GetSecretValueRequest().withSecretId(applicationConfiguration.getSalesforceCredentialsSecretName());
+        GetSecretValueResult result = client.getSecretValue(request);
+        return result.getSecretString();
     }
 
     @GetMapping("/salesforce/token")
     public String getSalesforceToken() throws JsonProcessingException {
-        return "{\"access_token\":\"00DFg0000002xSD!AQEAQKC5t05UVHKVky7USL9JBg7KiKqwHN5GrmWga3js92o8.jYe1aX71k6RTM38c_WyfzQrtrJ0Es0WTDPcITzCCmhGOF9o\",\"signature\":\"VnqpkIirDzIY7dGNy/CzUbxKziCk33Bveolm04494iA=\",\"instance_url\":\"https://postillion-hotels--postfull.sandbox.my.salesforce.com\",\"created_at\":1687860426,\"id\":\"https://test.salesforce.com/id/00DFg0000002xSDMAY/005090000039vkAAAQ\",\"token_type\":\"Bearer\",\"issued_at\":\"1687860426728\",\"expires_in\":7200}";
-    }
+        AWSSecretsManager client = AWSSecretsManagerClientBuilder.standard().build();
+        GetSecretValueRequest request = new GetSecretValueRequest().withSecretId(applicationConfiguration.getSalesforceTokenSecretName());
+        GetSecretValueResult result = client.getSecretValue(request);
+        ObjectMapper mapper = new ObjectMapper();
+        return result.getSecretString();}
 
     @PutMapping("/salesforce/token/update")
     public ResponseEntity<String> updateSalesforceToken(@RequestBody Map<String, Object> requestMap) {
@@ -62,7 +68,6 @@ public class SecretKeyManagerController {
             Instant now = Instant.now();
             return now.isAfter(expirationTime);
         } catch (Exception e) {
-            // If there is an error parsing the JWT, treat the token as expired
             return true;
         }
     }

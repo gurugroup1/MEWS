@@ -63,12 +63,12 @@ public class MewsConnectorService {
             OkHttpClient httpClient = new OkHttpClient.Builder()
                     .followRedirects(false)
                     .build();
-                System.out.println("jsonStr" + jsonStr);
+                System.out.println("Request Body " + object + " : " + jsonStr);
             try (Response calloutResponse = httpClient.newCall(request).execute()) {
                 if (!calloutResponse.isSuccessful()) {
                     throw new IOException("Unexpected code " + calloutResponse);
                 }
-                System.out.println("Body" + calloutResponse.body().string());
+                System.out.println("Success Body " + object + " : " + calloutResponse.body().string());
                 return calloutResponse.body().string();
             }
         } catch (IOException e) {

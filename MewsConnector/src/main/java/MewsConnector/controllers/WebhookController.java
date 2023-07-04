@@ -54,7 +54,7 @@ public class WebhookController {
         return bookingId;
     }
 
-    public String startSalesforceProcess(String bookingId) throws CustomException, JsonProcessingException {
+    public String startSalesforceProcess(String bookingId) throws Exception {
         SalesforceBookingResponse booking = this.getSalesforceBookingRecord(bookingId);
 
         SalesforceAccountResponse account =  this.getSalesforceAccountRecord(booking);
@@ -63,172 +63,233 @@ public class WebhookController {
 
         MewsCompanyRequest mewsCompanyRequest = this.mewsController.createCompanyPayload(booking,account,contact);
 
-        MewsCompanyResponse  mewsCompanyResponse =this.addCompanyInMews(mewsCompanyRequest);
-        logger.info("MEWS Company Response: " + mewsCompanyResponse.getCursor());
+        MewsCompanyResponse mewsCompanyResponse = this.addCompanyInMews(mewsCompanyRequest);
 
-        MewsBookerRequest mewsBookerRequest = this.mewsController.createBookerPayload(booking,account,contact);
-
-        MewsBookerResponse  booker = this.addBookerInMews(mewsBookerRequest);
-        logger.info("MEWS Booker Response: " + booker.getAccountingCode());
-
-        SalesforceRateResponse rate =  this.getSalesforceRateRecord(booking);
-        SalesforcePropertyResponse property = this.getSalesforceHotelRecord(rate);
-
-        MewsAvailabilityBlockRequest mewsAvailabilityBlockRequest = this.mewsController.createAvailabilityBlockPayload(booking,rate,property,booker);
-
-        MewsAvailabilityBlockResponse availabilityBlock = this.addAvailabilityBlockInMews(mewsAvailabilityBlockRequest);
+//        MewsBookerRequest mewsBookerRequest = this.mewsController.createBookerPayload(booking,account,contact);
+//
+//        MewsBookerResponse  booker = this.addBookerInMews(mewsBookerRequest);
+//
+//        SalesforceRateResponse rate =  this.getSalesforceRateRecord(booking);
+//        SalesforcePropertyResponse property = this.getSalesforceHotelRecord(rate);
+//
+//        MewsAvailabilityBlockRequest mewsAvailabilityBlockRequest = this.mewsController.createAvailabilityBlockPayload(booking,rate,property,booker);
+//
+//        MewsAvailabilityBlockResponse availabilityBlock = this.addAvailabilityBlockInMews(mewsAvailabilityBlockRequest);
         return  null;
     }
 
-    public SalesforceBookingResponse getSalesforceBookingRecord(String bookingId) throws CustomException, JsonProcessingException {
+    public SalesforceBookingResponse getSalesforceBookingRecord(String bookingId) throws Exception {
+        SalesforceTokenResponse salesforceToken = authController.retrieveSalesforceTokenFromAWS();
+
+        if (salesforceToken == null || salesforceToken.getAccess_token() == null) {
+            throw new Exception("Salesforce token is not available.");
+        }
 
         String bookingResponse = salesforceController.getRecordFromSalesforce(
                 applicationConfiguration.getSalesforceBookingObject(),
-                "00DFg0000002xSD!AQEAQGABI.Gv1MIOC_NgDmcGSC18rFYo.hQF4MiMit88sW7_s2T6iM8T_GeDx8nj5GNFSHcah8e87nBvb_iNv56CreIdJDzh",
+                salesforceToken.getAccess_token(),
                 bookingId
         );
 
         if (bookingResponse == null || bookingResponse.isEmpty()) {
-            logger.error("Received empty Salesforce booking response.");
+            throw new Exception("Empty Salesforce booking response.");
         }
-
         logger.info("Salesforce Booking Response: " + bookingResponse);
-
         ObjectMapper objectMapper = new ObjectMapper();
-        SalesforceBookingResponse bookingObject;
         try {
-            bookingObject = objectMapper.readValue(bookingResponse, SalesforceBookingResponse.class);
+            return objectMapper.readValue(bookingResponse, SalesforceBookingResponse.class);
         } catch (IOException e) {
-            throw new CustomException("Unable to parse Salesforce Booking Response", e);
+            throw new Exception("Unable to parse Salesforce Booking Response", e);
         }
-        return bookingObject;
     }
 
-    public SalesforceAccountResponse getSalesforceAccountRecord(SalesforceBookingResponse bookingObject) throws CustomException, JsonProcessingException {
+
+    public SalesforceAccountResponse getSalesforceAccountRecord(SalesforceBookingResponse bookingObject) throws Exception {
+        SalesforceTokenResponse salesforceToken = authController.retrieveSalesforceTokenFromAWS();
+
+        if (salesforceToken == null || salesforceToken.getAccess_token() == null) {
+            throw new Exception("Salesforce token is not available.");
+        }
+
         String accountResponse = salesforceController.getRecordFromSalesforce(
                 applicationConfiguration.getSalesforceAccountObject(),
-                "00DFg0000002xSD!AQEAQGABI.Gv1MIOC_NgDmcGSC18rFYo.hQF4MiMit88sW7_s2T6iM8T_GeDx8nj5GNFSHcah8e87nBvb_iNv56CreIdJDzh",
+                salesforceToken.getAccess_token(),
                 bookingObject.getThn__Company__c()
         );
+
+        if (accountResponse == null || accountResponse.isEmpty()) {
+            throw new Exception("Empty Salesforce account response.");
+        }
 
         logger.info("Salesforce Account Response: " + accountResponse);
 
         ObjectMapper objectMapper = new ObjectMapper();
-        SalesforceAccountResponse accountObject;
         try {
-            accountObject = objectMapper.readValue(accountResponse, SalesforceAccountResponse.class);
+            return objectMapper.readValue(accountResponse, SalesforceAccountResponse.class);
         } catch (IOException e) {
-            throw new CustomException("Unable to parse Salesforce Account Response", e);
+            throw new Exception("Unable to parse Salesforce Account Response", e);
         }
-
-        return accountObject;
     }
 
-    public SalesforceContactResponse getSalesforceContactRecord(SalesforceBookingResponse bookingObject) throws CustomException, JsonProcessingException {
+
+    public SalesforceContactResponse getSalesforceContactRecord(SalesforceBookingResponse bookingObject) throws Exception {
+        SalesforceTokenResponse salesforceToken = authController.retrieveSalesforceTokenFromAWS();
+
+        if (salesforceToken == null || salesforceToken.getAccess_token() == null) {
+            throw new Exception("Salesforce token is not available.");
+        }
+
         String contactResponse = salesforceController.getRecordFromSalesforce(
                 applicationConfiguration.getSalesforceCompanyContactObject(),
-                "00DFg0000002xSD!AQEAQGABI.Gv1MIOC_NgDmcGSC18rFYo.hQF4MiMit88sW7_s2T6iM8T_GeDx8nj5GNFSHcah8e87nBvb_iNv56CreIdJDzh",
+                salesforceToken.getAccess_token(),
                 bookingObject.getThn__Company_Contact__c()
         );
+
+        if (contactResponse == null || contactResponse.isEmpty()) {
+            throw new Exception("Empty Salesforce contact response.");
+        }
 
         logger.info("Salesforce Contact Response: " + contactResponse);
 
         ObjectMapper objectMapper = new ObjectMapper();
-        SalesforceContactResponse contactObject;
         try {
-            contactObject = objectMapper.readValue(contactResponse, SalesforceContactResponse.class);
+            return objectMapper.readValue(contactResponse, SalesforceContactResponse.class);
         } catch (IOException e) {
-            throw new CustomException("Unable to parse Salesforce Contact Response", e);
+            throw new Exception("Unable to parse Salesforce Contact Response", e);
         }
-
-        return contactObject;
     }
 
-    public SalesforceRateResponse getSalesforceRateRecord(SalesforceBookingResponse bookingObject) throws CustomException, JsonProcessingException {
+
+    public SalesforceRateResponse getSalesforceRateRecord(SalesforceBookingResponse bookingObject) throws Exception {
+        SalesforceTokenResponse salesforceToken = authController.retrieveSalesforceTokenFromAWS();
+
+        if (salesforceToken == null || salesforceToken.getAccess_token() == null) {
+            throw new Exception("Salesforce token is not available.");
+        }
+
         String rateResponse = salesforceController.getRecordFromSalesforce(
                 applicationConfiguration.getSalesforceRateObject(),
-                "00DFg0000002xSD!AQEAQGABI.Gv1MIOC_NgDmcGSC18rFYo.hQF4MiMit88sW7_s2T6iM8T_GeDx8nj5GNFSHcah8e87nBvb_iNv56CreIdJDzh",
+                salesforceToken.getAccess_token(),
                 bookingObject.getThn__Block_Rate__c()
         );
+
+        if (rateResponse == null || rateResponse.isEmpty()) {
+            throw new Exception("Empty Salesforce rate response.");
+        }
 
         logger.info("Salesforce Rate Response: " + rateResponse);
 
         ObjectMapper objectMapper = new ObjectMapper();
-        SalesforceRateResponse rateObject;
         try {
-            rateObject = objectMapper.readValue(rateResponse, SalesforceRateResponse.class);
+            return objectMapper.readValue(rateResponse, SalesforceRateResponse.class);
         } catch (IOException e) {
-            throw new CustomException("Unable to parse Salesforce Contact Response", e);
+            throw new Exception("Unable to parse Salesforce Rate Response", e);
         }
-
-        return rateObject;
     }
 
-    public SalesforcePropertyResponse getSalesforceHotelRecord(SalesforceRateResponse rateObject) throws CustomException, JsonProcessingException {
+
+    public SalesforcePropertyResponse getSalesforceHotelRecord(SalesforceRateResponse rateObject) throws Exception {
+        SalesforceTokenResponse salesforceToken = authController.retrieveSalesforceTokenFromAWS();
+
+        if (salesforceToken == null || salesforceToken.getAccess_token() == null) {
+            throw new Exception("Salesforce token is not available.");
+        }
+
         String propertyResponse = salesforceController.getRecordFromSalesforce(
                 applicationConfiguration.getSalesforcePropertyObject(),
-                "00DFg0000002xSD!AQEAQGABI.Gv1MIOC_NgDmcGSC18rFYo.hQF4MiMit88sW7_s2T6iM8T_GeDx8nj5GNFSHcah8e87nBvb_iNv56CreIdJDzh",
+                salesforceToken.getAccess_token(),
                 rateObject.getHotel()
         );
+
+        if (propertyResponse == null || propertyResponse.isEmpty()) {
+            throw new Exception("Empty Salesforce property response.");
+        }
 
         logger.info("Salesforce Property Response: " + propertyResponse);
 
         ObjectMapper objectMapper = new ObjectMapper();
-        SalesforcePropertyResponse propertyObject;
         try {
-            propertyObject = objectMapper.readValue(propertyResponse, SalesforcePropertyResponse.class);
+            return objectMapper.readValue(propertyResponse, SalesforcePropertyResponse.class);
         } catch (IOException e) {
-            throw new CustomException("Unable to parse Salesforce Contact Response", e);
+            throw new Exception("Unable to parse Salesforce Property Response", e);
         }
-
-        return propertyObject;
     }
 
-    public MewsCompanyResponse addCompanyInMews(MewsCompanyRequest mewsCompanyRequest) throws CustomException, JsonProcessingException {
+
+    public MewsCompanyResponse addCompanyInMews(MewsCompanyRequest mewsCompanyRequest) throws Exception {
         String companyResponse = mewsController.addCompany(mewsCompanyRequest);
+
+        if (companyResponse == null || companyResponse.isEmpty()) {
+            throw new Exception("Empty company response from Mews.");
+        }
 
         logger.info("Mews Company Response: " + companyResponse);
 
         ObjectMapper objectMapper = new ObjectMapper();
-        MewsCompanyResponse companyResponseObject;
         try {
-            companyResponseObject = objectMapper.readValue(companyResponse, MewsCompanyResponse.class);
-        } catch (IOException e) {
-            throw new CustomException("Unable to parse Company Response", e);
-        }
+            JsonNode responseJson = objectMapper.readTree(companyResponse);
 
-        return companyResponseObject;
+            if (responseJson.has("error")) {
+                String errorMessage = responseJson.get("error").asText();
+                throw new Exception("Error in Company response from Mews: " + errorMessage);
+            }
+
+            return objectMapper.readValue(companyResponse, MewsCompanyResponse.class);
+        } catch (IOException e) {
+            throw new Exception("Unable to parse Company Response", e);
+        }
     }
 
-    public MewsBookerResponse addBookerInMews(MewsBookerRequest mewsBookerRequest) throws CustomException, JsonProcessingException {
+
+    public MewsBookerResponse addBookerInMews(MewsBookerRequest mewsBookerRequest) throws Exception {
         String bookerResponse = mewsController.addBooker(mewsBookerRequest);
+
+        if (bookerResponse == null || bookerResponse.isEmpty()) {
+            throw new Exception("Empty booker response from Mews.");
+        }
 
         logger.info("Mews Booker Response: " + bookerResponse);
 
         ObjectMapper objectMapper = new ObjectMapper();
-        MewsBookerResponse bookerResponseObject;
         try {
-            bookerResponseObject = objectMapper.readValue(bookerResponse, MewsBookerResponse.class);
-        } catch (IOException e) {
-            throw new CustomException("Unable to parse Company Response", e);
-        }
+            JsonNode responseJson = objectMapper.readTree(bookerResponse);
 
-        return bookerResponseObject;
+            if (responseJson.has("error")) {
+                String errorMessage = responseJson.get("error").asText();
+                throw new Exception("Error in booker response from Mews: " + errorMessage);
+            }
+
+            return objectMapper.readValue(bookerResponse, MewsBookerResponse.class);
+        } catch (IOException e) {
+            throw new Exception("Unable to parse Booker Response", e);
+        }
     }
 
-    public MewsAvailabilityBlockResponse addAvailabilityBlockInMews(MewsAvailabilityBlockRequest Request) throws CustomException, JsonProcessingException {
-        String bookerResponse = mewsController.addAvailabilityBlock(Request);
 
-        logger.info("Mews Availability Response: " + bookerResponse);
+
+    public MewsAvailabilityBlockResponse addAvailabilityBlockInMews(MewsAvailabilityBlockRequest request) throws Exception {
+        String availabilityResponse = mewsController.addAvailabilityBlock(request);
+
+        if (availabilityResponse == null || availabilityResponse.isEmpty()) {
+            throw new Exception("Empty availability block response from Mews.");
+        }
+
+        logger.info("Mews Availability Response: " + availabilityResponse);
 
         ObjectMapper objectMapper = new ObjectMapper();
-        MewsAvailabilityBlockResponse bookerResponseObject;
         try {
-            bookerResponseObject = objectMapper.readValue(bookerResponse, MewsAvailabilityBlockResponse.class);
-        } catch (IOException e) {
-            throw new CustomException("Unable to parse Company Response", e);
-        }
 
-        return bookerResponseObject;
+            JsonNode responseJson = objectMapper.readTree(availabilityResponse);
+
+            if (responseJson.has("error")) {
+                String errorMessage = responseJson.get("error").asText();
+                throw new Exception("Error in Company response from Mews: " + errorMessage);
+            }
+
+            return objectMapper.readValue(availabilityResponse, MewsAvailabilityBlockResponse.class);
+        } catch (IOException e) {
+            throw new Exception("Unable to parse Availability Block Response", e);
+        }
     }
+
 }
