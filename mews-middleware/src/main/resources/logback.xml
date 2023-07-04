@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <include resource="org/springframework/boot/logging/logback/base.xml" />
+
+    <!-- Configure root logger to only output logs of level ERROR and above -->
+    <root level="ERROR">
+        <appender-ref ref="CONSOLE" />
+    </root>
+
+    <!-- Set the log level for specific loggers -->
+    <logger name="org.springframework" level="ERROR" />
+
+    <!-- Add other loggers as needed -->
+
+</configuration>
