@@ -9,6 +9,7 @@ import middleware.models.*;
 import middleware.services.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
@@ -29,15 +30,10 @@ public class WebhookController {
     private SecretKeyManagerController secretKeyManagerController;
     private SalesforceConnectorService salesforceConnectorService;
     private MewsConnectorService MewsConnectorService;
-
-    private CacheService cacheService;
     private final ApplicationContext context;
 
     private Status status;
-    @Autowired
-    public void CacheController(CacheService cacheService) {
-        this.cacheService = cacheService;
-    }
+
 
     public WebhookController(ApplicationContext context) {
         this.salesforceConnectorService = new SalesforceConnectorService(applicationConfiguration);
@@ -49,15 +45,54 @@ public class WebhookController {
         this.context = context;
     }
 
-    @GetMapping("/logs/")
-    public List<Log> getAllLogs() {
-        List<Log> logs = cacheService.getAllLogs();
-        return logs;
-    }
-    @GetMapping("/booking/")
-    public List<Log> executeProcess() {
-        List<Log> logs = cacheService.getAllLogs();
-        return logs;
+    @PostMapping("/booking/")
+    public String executeProcess(@RequestBody String requestBody) {
+        try {
+            ObjectMapper objectMapper = new ObjectMapper();
+            JsonNode jsonNode = objectMapper.readTree(requestBody);
+
+            String bookingId = jsonNode.has("bookingId") ? jsonNode.get("bookingId").asText() : null;
+            if (bookingId != null) {
+                System.out.println("Booking Id: " + bookingId);
+
+                SalesforceBookingResponse booking = retrieveAndParseResponse(bookingId, SalesforceBookingResponse.class, applicationConfiguration.getSalesforceBookingObject());
+
+                SalesforceAccountResponse account = retrieveAndParseResponse(booking.getThn__Company__c(), SalesforceAccountResponse.class, applicationConfiguration.getSalesforceAccountObject());
+
+                SalesforceContactResponse contact = retrieveAndParseResponse(booking.getThn__Company_Contact__c(), SalesforceContactResponse.class, applicationConfiguration.getSalesforceCompanyContactObject());
+
+                SalesforceRateResponse rate = retrieveAndParseResponse(booking.getThn__Block_Rate__c(), SalesforceRateResponse.class, applicationConfiguration.getSalesforceRateObject());
+
+                SalesforcePropertyResponse property = retrieveAndParseResponse(rate.getHotel(), SalesforcePropertyResponse.class, applicationConfiguration.getSalesforcePropertyObject());
+
+                MewsCompanyRequest mewsCompanyRequest = this.mewsController.createCompanyPayload(booking,account,contact);
+
+                MewsCompanyResponse mewsCompanyResponse = this.addCompanyInMews(mewsCompanyRequest);
+
+                MewsBookerRequest mewsBookerRequest = this.mewsController.createBookerPayload(booking,account,contact);
+
+                MewsBookerResponse  booker = this.addBookerInMews(mewsBookerRequest);
+
+                MewsAvailabilityBlockRequest mewsAvailabilityBlockRequest = this.mewsController.createAvailabilityBlockPayload(booking,rate,property,booker);
+
+                MewsAvailabilityBlockResponse availabilityBlock = this.addAvailabilityBlockInMews(mewsAvailabilityBlockRequest);
+
+                MewsUpdateAvailabilityRequest mewsUpdateAvailabilityRequest = this.mewsController.createUpdateAvailabilityPayload(booking,rate,property,booker);
+
+                this.mewsController.updateAvailability(mewsUpdateAvailabilityRequest);
+
+                MewsUpdateRateRequest mewsUpdateRateRequest = this.mewsController.createUpdateRatePayload(booking,rate,property,booker);
+
+                this.mewsController.updateRate(mewsUpdateRateRequest);
+
+            } else {
+                System.out.println("Request body does not contain booking Id");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return "Success";
     }
 
     public MewsCompanyResponse addCompanyInMews(MewsCompanyRequest payload) throws Exception {
