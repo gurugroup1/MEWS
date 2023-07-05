@@ -18,19 +18,19 @@ public class CacheController {
         this.cacheService = cacheService;
     }
 
-    @GetMapping("/logs")
+    @GetMapping("/logs/")
     public List<Log> getAllLogs() {
         List<Log> logs = cacheService.getAllLogs();
         return logs;
     }
 
-    @PostMapping("/logs")
+    @PostMapping("/logs/")
     public void addLog(@RequestBody Log log) {
         // Add the log to the cache or database
         cacheService.addLog(log);
     }
 
-    @PutMapping("/logs/{logId}")
+    @PutMapping("/logs/{logId}/")
     public Log updateLogById(@PathVariable String logId, @RequestBody Log updatedLog) {
         // Get the log by ID
         Log existingLog = cacheService.getLogById(logId);
