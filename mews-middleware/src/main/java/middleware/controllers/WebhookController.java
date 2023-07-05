@@ -9,13 +9,13 @@ import middleware.models.*;
 import middleware.services.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
+import java.util.List;
 
 @Component
 @RestController
@@ -29,10 +29,15 @@ public class WebhookController {
     private SecretKeyManagerController secretKeyManagerController;
     private SalesforceConnectorService salesforceConnectorService;
     private MewsConnectorService MewsConnectorService;
+
+    private CacheService cacheService;
     private final ApplicationContext context;
 
     private Status status;
-
+    @Autowired
+    public void CacheController(CacheService cacheService) {
+        this.cacheService = cacheService;
+    }
 
     public WebhookController(ApplicationContext context) {
         this.salesforceConnectorService = new SalesforceConnectorService(applicationConfiguration);
@@ -44,6 +49,11 @@ public class WebhookController {
         this.context = context;
     }
 
+    @GetMapping("/logs/")
+    public List<Log> getAllLogs() {
+        List<Log> logs = cacheService.getAllLogs();
+        return logs;
+    }
     @PostMapping("/booking/")
     public String executeProcess(@RequestBody String requestBody) {
         try {
