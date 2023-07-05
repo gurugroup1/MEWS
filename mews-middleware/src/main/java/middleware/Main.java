@@ -20,8 +20,6 @@ public class Main {
         DataSourceInitializer initializer = new DataSourceInitializer();
         initializer.setDataSource(dataSource);
         ResourceDatabasePopulator populator = new ResourceDatabasePopulator();
-        // Add your database initialization script or SQL file
-        // Example: populator.addScript(new ClassPathResource("data.sql"));
         initializer.setDatabasePopulator(populator);
         return initializer;
     }

@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 import java.io.IOException;
 import java.util.List;
 
+@CrossOrigin(origins = {"http://3.86.96.254:4200", "http://localhost:4200"})
 @Component
 @RestController
 @RequestMapping("/mews")
