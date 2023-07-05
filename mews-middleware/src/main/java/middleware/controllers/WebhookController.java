@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import middleware.configurations.ApplicationConfiguration;
 import middleware.entity.Log;
+import middleware.enums.Status;
 import middleware.models.*;
 import middleware.services.*;
 import org.slf4j.Logger;
@@ -29,6 +30,8 @@ public class WebhookController {
     private SalesforceConnectorService salesforceConnectorService;
     private MewsConnectorService MewsConnectorService;
     private final ApplicationContext context;
+
+    private Status status;
 
 
     public WebhookController(ApplicationContext context) {
@@ -173,7 +176,7 @@ public class WebhookController {
             log.setPayload(payload);
 
             log.setError("");
-            log.setStatus("Success");
+            log.setStatus(String.valueOf(status.SUCCESS));
             log.setStatus_code("200");
             cacheService.addLog(log);
             // Parse the response

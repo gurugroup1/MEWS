@@ -9,6 +9,7 @@ public class Log {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    private String bookingId;
     private String object;
     @Lob
     @Column(columnDefinition = "BLOB") // Use BLOB column type
@@ -26,6 +27,14 @@ public class Log {
         this.id = id;
     }
 
+    public String getBookingId() {
+        return bookingId;
+    }
+
+    public void setBookingId(String bookingId) {
+        this.bookingId = bookingId;
+    }
+
     public String getObject() {
         return object;
     }
@@ -33,8 +42,6 @@ public class Log {
     public void setObject(String object) {
         this.object = object;
     }
-
-
 
     public String getStatus() {
         return status;
@@ -69,3 +76,33 @@ public class Log {
         return new String(this.payload, StandardCharsets.UTF_8);
     }
 }
+
+
+//
+//{
+//        "bookingId": "123123",
+//        "booking": {
+//        "success": true,
+//        "error": "field is missing",
+//        "source": "Salesforce",
+//        "payload": {}
+//        },
+//        "rate": {
+//        "success": false,
+//        "error": "field is missing",
+//        "source": "Salesforce",
+//        "payload": {}
+//        },
+//        "property": {
+//        "success": true,
+//        "error": "field is missing",
+//        "source": "Salesforce",
+//        "payload": {}
+//        },
+//        "account": {
+//        "success": false,
+//        "error": "field is missing",
+//        "source": "Salesforce",
+//        "payload": {}
+//        }
+//        }
