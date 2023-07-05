@@ -54,54 +54,10 @@ public class WebhookController {
         List<Log> logs = cacheService.getAllLogs();
         return logs;
     }
-    @PostMapping("/booking/")
-    public String executeProcess(@RequestBody String requestBody) {
-        try {
-            ObjectMapper objectMapper = new ObjectMapper();
-            JsonNode jsonNode = objectMapper.readTree(requestBody);
-
-            String bookingId = jsonNode.has("bookingId") ? jsonNode.get("bookingId").asText() : null;
-            if (bookingId != null) {
-                System.out.println("Booking Id: " + bookingId);
-
-                SalesforceBookingResponse booking = retrieveAndParseResponse(bookingId, SalesforceBookingResponse.class, applicationConfiguration.getSalesforceBookingObject());
-
-                SalesforceAccountResponse account = retrieveAndParseResponse(booking.getThn__Company__c(), SalesforceAccountResponse.class, applicationConfiguration.getSalesforceAccountObject());
-
-                SalesforceContactResponse contact = retrieveAndParseResponse(booking.getThn__Company_Contact__c(), SalesforceContactResponse.class, applicationConfiguration.getSalesforceCompanyContactObject());
-
-                SalesforceRateResponse rate = retrieveAndParseResponse(booking.getThn__Block_Rate__c(), SalesforceRateResponse.class, applicationConfiguration.getSalesforceRateObject());
-
-                SalesforcePropertyResponse property = retrieveAndParseResponse(rate.getHotel(), SalesforcePropertyResponse.class, applicationConfiguration.getSalesforcePropertyObject());
-
-                MewsCompanyRequest mewsCompanyRequest = this.mewsController.createCompanyPayload(booking,account,contact);
-
-                MewsCompanyResponse mewsCompanyResponse = this.addCompanyInMews(mewsCompanyRequest);
-
-                MewsBookerRequest mewsBookerRequest = this.mewsController.createBookerPayload(booking,account,contact);
-
-                MewsBookerResponse  booker = this.addBookerInMews(mewsBookerRequest);
-
-                MewsAvailabilityBlockRequest mewsAvailabilityBlockRequest = this.mewsController.createAvailabilityBlockPayload(booking,rate,property,booker);
-
-                MewsAvailabilityBlockResponse availabilityBlock = this.addAvailabilityBlockInMews(mewsAvailabilityBlockRequest);
-
-                MewsUpdateAvailabilityRequest mewsUpdateAvailabilityRequest = this.mewsController.createUpdateAvailabilityPayload(booking,rate,property,booker);
-
-                this.mewsController.updateAvailability(mewsUpdateAvailabilityRequest);
-
-                MewsUpdateRateRequest mewsUpdateRateRequest = this.mewsController.createUpdateRatePayload(booking,rate,property,booker);
-
-                this.mewsController.updateRate(mewsUpdateRateRequest);
-
-            } else {
-                System.out.println("Request body does not contain booking Id");
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        return "Success";
+    @GetMapping("/booking/")
+    public List<Log> executeProcess() {
+        List<Log> logs = cacheService.getAllLogs();
+        return logs;
     }
 
     public MewsCompanyResponse addCompanyInMews(MewsCompanyRequest payload) throws Exception {
