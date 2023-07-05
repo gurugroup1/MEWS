@@ -22,12 +22,13 @@ public class CacheController {
 
     @GetMapping("/logs/")
 
-    public List<Log> getAllLogs() {
-        CacheService cacheService = context.getBean(CacheService.class);
-
-        List<Log> logs = cacheService.getAllLogs();
-
-        return logs;
+    public String getAllLogs() {
+//        CacheService cacheService = context.getBean(CacheService.class);
+//
+//        List<Log> logs = cacheService.getAllLogs();
+//
+//        return logs;
+        return "hello";
     }
     public void addLog(Log log) {
         // Add the log to the cache or database
