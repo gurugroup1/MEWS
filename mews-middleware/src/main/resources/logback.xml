@@ -8,7 +8,7 @@
     </root>
 
     <!-- Set the log level for specific loggers -->
-    <logger name="org.springframework" level="ERROR" />
+    <logger name="org.springframework" level="INFO" />
 
     <!-- Add other loggers as needed -->
 
