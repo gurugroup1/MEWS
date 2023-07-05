@@ -1,45 +1,37 @@
 package middleware.controllers;
 
 import middleware.entity.Log;
-import middleware.services.*;
+import middleware.services.CacheService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
-import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@Component
 @RestController
 @RequestMapping("/cache")
 public class CacheController {
-    private final ApplicationContext context;
+
+    private final CacheService cacheService;
 
     @Autowired
-    public CacheController(ApplicationContext context) {
-        this.context = context;
+    public CacheController(CacheService cacheService) {
+        this.cacheService = cacheService;
     }
 
-    @GetMapping("/logs/")
-
-    public String getAllLogs() {
-//        CacheService cacheService = context.getBean(CacheService.class);
-//
-//        List<Log> logs = cacheService.getAllLogs();
-//
-//        return logs;
-        return "hello";
+    @GetMapping("/logs")
+    public List<Log> getAllLogs() {
+        List<Log> logs = cacheService.getAllLogs();
+        return logs;
     }
-    public void addLog(Log log) {
+
+    @PostMapping("/logs")
+    public void addLog(@RequestBody Log log) {
         // Add the log to the cache or database
-        CacheService cacheService = context.getBean(CacheService.class);
         cacheService.addLog(log);
     }
 
     @PutMapping("/logs/{logId}")
     public Log updateLogById(@PathVariable String logId, @RequestBody Log updatedLog) {
-        CacheService cacheService = context.getBean(CacheService.class);
-
         // Get the log by ID
         Log existingLog = cacheService.getLogById(logId);
         if (existingLog == null) {
@@ -59,8 +51,4 @@ public class CacheController {
 
         return existingLog;
     }
-
-
-
-
 }
