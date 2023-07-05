@@ -97,6 +97,20 @@ public class WebhookController {
     }
 
     public MewsCompanyResponse addCompanyInMews(MewsCompanyRequest payload) throws Exception {
+        ObjectMapper objectMapper = new ObjectMapper();
+        CacheService cacheService = context.getBean(CacheService.class);
+
+        Log log = new Log();
+        log.setObject("Company Request");
+
+        String payloadJson = objectMapper.writeValueAsString(payload);
+        log.setPayload(payloadJson);
+
+        log.setError("");
+        log.setStatus(String.valueOf(status.SUCCESS));
+        log.setStatus_code("200");
+        cacheService.addLog(log);
+
         String response = mewsController.addCompany(payload);
 
         if (response == null || response.isEmpty()) {
@@ -105,10 +119,23 @@ public class WebhookController {
 
         logger.info("Mews Company Response: " + response);
 
-        return parseResponse(response, MewsCompanyResponse.class);
+        return parseResponse(response, MewsCompanyResponse.class,"Company Response");
     }
 
     public MewsBookerResponse addBookerInMews(MewsBookerRequest payload) throws Exception {
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        CacheService cacheService = context.getBean(CacheService.class);
+        Log log = new Log();
+        log.setObject("Booker Request");
+
+        String payloadJson = objectMapper.writeValueAsString(payload);
+        log.setPayload(payloadJson);
+
+        log.setError("");
+        log.setStatus(String.valueOf(status.SUCCESS));
+        log.setStatus_code("200");
+        cacheService.addLog(log);
         String response = mewsController.addBooker(payload);
 
         if (response == null || response.isEmpty()) {
@@ -117,10 +144,24 @@ public class WebhookController {
 
         logger.info("Mews Booker Response: " + response);
 
-        return parseResponse(response, MewsBookerResponse.class);
+        return parseResponse(response, MewsBookerResponse.class,"Booker Response");
     }
 
     public MewsAvailabilityBlockResponse addAvailabilityBlockInMews(MewsAvailabilityBlockRequest payload) throws Exception {
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        CacheService cacheService = context.getBean(CacheService.class);
+        Log log = new Log();
+        log.setObject("Availability Block Request");
+
+        String payloadJson = objectMapper.writeValueAsString(payload);
+        log.setPayload(payloadJson);
+
+        log.setError("");
+        log.setStatus(String.valueOf(status.SUCCESS));
+        log.setStatus_code("200");
+        cacheService.addLog(log);
+
         String response = mewsController.addAvailabilityBlock(payload);
 
         if (response == null || response.isEmpty()) {
@@ -129,21 +170,41 @@ public class WebhookController {
 
         logger.info("Mews Availability Block Response: " + response);
 
-        return parseResponse(response, MewsAvailabilityBlockResponse.class);
+        return parseResponse(response, MewsAvailabilityBlockResponse.class,"Availability Block Response");
     }
 
     //MEWS response parser
-    private <T> T parseResponse(String response, Class<T> responseType) throws Exception {
+    private <T> T parseResponse(String response, Class<T> responseType,String Object) throws Exception {
         ObjectMapper objectMapper = new ObjectMapper();
-
+        CacheService cacheService = context.getBean(CacheService.class);
         JsonNode responseJson = objectMapper.readTree(response);
-
+        Log log = new Log();
         if (responseJson.has("error")) {
             String errorMessage = responseJson.get("error").asText();
+
+            log.setObject(Object);
+            T parsedResponse = objectMapper.readValue(response, responseType);
+            String payload = objectMapper.writeValueAsString(parsedResponse);
+            log.setPayload(payload);
+            log.setError(errorMessage);
+            log.setStatus(String.valueOf(status.FAILED));
+            log.setStatus_code("400");
+            cacheService.addLog(log);
             throw new Exception("Error in " + responseType.getSimpleName() + " response from Mews: " + errorMessage);
+
         }
 
         try {
+
+            log.setObject(Object);
+            T parsedResponse = objectMapper.readValue(response, responseType);
+            String payload = objectMapper.writeValueAsString(parsedResponse);
+            log.setPayload(payload);
+            log.setError("");
+            log.setStatus(String.valueOf(status.SUCCESS));
+            log.setStatus_code("200");
+            cacheService.addLog(log);
+
             return objectMapper.readValue(response, responseType);
         } catch (IOException e) {
             throw new Exception("Unable to parse " + responseType.getSimpleName() + " Response", e);
@@ -152,7 +213,7 @@ public class WebhookController {
 
     private <T> T retrieveAndParseResponse(String parameter, Class<T> responseClass, String object) throws Exception {
         SalesforceTokenResponse salesforceToken = retrieveSalesforceToken();
-        CacheService cacheService = context.getBean(CacheService.class);
+
         String response = salesforceController.getRecordFromSalesforce(
                 object,
                 salesforceToken.getAccess_token(),
@@ -171,16 +232,6 @@ public class WebhookController {
 
         ObjectMapper objectMapper = new ObjectMapper();
         try {
-            Log log = new Log();
-            log.setObject("Booking");
-            T parsedResponse = objectMapper.readValue(response, responseClass);
-            String payload = objectMapper.writeValueAsString(parsedResponse);
-            log.setPayload(payload);
-
-            log.setError("");
-            log.setStatus(String.valueOf(status.SUCCESS));
-            log.setStatus_code("200");
-            cacheService.addLog(log);
             // Parse the response
             return objectMapper.readValue(response, responseClass);
         } catch (IOException e) {
