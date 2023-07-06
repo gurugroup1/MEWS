@@ -3,9 +3,9 @@ package middleware.services;
 import middleware.configurations.ApplicationConfiguration;
 import middleware.models.SecretKeyAWS;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.ObjectWriter;
 import okhttp3.*;
-import org.jvnet.hk2.annotations.Service;
+import org.springframework.stereotype.Service;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.IOException;
 
@@ -15,10 +15,11 @@ public class SalesforceConnectorService {
     private final ObjectMapper objectMapper;
     private final OkHttpClient httpClient;
 
-    public SalesforceConnectorService(ApplicationConfiguration applicationConfiguration) {
+    @Autowired
+    public SalesforceConnectorService(ApplicationConfiguration applicationConfiguration, OkHttpClient httpClient) {
         this.applicationConfiguration = applicationConfiguration;
         this.objectMapper = new ObjectMapper();
-        this.httpClient = new OkHttpClient.Builder().build();
+        this.httpClient = httpClient;
     }
 
     public String getDataFromSalesforce(String object, String sfAccessToken, String bookingId) throws IOException {
@@ -65,4 +66,5 @@ public class SalesforceConnectorService {
             return calloutResponse.body().string();
         }
     }
+
 }

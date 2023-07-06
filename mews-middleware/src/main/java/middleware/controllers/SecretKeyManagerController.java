@@ -16,40 +16,48 @@ import io.jsonwebtoken.Jwts;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.time.Instant;
 import java.util.Map;
 
-@Controller
 @RestController
+@RequestMapping("/salesforce")
 public class SecretKeyManagerController {
 
-    private ApplicationConfiguration applicationConfiguration;
+    private final ApplicationConfiguration applicationConfiguration;
 
-    @GetMapping("/salesforce/credentials")
+    public SecretKeyManagerController(ApplicationConfiguration applicationConfiguration) {
+        this.applicationConfiguration = applicationConfiguration;
+    }
+
+    @GetMapping("/credentials")
     public String getSalesforceCredentials() {
-        AWSSecretsManager client = AWSSecretsManagerClientBuilder.standard().withRegion(Regions.US_EAST_1).build();
-        GetSecretValueRequest request = new GetSecretValueRequest().withSecretId(applicationConfiguration.getSalesforceCredentialsSecretName());
+        AWSSecretsManager client = AWSSecretsManagerClientBuilder.standard()
+                .withRegion(Regions.US_EAST_1)
+                .build();
+        GetSecretValueRequest request = new GetSecretValueRequest()
+                .withSecretId(applicationConfiguration.getSalesforceCredentialsSecretName());
         GetSecretValueResult result = client.getSecretValue(request);
         return result.getSecretString();
     }
 
-    @GetMapping("/salesforce/token")
+    @GetMapping("/token")
     public String getSalesforceToken() throws JsonProcessingException {
-        AWSSecretsManager client = AWSSecretsManagerClientBuilder.standard().build();
-        GetSecretValueRequest request = new GetSecretValueRequest().withSecretId(applicationConfiguration.getSalesforceTokenSecretName());
+        AWSSecretsManager client = AWSSecretsManagerClientBuilder.standard()
+                .build();
+        GetSecretValueRequest request = new GetSecretValueRequest()
+                .withSecretId(applicationConfiguration.getSalesforceTokenSecretName());
         GetSecretValueResult result = client.getSecretValue(request);
-        ObjectMapper mapper = new ObjectMapper();
-        return result.getSecretString();}
+        return result.getSecretString();
+    }
 
-    @PutMapping("/salesforce/token/update")
+    @PutMapping("/token/update")
     public ResponseEntity<String> updateSalesforceToken(@RequestBody Map<String, Object> requestMap) {
         try {
-            AWSSecretsManager client = AWSSecretsManagerClientBuilder.standard().withRegion(Regions.US_EAST_1).build();
+            AWSSecretsManager client = AWSSecretsManagerClientBuilder.standard()
+                    .withRegion(Regions.US_EAST_1)
+                    .build();
             UpdateSecretRequest updateSecretRequest = new UpdateSecretRequest()
                     .withSecretId(applicationConfiguration.getSalesforceTokenSecretName())
                     .withSecretString(new ObjectMapper().writeValueAsString(requestMap));
@@ -57,7 +65,8 @@ public class SecretKeyManagerController {
             return ResponseEntity.ok("Secret updated successfully.");
         } catch (Exception e) {
             // Return an error response if something goes wrong
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error updating secret: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Error updating secret: " + e.getMessage());
         }
     }
 
@@ -71,5 +80,4 @@ public class SecretKeyManagerController {
             return true;
         }
     }
-
 }

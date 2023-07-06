@@ -9,52 +9,53 @@ import middleware.models.*;
 import middleware.services.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
-import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
-import java.util.List;
 
-@CrossOrigin(origins = {"http://3.86.96.254:4200", "http://localhost:4200"})
-@Component
+@CrossOrigin(origins = {"${cross.origin}"}) //It's better to configure this in the application properties
 @RestController
 @RequestMapping("/mews")
 public class WebhookController {
+
     private static final Logger logger = LoggerFactory.getLogger(WebhookController.class);
-    private SalesforceController salesforceController;
-    private ApplicationConfiguration applicationConfiguration;
-    private MewsController mewsController;
-    private AuthController authController;
-    private SecretKeyManagerController secretKeyManagerController;
-    private SalesforceConnectorService salesforceConnectorService;
-    private MewsConnectorService MewsConnectorService;
+
     private final ApplicationContext context;
+    private final ApplicationConfiguration applicationConfiguration;
+    private final SalesforceConnectorService salesforceConnectorService;
+    private final MewsConnectorService mewsConnectorService;
+    private final MewsController mewsController;
+    private final SecretKeyManagerController secretKeyManagerController;
+    private final SalesforceController salesforceController;
+    private final AuthController authController;
+    private final ObjectMapper objectMapper;
 
     private Status status;
 
-
-    public WebhookController(ApplicationContext context) {
-        this.salesforceConnectorService = new SalesforceConnectorService(applicationConfiguration);
-        this.MewsConnectorService = new MewsConnectorService();
-        this.mewsController = new MewsController(this.MewsConnectorService);
-        this.secretKeyManagerController = new SecretKeyManagerController();
-        this.salesforceController = new SalesforceController(this.secretKeyManagerController,this.salesforceConnectorService);
-        this.authController = new AuthController(applicationConfiguration, this.secretKeyManagerController,this.salesforceConnectorService);
+    @Autowired
+    public WebhookController(ApplicationContext context, SalesforceConnectorService salesforceConnectorService,
+                             MewsConnectorService mewsConnectorService, SecretKeyManagerController secretKeyManagerController,
+                             ApplicationConfiguration applicationConfiguration, ObjectMapper objectMapper) {
         this.context = context;
+        this.salesforceConnectorService = salesforceConnectorService;
+        this.mewsConnectorService = mewsConnectorService;
+        this.secretKeyManagerController = secretKeyManagerController;
+        this.applicationConfiguration = applicationConfiguration;
+        this.objectMapper = objectMapper;
+        this.mewsController = new MewsController(this.mewsConnectorService);
+        this.salesforceController = new SalesforceController(applicationConfiguration,this.secretKeyManagerController,this.salesforceConnectorService);
+        this.authController = new AuthController(applicationConfiguration, this.secretKeyManagerController,this.salesforceConnectorService);
     }
-
     @PostMapping("/booking/")
     public String executeProcess(@RequestBody String requestBody) {
         try {
-            ObjectMapper objectMapper = new ObjectMapper();
             JsonNode jsonNode = objectMapper.readTree(requestBody);
 
             String bookingId = jsonNode.has("bookingId") ? jsonNode.get("bookingId").asText() : null;
             if (bookingId != null) {
-                System.out.println("Booking Id: " + bookingId);
+                logger.info("Booking Id: " + bookingId);
 
                 SalesforceBookingResponse booking = retrieveAndParseResponse(bookingId, SalesforceBookingResponse.class, applicationConfiguration.getSalesforceBookingObject());
 
@@ -87,10 +88,11 @@ public class WebhookController {
                 this.mewsController.updateRate(mewsUpdateRateRequest);
 
             } else {
-                System.out.println("Request body does not contain booking Id");
+                logger.info("Request body does not contain booking Id");
+                return "Failed"; // return a failure response if bookingId is not provided
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage(), e);
         }
 
         return "Success";
@@ -258,4 +260,5 @@ public class WebhookController {
             throw new Exception("Salesforce API error: " + errorMessage + " - " + message);
         }
     }
+
 }

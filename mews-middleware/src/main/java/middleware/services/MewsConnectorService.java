@@ -7,19 +7,22 @@ import okhttp3.*;
 import org.springframework.stereotype.Service;
 import middleware.configurations.ApplicationConfiguration;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.IOException;
 
 @Service
 public class MewsConnectorService {
     private final OkHttpClient httpClient;
     private final ObjectMapper objectMapper;
+    private final ApplicationConfiguration applicationConfiguration;
 
-    private ApplicationConfiguration applicationConfiguration;
+    private static final Logger LOGGER = LoggerFactory.getLogger(MewsConnectorService.class);
 
-    public MewsConnectorService() {
-        this.httpClient = new OkHttpClient.Builder()
-                .followRedirects(false)
-                .build();
+    public MewsConnectorService(ApplicationConfiguration applicationConfiguration, OkHttpClient httpClient) {
+        this.applicationConfiguration = applicationConfiguration;
+        this.httpClient = httpClient;
         this.objectMapper = new ObjectMapper();
     }
 
@@ -35,7 +38,7 @@ public class MewsConnectorService {
                 .url(applicationConfiguration.getMewsApiUrl() + "/" + object + "/add")
                 .method("POST", RequestBody.create(mediaType, jsonStr))
                 .addHeader("Content-Type", "application/json")
-                .addHeader("Authorization", "Bearer " + ApplicationConfiguration.getMewsAccessToken())
+                .addHeader("Authorization", "Bearer " + applicationConfiguration.getMewsAccessToken())
                 .build();
         System.out.println("Request Body " + object + " : " + jsonStr);
         try (Response calloutResponse = httpClient.newCall(request).execute()) {
@@ -61,7 +64,7 @@ public class MewsConnectorService {
                 .url(applicationConfiguration.getMewsApiUrl() + "/" + object)
                 .method("POST", RequestBody.create(mediaType, jsonStr))
                 .addHeader("Content-Type", "application/json")
-                .addHeader("Authorization", "Bearer " + ApplicationConfiguration.getMewsAccessToken())
+                .addHeader("Authorization", "Bearer " + applicationConfiguration.getMewsAccessToken())
                 .build();
         System.out.println("Request Body " + object + " : " + jsonStr);
         try (Response calloutResponse = httpClient.newCall(request).execute()) {
@@ -83,6 +86,4 @@ public class MewsConnectorService {
             return responseBody;
         }
     }
-
-
 }

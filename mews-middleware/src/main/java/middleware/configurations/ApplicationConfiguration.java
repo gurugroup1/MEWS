@@ -1,102 +1,125 @@
 package middleware.configurations;
 
 import middleware.services.SalesforceConnectorService;
+import okhttp3.OkHttpClient;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.jdbc.datasource.init.DataSourceInitializer;
+import org.springframework.jdbc.datasource.init.ResourceDatabasePopulator;
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.Properties;
+import javax.sql.DataSource;
 
 @Configuration
 public class ApplicationConfiguration {
 
-//       private static final String PROPERTIES_FILE = System.getenv("AWS_PROFILE");
-    private static final String PROPERTIES_FILE = "application.properties";
-    private static Properties properties;
+    @Value("${salesforce_credentials_secret_manager}")
+    private String salesforceCredentialsSecretName;
 
-    static {
-        properties = loadProperties();
-    }
+    @Value("${salesforce_token_secret_manager}")
+    private String salesforceTokenSecretName;
 
-    private static Properties loadProperties() {
-        try (InputStream input = ApplicationConfiguration.class.getClassLoader().getResourceAsStream(PROPERTIES_FILE)) {
-            if (input != null) {
-                Properties props = new Properties();
-                props.load(input);
-                return props;
-            } else {
-                throw new FileNotFoundException("Unable to find application property" + PROPERTIES_FILE);
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
+    @Value("${salesforce_object_url}")
+    private String salesforceSObjectUrl;
 
+    @Value("${salesforce_object_url_prefix}")
+    private String salesforceSObjectrUrlPrefix;
 
-    static String getProperty(String key) {
-        if (properties != null) {
-            return properties.getProperty(key);
-        }
-        return null;
-    }
+    @Value("${salesforce_booking_object}")
+    private String salesforceBookingObject;
 
-    public static String getApiUrl() {
-        return getProperty("api_url");
-    }
+    @Value("${salesforce_account_object}")
+    private String salesforceAccountObject;
 
-    public static String getApiAuthUrl() {
-        return getProperty("api_auth_url");
-    }
+    @Value("${salesforce_company_contact_object}")
+    private String salesforceCompanyContactObject;
 
-    public static String getSalesforceCredentialsSecretName() {
-        return getProperty("salesforce_credentials_secret_manager");
-    }
+    @Value("${salesforce_rate_object}")
+    private String salesforceRateObject;
 
-    public static String getSalesforceTokenSecretName() {
-        return getProperty("salesforce_token_secret_manager");
-    }
-    public static String getSalesforceSObjectUrl() {
-        return getProperty("salesforce_object_url");
-    }
-    public static String getSalesforceSObjectrUrlPrefix() {
-        return getProperty("salesforce_object_url_prefix");
-    }
-    public static String getSalesforceBookingObject() {
-        return getProperty("salesforce_booking_object");
-    }
-    public static String getSalesforceAccountObject() {
-        return getProperty("salesforce_account_object");
-    }
-    public static String getSalesforceCompanyContactObject() {
-        return getProperty("salesforce_company_contact_object");
-    }
-    public static String getSalesforceRateObject() {
-        return getProperty("salesforce_rate_object");
-    }
+    @Value("${salesforce_property_object}")
+    private String salesforcePropertyObject;
 
-    public static String getSalesforcePropertyObject() {
-        return getProperty("salesforce_property_object");
-    }
-    public static String getMewsClientName() {
-        return getProperty("mews.clientName");
-    }
-    public static String getMewsClientToken() {
-        return getProperty("mews.clientToken");
-    }
-    public static String getMewsAccessToken() {
-        return getProperty("mews.accessToken");
-    }
-    public static String getMewsApiUrl() {
-        return getProperty("mews.apiUrl");
-    }
+    @Value("${mews.clientName}")
+    private String mewsClientName;
+
+    @Value("${mews.clientToken}")
+    private String mewsClientToken;
+
+    @Value("${mews.accessToken}")
+    private String mewsAccessToken;
+
+    @Value("${mews.apiUrl}")
+    private String mewsApiUrl;
+
     @Bean
-    public SalesforceConnectorService salesforceConnectorService(ApplicationConfiguration applicationConfiguration) {
-        return new SalesforceConnectorService(applicationConfiguration);
+    public DataSourceInitializer dataSourceInitializer(DataSource dataSource) {
+        DataSourceInitializer initializer = new DataSourceInitializer();
+        initializer.setDataSource(dataSource);
+        ResourceDatabasePopulator populator = new ResourceDatabasePopulator();
+        initializer.setDatabasePopulator(populator);
+        return initializer;
     }
 
+    @Bean
+    public OkHttpClient httpClient() {
+        return new OkHttpClient.Builder().build();
+    }
+
+    @Bean
+    public SalesforceConnectorService salesforceConnectorService(OkHttpClient httpClient) {
+        return new SalesforceConnectorService(this, httpClient);
+    }
+
+    public String getSalesforceCredentialsSecretName() {
+        return salesforceCredentialsSecretName;
+    }
+
+    public String getSalesforceTokenSecretName() {
+        return salesforceTokenSecretName;
+    }
+
+    public String getSalesforceSObjectUrl() {
+        return salesforceSObjectUrl;
+    }
+
+    public String getSalesforceSObjectrUrlPrefix() {
+        return salesforceSObjectrUrlPrefix;
+    }
+
+    public String getSalesforceBookingObject() {
+        return salesforceBookingObject;
+    }
+
+    public String getSalesforceAccountObject() {
+        return salesforceAccountObject;
+    }
+
+    public String getSalesforceCompanyContactObject() {
+        return salesforceCompanyContactObject;
+    }
+
+    public String getSalesforceRateObject() {
+        return salesforceRateObject;
+    }
+
+    public String getSalesforcePropertyObject() {
+        return salesforcePropertyObject;
+    }
+
+    public String getMewsClientName() {
+        return mewsClientName;
+    }
+
+    public String getMewsClientToken() {
+        return mewsClientToken;
+    }
+
+    public String getMewsAccessToken() {
+        return mewsAccessToken;
+    }
+
+    public String getMewsApiUrl() {
+        return mewsApiUrl;
+    }
 }
-
-
