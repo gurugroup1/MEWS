@@ -5,6 +5,7 @@ public class APIResponse {
     private String createdDate;
     private String status;
     private BookingDetails bookingDetails;
+    private AccountDetails accountDetails;
 
     // Getters and setters...
 
@@ -15,6 +16,7 @@ public class APIResponse {
                 ", createdDate:'" + createdDate + '\'' +
                 ", status:'" + status + '\'' +
                 ", bookingDetails:" + (bookingDetails != null ? bookingDetails.toString() : null) +
+                ", accountDetails:" + (accountDetails != null ? accountDetails.toString() : null) +
                 '}';
     }
 
@@ -50,6 +52,14 @@ public class APIResponse {
         this.bookingDetails = bookingDetails;
     }
 
+    public AccountDetails getAccountDetails() {
+        return accountDetails;
+    }
+
+    public void setAccountDetails(AccountDetails accountDetails) {
+        this.accountDetails = accountDetails;
+    }
+
     public static class BookingDetails {
         private String request;
         private SalesforceBookingResponse response;
@@ -83,6 +93,67 @@ public class APIResponse {
         }
 
         public void setResponse(SalesforceBookingResponse response) {
+            this.response = response;
+        }
+
+        public String getSource() {
+            return source;
+        }
+
+        public void setSource(String source) {
+            this.source = source;
+        }
+
+        public String getStatus() {
+            return status;
+        }
+
+        public void setStatus(String status) {
+            this.status = status;
+        }
+
+        public String getError() {
+            return error;
+        }
+
+        public void setError(String error) {
+            this.error = error;
+        }
+    }
+
+    public static class AccountDetails {
+        private String request;
+        private SalesforceAccountResponse response;
+        private String source;
+        private String status;
+        private String error;
+
+        // Getters and setters...
+
+        @Override
+        public String toString() {
+            return "AccountDetails{" +
+                    "request:'" + request + '\'' +
+                    ", response:'" + response + '\'' +
+                    ", source:'" + source + '\'' +
+                    ", status:'" + status + '\'' +
+                    ", error:'" + error + '\'' +
+                    '}';
+        }
+
+        public String getRequest() {
+            return request;
+        }
+
+        public void setRequest(String request) {
+            this.request = request;
+        }
+
+        public SalesforceAccountResponse getResponse() {
+            return response;
+        }
+
+        public void setResponse(SalesforceAccountResponse response) {
             this.response = response;
         }
 

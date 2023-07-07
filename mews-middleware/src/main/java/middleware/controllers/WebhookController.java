@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.Objects;
 import java.util.Optional;
 
 @CrossOrigin(origins = {"${cross.origin}"}) //It's better to configure this in the application properties
@@ -64,10 +65,17 @@ public class WebhookController {
                 logger.info("Booking Id: " + bookingId);
 
                 Optional<SalesforceBookingResponse> booking = retrieveAndParseResponse(bookingId, SalesforceBookingResponse.class, applicationConfiguration.getSalesforceBookingObject());
-                if(booking.isPresent()) {
-                    setResponseAPI("Booking",bookingId,requestBody, booking.get(),"Salesforce","Success","None");
+                if (booking.isPresent()) {
+                    setResponseAPI("Booking", bookingId, requestBody, booking.get(), "Salesforce", "Success", "None");
+                    Optional<SalesforceAccountResponse> account = retrieveAndParseResponse(booking.get().getThn__Company__c(), SalesforceAccountResponse.class, applicationConfiguration.getSalesforceAccountObject());
+                    if (account.isPresent()) {
+                        setResponseAPI("Account", bookingId, requestBody, account.get(), "Salesforce", "Success", "None");
+                    } else {
+                        setResponseAPI("Account", bookingId, requestBody, null, "Salesforce", "Failed", "Error retrieving or parsing Salesforce Account Response");
+                        logger.error("Error retrieving or parsing Salesforce Account Response");
+                    }
                 } else {
-                    setResponseAPI("Booking",bookingId,requestBody, null,"Salesforce","Failed","Error retrieving or parsing Salesforce Booking Response");
+                    setResponseAPI("Booking", bookingId, requestBody, null, "Salesforce", "Failed", "Error retrieving or parsing Salesforce Booking Response");
                     logger.error("Error retrieving or parsing Salesforce Booking Response");
                 }
             } else {
@@ -83,18 +91,30 @@ public class WebhookController {
 
 
 
-    public String setResponseAPI(String object, String bookingId, String request, SalesforceBookingResponse response, String source, String status, String error) {
+    private <T> void setResponseAPI(String objectType, String objectId, String request, T response, String source, String status, String error) {
         APIResponse apiResponse = new APIResponse();
         CacheService cacheService = context.getBean(CacheService.class);
-        APIResponse.BookingDetails bookingDetails = new APIResponse.BookingDetails();
-        bookingDetails.setRequest(request);
-        bookingDetails.setResponse(response);
-        bookingDetails.setSource(source);
-        bookingDetails.setStatus(status);
-        bookingDetails.setError(error);
+        if(Objects.equals(objectType, "Booking")){
+            APIResponse.BookingDetails bookingDetails = new APIResponse.BookingDetails();
+            bookingDetails.setRequest(request);
+            bookingDetails.setResponse((SalesforceBookingResponse) response);
+            bookingDetails.setSource(source);
+            bookingDetails.setStatus(status);
+            bookingDetails.setError(error);
 
-        apiResponse.setBookingDetails(bookingDetails);
-        apiResponse.setBookingId(bookingId);
+            apiResponse.setBookingDetails(bookingDetails);
+        }
+        if(Objects.equals(objectType, "Account")){
+            APIResponse.AccountDetails accountDetails = new APIResponse.AccountDetails();
+            accountDetails.setRequest(request);
+            accountDetails.setResponse((SalesforceAccountResponse) response);
+            accountDetails.setSource(source);
+            accountDetails.setStatus(status);
+            accountDetails.setError(error);
+
+            apiResponse.setAccountDetails(accountDetails);
+        }
+        apiResponse.setBookingId(objectId);
         apiResponse.setStatus(status);
 
         apiResponse.setCreatedDate(getTimeNow());
@@ -113,8 +133,6 @@ public class WebhookController {
         } catch (JsonProcessingException e) {
             e.printStackTrace();
         }
-
-        return "null";
     }
 
     public String getTimeNow(){
