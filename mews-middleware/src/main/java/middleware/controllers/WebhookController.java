@@ -96,6 +96,24 @@ public class WebhookController {
                                             Optional<MewsAvailabilityBlockResponse> availabilityBlockResponse = this.addAvailabilityBlockInMews(mewsAvailabilityBlockRequest);
                                             if (availabilityBlockResponse.isPresent()) {
                                                 setResponseAPI("MewsAvailabilityBlock", bookingId, mewsAvailabilityBlockRequestString, availabilityBlockResponse.get(), "Mews", "Success", "None", apiResponse);
+                                                MewsUpdateAvailabilityRequest mewsUpdateAvailabilityRequest = this.mewsController.createUpdateAvailabilityPayload(booking.get(),rate.get(),property.get(),bookerResponse.get());
+                                                String mewsUpdateAvailabilityRequestString = objectMapper.writeValueAsString(mewsUpdateAvailabilityRequest);
+                                                String updateAvailabilityResponse = this.mewsController.updateAvailability(mewsUpdateAvailabilityRequest);
+                                                if (updateAvailabilityResponse.equals("{}")) {
+                                                    setResponseAPI("MewsUpdateAvailability", bookingId, mewsUpdateAvailabilityRequestString, null, "Mews", "Success", "None", apiResponse);
+                                                    MewsUpdateRateRequest mewsUpdateRateRequest = this.mewsController.createUpdateRatePayload(booking.get(),rate.get(),property.get(),bookerResponse.get());
+                                                    String mewsUpdateRateRequestString = objectMapper.writeValueAsString(mewsUpdateRateRequest);
+                                                    String mewsUpdateRateResponse = this.mewsController.updateAvailability(mewsUpdateAvailabilityRequest);
+                                                    if (mewsUpdateRateResponse.equals("{}")) {
+                                                        setResponseAPI("MewsUpdateRate", bookingId, mewsUpdateRateRequestString, null, "Mews", "Success", "None", apiResponse);
+                                                    } else {
+                                                        setResponseAPI("MewsUpdateRate", bookingId, mewsAvailabilityBlockRequestString, null, "Mews", "Failed", "Error retrieving or parsing Mews Update Rate ", apiResponse);
+                                                        logger.error("Error retrieving or parsing Mews Update Rate Response");
+                                                    }
+                                                } else {
+                                                    setResponseAPI("MewsUpdateAvailability", bookingId, mewsAvailabilityBlockRequestString, null, "Mews", "Failed", "Error retrieving or parsing Mews Update Availability ", apiResponse);
+                                                    logger.error("Error retrieving or parsing Mews Update Availability Response");
+                                                }
                                             } else {
                                                 setResponseAPI("MewsAvailabilityBlock", bookingId, mewsAvailabilityBlockRequestString, null, "Mews", "Failed", "Error retrieving or parsing Mews Availability Block Response", apiResponse);
                                                 logger.error("Error retrieving or parsing Mews Availability Block Response");

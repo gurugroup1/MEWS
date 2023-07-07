@@ -67,23 +67,30 @@ public class MewsConnectorService {
                 .addHeader("Authorization", "Bearer " + applicationConfiguration.getMewsAccessToken())
                 .build();
         System.out.println("Request Body " + object + " : " + jsonStr);
+
         try (Response calloutResponse = httpClient.newCall(request).execute()) {
             if (!calloutResponse.isSuccessful()) {
                 String errorMessage = "Error in " + object + " call: " + calloutResponse.code() + " - " + calloutResponse.message();
                 throw new IOException(errorMessage);
             }
+
             String responseBody = calloutResponse.body().string();
             System.out.println("Success Body " + object + " : " + responseBody);
 
-
-            if (responseBody.isEmpty() || responseBody.equals("{}")) {
+            if (responseBody == null || responseBody.trim().isEmpty()) {
                 // Handle empty response body here
-                // You can log a message or perform any other desired actions
                 System.out.println("Empty response body received");
-                return responseBody;
+                return null; // Or return any specific value that indicates empty response
+            }
+
+            if (responseBody.equals("{}")) {
+                // Handle success with empty response body here
+                System.out.println("Success with empty response body");
+                return responseBody; // Or return any specific value for success with empty response
             }
 
             return responseBody;
         }
     }
+
 }
