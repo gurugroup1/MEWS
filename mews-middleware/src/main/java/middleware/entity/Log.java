@@ -1,16 +1,16 @@
 package middleware.entity;
 
 import javax.persistence.*;
-
+import java.nio.charset.StandardCharsets;
 @Entity
-@Table(name = "log")
+@Table(name = "logs")
 public class Log {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;  // This is the primary key field
 
-    @Column(columnDefinition = "TEXT")
+    @Column(columnDefinition = "CLOB")
     private String apiResponse;
 
 

@@ -85,6 +85,7 @@ public class WebhookController {
 
     public String setResponseAPI(String object, String bookingId, String request, SalesforceBookingResponse response, String source, String status, String error) {
         APIResponse apiResponse = new APIResponse();
+        CacheService cacheService = context.getBean(CacheService.class);
         APIResponse.BookingDetails bookingDetails = new APIResponse.BookingDetails();
         bookingDetails.setRequest(request);
         bookingDetails.setResponse(response);
