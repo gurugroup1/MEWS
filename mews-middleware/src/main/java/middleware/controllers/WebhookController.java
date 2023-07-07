@@ -83,9 +83,27 @@ public class WebhookController {
                                     setResponseAPI("Property", bookingId, rate.get().getHotel(), property.get(), "Salesforce", "Success", "None", apiResponse);
                                     MewsCompanyRequest mewsCompanyRequest = this.mewsController.createCompanyPayload(booking.get(),account.get(),contact.get());
                                     Optional<MewsCompanyResponse> mewsCompanyResponse = this.addCompanyInMews(mewsCompanyRequest);
+                                    String mewsCompanyRequestString = objectMapper.writeValueAsString(mewsCompanyRequest);
                                     if (mewsCompanyResponse.isPresent()) {
-                                        String mewsCompanyRequestString = objectMapper.writeValueAsString(mewsCompanyRequest);
                                         setResponseAPI("MewsCompany", bookingId, mewsCompanyRequestString, mewsCompanyResponse.get(), "Mews", "Success", "None", apiResponse);
+                                        MewsBookerRequest mewsBookerRequest = this.mewsController.createBookerPayload(booking.get(),account.get(),contact.get());
+                                        String mewsBookerRequestString = objectMapper.writeValueAsString(mewsBookerRequest);
+                                        Optional<MewsBookerResponse> bookerResponse = this.addBookerInMews(mewsBookerRequest);
+                                        if (bookerResponse.isPresent()) {
+                                            setResponseAPI("MewsBooker", bookingId, mewsBookerRequestString, bookerResponse.get(), "Mews", "Success", "None", apiResponse);
+                                            MewsAvailabilityBlockRequest mewsAvailabilityBlockRequest = this.mewsController.createAvailabilityBlockPayload(booking.get(),rate.get(),property.get(),bookerResponse.get());
+                                            String mewsAvailabilityBlockRequestString = objectMapper.writeValueAsString(mewsAvailabilityBlockRequest);
+                                            Optional<MewsAvailabilityBlockResponse> availabilityBlockResponse = this.addAvailabilityBlockInMews(mewsAvailabilityBlockRequest);
+                                            if (availabilityBlockResponse.isPresent()) {
+                                                setResponseAPI("MewsAvailabilityBlock", bookingId, mewsAvailabilityBlockRequestString, availabilityBlockResponse.get(), "Mews", "Success", "None", apiResponse);
+                                            } else {
+                                                setResponseAPI("MewsAvailabilityBlock", bookingId, mewsAvailabilityBlockRequestString, null, "Mews", "Failed", "Error retrieving or parsing Mews Availability Block Response", apiResponse);
+                                                logger.error("Error retrieving or parsing Mews Availability Block Response");
+                                            }
+                                        } else {
+                                            setResponseAPI("MewsBooker", bookingId, rate.get().getHotel(), null, "Mews", "Failed", "Error retrieving or parsing Mews Booker Response", apiResponse);
+                                            logger.error("Error retrieving or parsing Mews Booker Response");
+                                        }
                                     } else {
                                         setResponseAPI("MewsCompany", bookingId, rate.get().getHotel(), null, "Mews", "Failed", "Error retrieving or parsing Mews Company Response", apiResponse);
                                         logger.error("Error retrieving or parsing Mews Company Response");
@@ -129,7 +147,6 @@ public class WebhookController {
             bookingDetails.setSource(source);
             bookingDetails.setStatus(status);
             bookingDetails.setError(error);
-
             apiResponse.setBookingDetails(bookingDetails);
         }
         if (Objects.equals(objectType, "Account")) {
@@ -139,7 +156,6 @@ public class WebhookController {
             accountDetails.setSource(source);
             accountDetails.setStatus(status);
             accountDetails.setError(error);
-
             apiResponse.setAccountDetails(accountDetails);
         }
 
@@ -150,7 +166,6 @@ public class WebhookController {
             contactDetails.setSource(source);
             contactDetails.setStatus(status);
             contactDetails.setError(error);
-
             apiResponse.setContactDetails(contactDetails);
         }
 
@@ -161,7 +176,6 @@ public class WebhookController {
             rateDetails.setSource(source);
             rateDetails.setStatus(status);
             rateDetails.setError(error);
-
             apiResponse.setRateDetails(rateDetails);
         }
 
@@ -172,7 +186,6 @@ public class WebhookController {
             propertyDetails.setSource(source);
             propertyDetails.setStatus(status);
             propertyDetails.setError(error);
-
             apiResponse.setPropertyDetails(propertyDetails);
         }
 
@@ -183,8 +196,43 @@ public class WebhookController {
             companyDetails.setSource(source);
             companyDetails.setStatus(status);
             companyDetails.setError(error);
-
             apiResponse.setMewsCompanyDetails(companyDetails);
+        }
+        if (Objects.equals(objectType, "MewsBooker")) {
+            APIResponse.MewsBookerDetails bookerDetails = new APIResponse.MewsBookerDetails();
+            bookerDetails.setRequest(request);
+            bookerDetails.setResponse((MewsBookerResponse) response);
+            bookerDetails.setSource(source);
+            bookerDetails.setStatus(status);
+            bookerDetails.setError(error);
+            apiResponse.setMewsBookerDetails(bookerDetails);
+        }
+        if (Objects.equals(objectType, "MewsAvailabilityBlock")) {
+            APIResponse.MewsAvailabilityBlockDetails details = new APIResponse.MewsAvailabilityBlockDetails();
+            details.setRequest(request);
+            details.setResponse((MewsAvailabilityBlockResponse) response);
+            details.setSource(source);
+            details.setStatus(status);
+            details.setError(error);
+            apiResponse.setMewsAvailabilityBlockDetails(details);
+        }
+        if (Objects.equals(objectType, "MewsUpdateAvailability")) {
+            APIResponse.MewsUpdateAvailabilityDetails details = new APIResponse.MewsUpdateAvailabilityDetails();
+            details.setRequest(request);
+            details.setResponse(null);
+            details.setSource(source);
+            details.setStatus(status);
+            details.setError(error);
+            apiResponse.setMewsUpdateAvailabilityDetails(details);
+        }
+        if (Objects.equals(objectType, "MewsUpdateRate")) {
+            APIResponse.MewsUpdateRateDetails details = new APIResponse.MewsUpdateRateDetails();
+            details.setRequest(request);
+            details.setResponse(null);
+            details.setSource(source);
+            details.setStatus(status);
+            details.setError(error);
+            apiResponse.setMewsUpdateRateDetails(details);
         }
 
         apiResponse.setBookingId(objectId);
@@ -260,7 +308,29 @@ public class WebhookController {
 
         return Optional.ofNullable(parseResponse(response, MewsCompanyResponse.class, "Company Response"));
     }
+    public Optional<MewsBookerResponse> addBookerInMews(MewsBookerRequest payload) throws Exception {
+        String response = mewsController.addBooker(payload);
 
+        if (response == null || response.isEmpty()) {
+            throw new Exception("Empty company response from Mews.");
+        }
+
+        logger.info("Mews Company Response: " + response);
+
+        return Optional.ofNullable(parseResponse(response, MewsBookerResponse.class, "Booker Response"));
+    }
+
+    public Optional<MewsAvailabilityBlockResponse> addAvailabilityBlockInMews(MewsAvailabilityBlockRequest payload) throws Exception {
+        String response = mewsController.addAvailabilityBlock(payload);
+
+        if (response == null || response.isEmpty()) {
+            throw new Exception("Empty Availability Block response from Mews.");
+        }
+
+        logger.info("Mews Company Response: " + response);
+
+        return Optional.ofNullable(parseResponse(response, MewsAvailabilityBlockResponse.class, "Availability Block Response"));
+    }
 
     private <T> T parseResponse(String response, Class<T> responseType, String object) throws Exception {
         try {
