@@ -5,17 +5,21 @@ import middleware.models.*;
 import middleware.services.*;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+@RestController
 public class MewsController {
+
     private ApplicationConfiguration applicationConfiguration;
     private final MewsConnectorService mewsConnectorService;
     @Autowired
-    public MewsController(MewsConnectorService mewsConnectorService) {
+    public MewsController(MewsConnectorService mewsConnectorService,ApplicationConfiguration applicationConfiguration) {
+        this.applicationConfiguration = applicationConfiguration;
         this.mewsConnectorService = Objects.requireNonNull(mewsConnectorService, "Salesforce connector service must not be null");
     }
     public MewsCompanyRequest createCompanyPayload(SalesforceBookingResponse book ,SalesforceAccountResponse account,SalesforceContactResponse contact) throws JsonProcessingException {

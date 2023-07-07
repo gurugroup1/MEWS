@@ -13,6 +13,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.web.bind.annotation.*;
+import java.util.Optional;
 
 import java.io.IOException;
 import java.time.LocalDate;
@@ -49,7 +50,7 @@ public class WebhookController {
         this.secretKeyManagerController = secretKeyManagerController;
         this.applicationConfiguration = applicationConfiguration;
         this.objectMapper = objectMapper;
-        this.mewsController = new MewsController(this.mewsConnectorService);
+        this.mewsController = new MewsController(this.mewsConnectorService,applicationConfiguration);
         this.salesforceController = new SalesforceController(applicationConfiguration, this.secretKeyManagerController, this.salesforceConnectorService);
         this.authController = new AuthController(applicationConfiguration, this.secretKeyManagerController, this.salesforceConnectorService);
         this.cacheService = cacheService;
@@ -80,6 +81,15 @@ public class WebhookController {
 
                                 if (property.isPresent()) {
                                     setResponseAPI("Property", bookingId, rate.get().getHotel(), property.get(), "Salesforce", "Success", "None", apiResponse);
+                                    MewsCompanyRequest mewsCompanyRequest = this.mewsController.createCompanyPayload(booking.get(),account.get(),contact.get());
+                                    Optional<MewsCompanyResponse> mewsCompanyResponse = this.addCompanyInMews(mewsCompanyRequest);
+                                    if (mewsCompanyResponse.isPresent()) {
+                                        String mewsCompanyRequestString = objectMapper.writeValueAsString(mewsCompanyRequest);
+                                        setResponseAPI("MewsCompany", bookingId, mewsCompanyRequestString, mewsCompanyResponse.get(), "Mews", "Success", "None", apiResponse);
+                                    } else {
+                                        setResponseAPI("MewsCompany", bookingId, rate.get().getHotel(), null, "Mews", "Failed", "Error retrieving or parsing Mews Company Response", apiResponse);
+                                        logger.error("Error retrieving or parsing Mews Company Response");
+                                    }
                                 } else {
                                     setResponseAPI("Property", bookingId, rate.get().getHotel(), null, "Salesforce", "Failed", "Error retrieving or parsing Salesforce Property Response", apiResponse);
                                     logger.error("Error retrieving or parsing Salesforce Property Response");
@@ -166,6 +176,17 @@ public class WebhookController {
             apiResponse.setPropertyDetails(propertyDetails);
         }
 
+        if (Objects.equals(objectType, "MewsCompany")) {
+            APIResponse.MewsCompanyDetails companyDetails = new APIResponse.MewsCompanyDetails();
+            companyDetails.setRequest(request);
+            companyDetails.setResponse((MewsCompanyResponse) response);
+            companyDetails.setSource(source);
+            companyDetails.setStatus(status);
+            companyDetails.setError(error);
+
+            apiResponse.setMewsCompanyDetails(companyDetails);
+        }
+
         apiResponse.setBookingId(objectId);
         apiResponse.setStatus(status);
         apiResponse.setCreatedDate(getTimeNow());
@@ -227,6 +248,39 @@ public class WebhookController {
             return Optional.empty();
         }
     }
+
+    public Optional<MewsCompanyResponse> addCompanyInMews(MewsCompanyRequest payload) throws Exception {
+        String response = mewsController.addCompany(payload);
+
+        if (response == null || response.isEmpty()) {
+            throw new Exception("Empty company response from Mews.");
+        }
+
+        logger.info("Mews Company Response: " + response);
+
+        return Optional.ofNullable(parseResponse(response, MewsCompanyResponse.class, "Company Response"));
+    }
+
+
+    private <T> T parseResponse(String response, Class<T> responseType, String object) throws Exception {
+        try {
+            JsonNode responseJson = objectMapper.readTree(response);
+
+            if (responseJson.has("error")) {
+                String errorMessage = responseJson.get("error").asText();
+                throw new Exception("Error in " + responseType.getSimpleName() + " response from Mews: " + errorMessage);
+            }
+
+            logger.info(responseType.getSimpleName() + " Response: " + response);
+
+            // Parse the response
+            T parsedResponse = objectMapper.readValue(response, responseType);
+            return parsedResponse;
+        } catch (IOException e) {
+            throw new Exception("Unable to parse " + responseType.getSimpleName() + " Response", e);
+        }
+    }
+
 
     private void checkForErrorResponse(String response) throws Exception {
         JsonNode jsonResponse = objectMapper.readTree(response);
