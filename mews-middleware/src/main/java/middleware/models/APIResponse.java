@@ -6,8 +6,11 @@ public class APIResponse {
     private String status;
     private BookingDetails bookingDetails;
     private AccountDetails accountDetails;
+    private ContactDetails contactDetails;
+    private RateDetails rateDetails;
+    private PropertyDetails propertyDetails;
 
-    // Getters and setters...
+
 
     @Override
     public String toString() {
@@ -17,6 +20,9 @@ public class APIResponse {
                 ", status:'" + status + '\'' +
                 ", bookingDetails:" + (bookingDetails != null ? bookingDetails.toString() : null) +
                 ", accountDetails:" + (accountDetails != null ? accountDetails.toString() : null) +
+                ", contactDetails:" + (contactDetails != null ? contactDetails.toString() : null) +
+                ", RateDetails:" + (rateDetails != null ? rateDetails.toString() : null) +
+                ", PropertyDetails:" + (propertyDetails != null ? propertyDetails.toString() : null) +
                 '}';
     }
 
@@ -58,6 +64,30 @@ public class APIResponse {
 
     public void setAccountDetails(AccountDetails accountDetails) {
         this.accountDetails = accountDetails;
+    }
+
+    public ContactDetails getContactDetails() {
+        return contactDetails;
+    }
+
+    public void setContactDetails(ContactDetails contactDetails) {
+        this.contactDetails = contactDetails;
+    }
+
+    public RateDetails getRateDetails() {
+        return rateDetails;
+    }
+
+    public void setRateDetails(RateDetails rateDetails) {
+        this.rateDetails = rateDetails;
+    }
+
+    public PropertyDetails getPropertyDetails() {
+        return propertyDetails;
+    }
+
+    public void setPropertyDetails(PropertyDetails propertyDetails) {
+        this.propertyDetails = propertyDetails;
     }
 
     public static class BookingDetails {
@@ -181,4 +211,187 @@ public class APIResponse {
             this.error = error;
         }
     }
+
+    public static class ContactDetails {
+        private String request;
+        private SalesforceContactResponse response;
+        private String source;
+        private String status;
+        private String error;
+
+        // Getters and setters...
+
+        @Override
+        public String toString() {
+            return "ContactDetails{" +
+                    "request:'" + request + '\'' +
+                    ", response:'" + response + '\'' +
+                    ", source:'" + source + '\'' +
+                    ", status:'" + status + '\'' +
+                    ", error:'" + error + '\'' +
+                    '}';
+        }
+
+        public String getRequest() {
+            return request;
+        }
+
+        public void setRequest(String request) {
+            this.request = request;
+        }
+
+        public SalesforceContactResponse getResponse() {
+            return response;
+        }
+
+        public void setResponse(SalesforceContactResponse response) {
+            this.response = response;
+        }
+
+        public String getSource() {
+            return source;
+        }
+
+        public void setSource(String source) {
+            this.source = source;
+        }
+
+        public String getStatus() {
+            return status;
+        }
+
+        public void setStatus(String status) {
+            this.status = status;
+        }
+
+        public String getError() {
+            return error;
+        }
+
+        public void setError(String error) {
+            this.error = error;
+        }
+    }
+
+    public static class RateDetails {
+        private String request;
+        private SalesforceRateResponse response;
+        private String source;
+        private String status;
+        private String error;
+
+        // Getters and setters...
+
+        @Override
+        public String toString() {
+            return "RateDetails{" +
+                    "request:'" + request + '\'' +
+                    ", response:'" + response + '\'' +
+                    ", source:'" + source + '\'' +
+                    ", status:'" + status + '\'' +
+                    ", error:'" + error + '\'' +
+                    '}';
+        }
+
+        public String getRequest() {
+            return request;
+        }
+
+        public void setRequest(String request) {
+            this.request = request;
+        }
+
+        public SalesforceRateResponse getResponse() {
+            return response;
+        }
+
+        public void setResponse(SalesforceRateResponse response) {
+            this.response = response;
+        }
+
+        public String getSource() {
+            return source;
+        }
+
+        public void setSource(String source) {
+            this.source = source;
+        }
+
+        public String getStatus() {
+            return status;
+        }
+
+        public void setStatus(String status) {
+            this.status = status;
+        }
+
+        public String getError() {
+            return error;
+        }
+
+        public void setError(String error) {
+            this.error = error;
+        }
+    }
+
+    public static class PropertyDetails {  private String request;
+        private SalesforcePropertyResponse response;
+        private String source;
+        private String status;
+        private String error;
+
+        // Getters and setters...
+
+        @Override
+        public String toString() {
+            return "PropertyDetails{" +
+                    "request:'" + request + '\'' +
+                    ", response:'" + response + '\'' +
+                    ", source:'" + source + '\'' +
+                    ", status:'" + status + '\'' +
+                    ", error:'" + error + '\'' +
+                    '}';
+        }
+
+        public String getRequest() {
+            return request;
+        }
+
+        public void setRequest(String request) {
+            this.request = request;
+        }
+
+        public SalesforcePropertyResponse getResponse() {
+            return response;
+        }
+
+        public void setResponse(SalesforcePropertyResponse response) {
+            this.response = response;
+        }
+
+        public String getSource() {
+            return source;
+        }
+
+        public void setSource(String source) {
+            this.source = source;
+        }
+
+        public String getStatus() {
+            return status;
+        }
+
+        public void setStatus(String status) {
+            this.status = status;
+        }
+
+        public String getError() {
+            return error;
+        }
+
+        public void setError(String error) {
+            this.error = error;
+        }
+    }
+
 }

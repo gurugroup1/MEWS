@@ -67,11 +67,33 @@ public class WebhookController {
                 Optional<SalesforceBookingResponse> booking = retrieveAndParseResponse(bookingId, SalesforceBookingResponse.class, applicationConfiguration.getSalesforceBookingObject());
                 if (booking.isPresent()) {
                     setResponseAPI("Booking", bookingId, requestBody, booking.get(), "Salesforce", "Success", "None", apiResponse);
-                    Optional<SalesforceAccountResponse> account = retrieveAndParseResponse("123123", SalesforceAccountResponse.class, applicationConfiguration.getSalesforceAccountObject());
+                    Optional<SalesforceAccountResponse> account = retrieveAndParseResponse(booking.get().getThn__Company__c(), SalesforceAccountResponse.class, applicationConfiguration.getSalesforceAccountObject());
                     if (account.isPresent()) {
-                        setResponseAPI("Account", bookingId, requestBody, account.get(), "Salesforce", "Success", "None", apiResponse);
+                        setResponseAPI("Account", bookingId, booking.get().getThn__Company_Contact__c(), account.get(), "Salesforce", "Success", "None", apiResponse);
+                        Optional<SalesforceContactResponse> contact = retrieveAndParseResponse(booking.get().getThn__Company_Contact__c(), SalesforceContactResponse.class, applicationConfiguration.getSalesforceCompanyContactObject());
+                        if (contact.isPresent()) {
+                            setResponseAPI("Contact", bookingId, booking.get().getThn__Company_Contact__c(), contact.get(), "Salesforce", "Success", "None", apiResponse);
+                            Optional<SalesforceRateResponse> rate = retrieveAndParseResponse(booking.get().getThn__Block_Rate__c(), SalesforceRateResponse.class, applicationConfiguration.getSalesforceRateObject());
+                            if (rate.isPresent()) {
+                                setResponseAPI("Rate", bookingId, booking.get().getThn__Block_Rate__c(), rate.get(), "Salesforce", "Success", "None", apiResponse);
+                                Optional<SalesforcePropertyResponse> property = retrieveAndParseResponse(rate.get().getHotel(), SalesforcePropertyResponse.class, applicationConfiguration.getSalesforcePropertyObject());
+
+                                if (property.isPresent()) {
+                                    setResponseAPI("Property", bookingId, rate.get().getHotel(), property.get(), "Salesforce", "Success", "None", apiResponse);
+                                } else {
+                                    setResponseAPI("Property", bookingId, rate.get().getHotel(), null, "Salesforce", "Failed", "Error retrieving or parsing Salesforce Property Response", apiResponse);
+                                    logger.error("Error retrieving or parsing Salesforce Property Response");
+                                }
+                            } else {
+                                setResponseAPI("Rate", bookingId, booking.get().getThn__Block_Rate__c(), null, "Salesforce", "Failed", "Error retrieving or parsing Salesforce Rate Response", apiResponse);
+                                logger.error("Error retrieving or parsing Salesforce Rate Response");
+                            }
+                        } else {
+                            setResponseAPI("Contact", bookingId, booking.get().getThn__Company_Contact__c(), null, "Salesforce", "Failed", "Error retrieving or parsing Salesforce Contact Response", apiResponse);
+                            logger.error("Error retrieving or parsing Salesforce Contact Response");
+                        }
                     } else {
-                        setResponseAPI("Account", bookingId, requestBody, null, "Salesforce", "Failed", "Error retrieving or parsing Salesforce Account Response", apiResponse);
+                        setResponseAPI("Account", bookingId,  booking.get().getThn__Company_Contact__c(), null, "Salesforce", "Failed", "Error retrieving or parsing Salesforce Account Response", apiResponse);
                         logger.error("Error retrieving or parsing Salesforce Account Response");
                     }
                 } else {
@@ -110,9 +132,42 @@ public class WebhookController {
 
             apiResponse.setAccountDetails(accountDetails);
         }
+
+        if (Objects.equals(objectType, "Contact")) {
+            APIResponse.ContactDetails contactDetails = new APIResponse.ContactDetails();
+            contactDetails.setRequest(request);
+            contactDetails.setResponse((SalesforceContactResponse) response);
+            contactDetails.setSource(source);
+            contactDetails.setStatus(status);
+            contactDetails.setError(error);
+
+            apiResponse.setContactDetails(contactDetails);
+        }
+
+        if (Objects.equals(objectType, "Rate")) {
+            APIResponse.RateDetails rateDetails = new APIResponse.RateDetails();
+            rateDetails.setRequest(request);
+            rateDetails.setResponse((SalesforceRateResponse) response);
+            rateDetails.setSource(source);
+            rateDetails.setStatus(status);
+            rateDetails.setError(error);
+
+            apiResponse.setRateDetails(rateDetails);
+        }
+
+        if (Objects.equals(objectType, "Property")) {
+            APIResponse.PropertyDetails propertyDetails = new APIResponse.PropertyDetails();
+            propertyDetails.setRequest(request);
+            propertyDetails.setResponse((SalesforcePropertyResponse) response);
+            propertyDetails.setSource(source);
+            propertyDetails.setStatus(status);
+            propertyDetails.setError(error);
+
+            apiResponse.setPropertyDetails(propertyDetails);
+        }
+
         apiResponse.setBookingId(objectId);
         apiResponse.setStatus(status);
-
         apiResponse.setCreatedDate(getTimeNow());
 
         try {
