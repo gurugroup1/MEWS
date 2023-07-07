@@ -38,12 +38,11 @@ public class WebhookController {
     private final ObjectMapper objectMapper;
 
     private final CacheService cacheService;
-    private Status status;
 
     @Autowired
     public WebhookController(ApplicationContext context, SalesforceConnectorService salesforceConnectorService,
                              MewsConnectorService mewsConnectorService, SecretKeyManagerController secretKeyManagerController,
-                             ApplicationConfiguration applicationConfiguration, ObjectMapper objectMapper,CacheService cacheService) {
+                             ApplicationConfiguration applicationConfiguration, ObjectMapper objectMapper, CacheService cacheService) {
         this.context = context;
         this.salesforceConnectorService = salesforceConnectorService;
         this.mewsConnectorService = mewsConnectorService;
@@ -51,14 +50,15 @@ public class WebhookController {
         this.applicationConfiguration = applicationConfiguration;
         this.objectMapper = objectMapper;
         this.mewsController = new MewsController(this.mewsConnectorService);
-        this.salesforceController = new SalesforceController(applicationConfiguration,this.secretKeyManagerController,this.salesforceConnectorService);
-        this.authController = new AuthController(applicationConfiguration, this.secretKeyManagerController,this.salesforceConnectorService);
+        this.salesforceController = new SalesforceController(applicationConfiguration, this.secretKeyManagerController, this.salesforceConnectorService);
+        this.authController = new AuthController(applicationConfiguration, this.secretKeyManagerController, this.salesforceConnectorService);
         this.cacheService = cacheService;
-
     }
+
     @PostMapping("/booking/")
     public String executeProcess(@RequestBody String requestBody) {
         try {
+            APIResponse apiResponse = new APIResponse();
             JsonNode jsonNode = objectMapper.readTree(requestBody);
             String bookingId = jsonNode.has("bookingId") ? jsonNode.get("bookingId").asText() : null;
             if (bookingId != null) {
@@ -66,16 +66,16 @@ public class WebhookController {
 
                 Optional<SalesforceBookingResponse> booking = retrieveAndParseResponse(bookingId, SalesforceBookingResponse.class, applicationConfiguration.getSalesforceBookingObject());
                 if (booking.isPresent()) {
-                    setResponseAPI("Booking", bookingId, requestBody, booking.get(), "Salesforce", "Success", "None");
-                    Optional<SalesforceAccountResponse> account = retrieveAndParseResponse(booking.get().getThn__Company__c(), SalesforceAccountResponse.class, applicationConfiguration.getSalesforceAccountObject());
+                    setResponseAPI("Booking", bookingId, requestBody, booking.get(), "Salesforce", "Success", "None", apiResponse);
+                    Optional<SalesforceAccountResponse> account = retrieveAndParseResponse("123123", SalesforceAccountResponse.class, applicationConfiguration.getSalesforceAccountObject());
                     if (account.isPresent()) {
-                        setResponseAPI("Account", bookingId, requestBody, account.get(), "Salesforce", "Success", "None");
+                        setResponseAPI("Account", bookingId, requestBody, account.get(), "Salesforce", "Success", "None", apiResponse);
                     } else {
-                        setResponseAPI("Account", bookingId, requestBody, null, "Salesforce", "Failed", "Error retrieving or parsing Salesforce Account Response");
+                        setResponseAPI("Account", bookingId, requestBody, null, "Salesforce", "Failed", "Error retrieving or parsing Salesforce Account Response", apiResponse);
                         logger.error("Error retrieving or parsing Salesforce Account Response");
                     }
                 } else {
-                    setResponseAPI("Booking", bookingId, requestBody, null, "Salesforce", "Failed", "Error retrieving or parsing Salesforce Booking Response");
+                    setResponseAPI("Booking", bookingId, requestBody, null, "Salesforce", "Failed", "Error retrieving or parsing Salesforce Booking Response", apiResponse);
                     logger.error("Error retrieving or parsing Salesforce Booking Response");
                 }
             } else {
@@ -89,12 +89,8 @@ public class WebhookController {
         return "Success";
     }
 
-
-
-    private <T> void setResponseAPI(String objectType, String objectId, String request, T response, String source, String status, String error) {
-        APIResponse apiResponse = new APIResponse();
-        CacheService cacheService = context.getBean(CacheService.class);
-        if(Objects.equals(objectType, "Booking")){
+    private <T> void setResponseAPI(String objectType, String objectId, String request, T response, String source, String status, String error, APIResponse apiResponse) {
+        if (Objects.equals(objectType, "Booking")) {
             APIResponse.BookingDetails bookingDetails = new APIResponse.BookingDetails();
             bookingDetails.setRequest(request);
             bookingDetails.setResponse((SalesforceBookingResponse) response);
@@ -104,7 +100,7 @@ public class WebhookController {
 
             apiResponse.setBookingDetails(bookingDetails);
         }
-        if(Objects.equals(objectType, "Account")){
+        if (Objects.equals(objectType, "Account")) {
             APIResponse.AccountDetails accountDetails = new APIResponse.AccountDetails();
             accountDetails.setRequest(request);
             accountDetails.setResponse((SalesforceAccountResponse) response);
@@ -120,7 +116,6 @@ public class WebhookController {
         apiResponse.setCreatedDate(getTimeNow());
 
         try {
-            ObjectMapper objectMapper = new ObjectMapper();
             String jsonResponse = objectMapper.writeValueAsString(apiResponse);
             System.out.println("API Response:");
             System.out.println(jsonResponse);
@@ -135,7 +130,7 @@ public class WebhookController {
         }
     }
 
-    public String getTimeNow(){
+    public String getTimeNow() {
         LocalDate currentDate = LocalDate.now();
         String formattedDate = currentDate.format(DateTimeFormatter.ISO_DATE);
         return formattedDate;
@@ -159,7 +154,6 @@ public class WebhookController {
             }
 
             // Check for API errors
-            ObjectMapper objectMapper = new ObjectMapper();
             JsonNode jsonResponse = objectMapper.readTree(response);
             if (jsonResponse.has("error")) {
                 String errorMessage = jsonResponse.get("error").asText();
@@ -179,9 +173,7 @@ public class WebhookController {
         }
     }
 
-
     private void checkForErrorResponse(String response) throws Exception {
-        ObjectMapper objectMapper = new ObjectMapper();
         JsonNode jsonResponse = objectMapper.readTree(response);
         if (jsonResponse.has("error")) {
             String errorMessage = jsonResponse.get("error").asText();
@@ -197,5 +189,4 @@ public class WebhookController {
         }
         return salesforceToken;
     }
-
 }
