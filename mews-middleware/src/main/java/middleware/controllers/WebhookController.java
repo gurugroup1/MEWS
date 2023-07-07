@@ -1,5 +1,6 @@
 package middleware.controllers;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import middleware.configurations.ApplicationConfiguration;
@@ -14,6 +15,9 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.Optional;
 
 @CrossOrigin(origins = {"${cross.origin}"}) //It's better to configure this in the application properties
 @RestController
@@ -32,12 +36,13 @@ public class WebhookController {
     private final AuthController authController;
     private final ObjectMapper objectMapper;
 
+    private final CacheService cacheService;
     private Status status;
 
     @Autowired
     public WebhookController(ApplicationContext context, SalesforceConnectorService salesforceConnectorService,
                              MewsConnectorService mewsConnectorService, SecretKeyManagerController secretKeyManagerController,
-                             ApplicationConfiguration applicationConfiguration, ObjectMapper objectMapper) {
+                             ApplicationConfiguration applicationConfiguration, ObjectMapper objectMapper,CacheService cacheService) {
         this.context = context;
         this.salesforceConnectorService = salesforceConnectorService;
         this.mewsConnectorService = mewsConnectorService;
@@ -47,46 +52,24 @@ public class WebhookController {
         this.mewsController = new MewsController(this.mewsConnectorService);
         this.salesforceController = new SalesforceController(applicationConfiguration,this.secretKeyManagerController,this.salesforceConnectorService);
         this.authController = new AuthController(applicationConfiguration, this.secretKeyManagerController,this.salesforceConnectorService);
+        this.cacheService = cacheService;
+
     }
     @PostMapping("/booking/")
     public String executeProcess(@RequestBody String requestBody) {
         try {
             JsonNode jsonNode = objectMapper.readTree(requestBody);
-
             String bookingId = jsonNode.has("bookingId") ? jsonNode.get("bookingId").asText() : null;
             if (bookingId != null) {
                 logger.info("Booking Id: " + bookingId);
 
-                SalesforceBookingResponse booking = retrieveAndParseResponse(bookingId, SalesforceBookingResponse.class, applicationConfiguration.getSalesforceBookingObject());
-
-                SalesforceAccountResponse account = retrieveAndParseResponse(booking.getThn__Company__c(), SalesforceAccountResponse.class, applicationConfiguration.getSalesforceAccountObject());
-
-                SalesforceContactResponse contact = retrieveAndParseResponse(booking.getThn__Company_Contact__c(), SalesforceContactResponse.class, applicationConfiguration.getSalesforceCompanyContactObject());
-
-                SalesforceRateResponse rate = retrieveAndParseResponse(booking.getThn__Block_Rate__c(), SalesforceRateResponse.class, applicationConfiguration.getSalesforceRateObject());
-
-                SalesforcePropertyResponse property = retrieveAndParseResponse(rate.getHotel(), SalesforcePropertyResponse.class, applicationConfiguration.getSalesforcePropertyObject());
-
-                MewsCompanyRequest mewsCompanyRequest = this.mewsController.createCompanyPayload(booking,account,contact);
-
-                MewsCompanyResponse mewsCompanyResponse = this.addCompanyInMews(mewsCompanyRequest);
-
-                MewsBookerRequest mewsBookerRequest = this.mewsController.createBookerPayload(booking,account,contact);
-
-                MewsBookerResponse  booker = this.addBookerInMews(mewsBookerRequest);
-
-                MewsAvailabilityBlockRequest mewsAvailabilityBlockRequest = this.mewsController.createAvailabilityBlockPayload(booking,rate,property,booker);
-
-                MewsAvailabilityBlockResponse availabilityBlock = this.addAvailabilityBlockInMews(mewsAvailabilityBlockRequest);
-
-                MewsUpdateAvailabilityRequest mewsUpdateAvailabilityRequest = this.mewsController.createUpdateAvailabilityPayload(booking,rate,property,booker);
-
-                this.mewsController.updateAvailability(mewsUpdateAvailabilityRequest);
-
-                MewsUpdateRateRequest mewsUpdateRateRequest = this.mewsController.createUpdateRatePayload(booking,rate,property,booker);
-
-                this.mewsController.updateRate(mewsUpdateRateRequest);
-
+                Optional<SalesforceBookingResponse> booking = retrieveAndParseResponse(bookingId, SalesforceBookingResponse.class, applicationConfiguration.getSalesforceBookingObject());
+                if(booking.isPresent()) {
+                    setResponseAPI("Booking",bookingId,requestBody, booking.get(),"Salesforce","Success","None");
+                } else {
+                    setResponseAPI("Booking",bookingId,requestBody, null,"Salesforce","Failed","Error retrieving or parsing Salesforce Booking Response");
+                    logger.error("Error retrieving or parsing Salesforce Booking Response");
+                }
             } else {
                 logger.info("Request body does not contain booking Id");
                 return "Failed"; // return a failure response if bookingId is not provided
@@ -98,159 +81,86 @@ public class WebhookController {
         return "Success";
     }
 
-    public MewsCompanyResponse addCompanyInMews(MewsCompanyRequest payload) throws Exception {
-        ObjectMapper objectMapper = new ObjectMapper();
-        CacheService cacheService = context.getBean(CacheService.class);
 
-        Log log = new Log();
-        log.setObject("Company Request");
 
-        String payloadJson = objectMapper.writeValueAsString(payload);
-        log.setPayload(payloadJson);
+    public String setResponseAPI(String object, String bookingId, String request, SalesforceBookingResponse response, String source, String status, String error) {
+        APIResponse apiResponse = new APIResponse();
+        APIResponse.BookingDetails bookingDetails = new APIResponse.BookingDetails();
+        bookingDetails.setRequest(request);
+        bookingDetails.setResponse(response);
+        bookingDetails.setSource(source);
+        bookingDetails.setStatus(status);
+        bookingDetails.setError(error);
 
-        log.setError("");
-        log.setStatus(String.valueOf(status.SUCCESS));
-        log.setStatus_code("200");
-        cacheService.addLog(log);
+        apiResponse.setBookingDetails(bookingDetails);
+        apiResponse.setBookingId(bookingId);
+        apiResponse.setStatus(status);
 
-        String response = mewsController.addCompany(payload);
-
-        if (response == null || response.isEmpty()) {
-            throw new Exception("Empty company response from Mews.");
-        }
-
-        logger.info("Mews Company Response: " + response);
-
-        return parseResponse(response, MewsCompanyResponse.class,"Company Response");
-    }
-
-    public MewsBookerResponse addBookerInMews(MewsBookerRequest payload) throws Exception {
-
-        ObjectMapper objectMapper = new ObjectMapper();
-        CacheService cacheService = context.getBean(CacheService.class);
-        Log log = new Log();
-        log.setObject("Booker Request");
-
-        String payloadJson = objectMapper.writeValueAsString(payload);
-        log.setPayload(payloadJson);
-
-        log.setError("");
-        log.setStatus(String.valueOf(status.SUCCESS));
-        log.setStatus_code("200");
-        cacheService.addLog(log);
-        String response = mewsController.addBooker(payload);
-
-        if (response == null || response.isEmpty()) {
-            throw new Exception("Empty Booker response from Mews.");
-        }
-
-        logger.info("Mews Booker Response: " + response);
-
-        return parseResponse(response, MewsBookerResponse.class,"Booker Response");
-    }
-
-    public MewsAvailabilityBlockResponse addAvailabilityBlockInMews(MewsAvailabilityBlockRequest payload) throws Exception {
-
-        ObjectMapper objectMapper = new ObjectMapper();
-        CacheService cacheService = context.getBean(CacheService.class);
-        Log log = new Log();
-        log.setObject("Availability Block Request");
-
-        String payloadJson = objectMapper.writeValueAsString(payload);
-        log.setPayload(payloadJson);
-
-        log.setError("");
-        log.setStatus(String.valueOf(status.SUCCESS));
-        log.setStatus_code("200");
-        cacheService.addLog(log);
-
-        String response = mewsController.addAvailabilityBlock(payload);
-
-        if (response == null || response.isEmpty()) {
-            throw new Exception("Empty Availability Block response from Mews.");
-        }
-
-        logger.info("Mews Availability Block Response: " + response);
-
-        return parseResponse(response, MewsAvailabilityBlockResponse.class,"Availability Block Response");
-    }
-
-    //MEWS response parser
-    private <T> T parseResponse(String response, Class<T> responseType,String Object) throws Exception {
-        ObjectMapper objectMapper = new ObjectMapper();
-        CacheService cacheService = context.getBean(CacheService.class);
-        JsonNode responseJson = objectMapper.readTree(response);
-        Log log = new Log();
-        if (responseJson.has("error")) {
-            String errorMessage = responseJson.get("error").asText();
-
-            log.setObject(Object);
-            T parsedResponse = objectMapper.readValue(response, responseType);
-            String payload = objectMapper.writeValueAsString(parsedResponse);
-            log.setPayload(payload);
-            log.setError(errorMessage);
-            log.setStatus(String.valueOf(status.FAILED));
-            log.setStatus_code("400");
-            cacheService.addLog(log);
-            throw new Exception("Error in " + responseType.getSimpleName() + " response from Mews: " + errorMessage);
-
-        }
+        apiResponse.setCreatedDate(getTimeNow());
 
         try {
+            ObjectMapper objectMapper = new ObjectMapper();
+            String jsonResponse = objectMapper.writeValueAsString(apiResponse);
+            System.out.println("API Response:");
+            System.out.println(jsonResponse);
 
-            log.setObject(Object);
-            T parsedResponse = objectMapper.readValue(response, responseType);
-            String payload = objectMapper.writeValueAsString(parsedResponse);
-            log.setPayload(payload);
-            log.setError("");
-            log.setStatus(String.valueOf(status.SUCCESS));
-            log.setStatus_code("200");
-            cacheService.addLog(log);
-
-            return objectMapper.readValue(response, responseType);
-        } catch (IOException e) {
-            throw new Exception("Unable to parse " + responseType.getSimpleName() + " Response", e);
+            // Create new Log and save it to the repository
+            Log newLog = new Log();
+            newLog.setApiResponse(jsonResponse); // Set API response
+            // Set other fields of the Log...
+            cacheService.addLog(newLog); // Assume cacheService is injected
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
         }
+
+        return "null";
     }
 
-    private <T> T retrieveAndParseResponse(String parameter, Class<T> responseClass, String object) throws Exception {
-        SalesforceTokenResponse salesforceToken = retrieveSalesforceToken();
+    public String getTimeNow(){
+        LocalDate currentDate = LocalDate.now();
+        String formattedDate = currentDate.format(DateTimeFormatter.ISO_DATE);
+        return formattedDate;
+    }
 
-        String response = salesforceController.getRecordFromSalesforce(
-                object,
-                salesforceToken.getAccess_token(),
-                parameter
-        );
-
-        System.out.println(responseClass.getSimpleName() + " response: " + response);
-
-        if (response == null || response.isEmpty()) {
-            throw new Exception("Empty Salesforce " + responseClass.getSimpleName() + " response.");
-        }
-
-        checkForErrorResponse(response); // Check for API errors
-
-        logger.info("Salesforce " + responseClass.getSimpleName() + " Response: " + response);
-
-        ObjectMapper objectMapper = new ObjectMapper();
+    private <T> Optional<T> retrieveAndParseResponse(String parameter, Class<T> responseClass, String object) {
         try {
+            SalesforceTokenResponse salesforceToken = retrieveSalesforceToken();
+
+            String response = salesforceController.getRecordFromSalesforce(
+                    object,
+                    salesforceToken.getAccess_token(),
+                    parameter
+            );
+
+            System.out.println(responseClass.getSimpleName() + " response: " + response);
+
+            if (response == null || response.isEmpty()) {
+                logger.error("Empty Salesforce " + responseClass.getSimpleName() + " response.");
+                return Optional.empty();
+            }
+
+            // Check for API errors
+            ObjectMapper objectMapper = new ObjectMapper();
+            JsonNode jsonResponse = objectMapper.readTree(response);
+            if (jsonResponse.has("error")) {
+                String errorMessage = jsonResponse.get("error").asText();
+                String message = jsonResponse.get("message").asText();
+                logger.error("Salesforce API error: " + errorMessage + " - " + message);
+                return Optional.empty();
+            }
+
+            logger.info("Salesforce " + responseClass.getSimpleName() + " Response: " + response);
+
             // Parse the response
-            return objectMapper.readValue(response, responseClass);
-        } catch (IOException e) {
-            throw new Exception("Unable to parse Salesforce " + responseClass.getSimpleName() + " Response", e);
+            T parsedResponse = objectMapper.readValue(response, responseClass);
+            return Optional.ofNullable(parsedResponse);
+        } catch (Exception e) {
+            logger.error("Error retrieving and parsing response", e);
+            return Optional.empty();
         }
     }
 
-    // Getting Salesforce Token
-    private SalesforceTokenResponse retrieveSalesforceToken() throws Exception {
-        SalesforceTokenResponse salesforceToken = authController.retrieveSalesforceTokenFromAWS();
-        if (salesforceToken == null || salesforceToken.getAccess_token() == null) {
-            throw new Exception("Salesforce token is not available.");
-        }
-        return salesforceToken;
-    }
 
-    // Check Salesforce Response for error
     private void checkForErrorResponse(String response) throws Exception {
         ObjectMapper objectMapper = new ObjectMapper();
         JsonNode jsonResponse = objectMapper.readTree(response);
@@ -259,6 +169,14 @@ public class WebhookController {
             String message = jsonResponse.get("message").asText();
             throw new Exception("Salesforce API error: " + errorMessage + " - " + message);
         }
+    }
+
+    private SalesforceTokenResponse retrieveSalesforceToken() throws Exception {
+        SalesforceTokenResponse salesforceToken = authController.retrieveSalesforceTokenFromAWS();
+        if (salesforceToken == null || salesforceToken.getAccess_token() == null) {
+            throw new Exception("Salesforce token is not available.");
+        }
+        return salesforceToken;
     }
 
 }

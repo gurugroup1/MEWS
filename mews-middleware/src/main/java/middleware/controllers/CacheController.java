@@ -36,30 +36,30 @@ public class CacheController {
         cacheService.addLog(log);
     }
 
-    @PutMapping("/logs/{logId}")
-    public Log updateLogById(@PathVariable String logId, @RequestBody Log updatedLog) {
-        CacheService cacheService = context.getBean(CacheService.class);
-
-        // Get the log by ID
-        Log existingLog = cacheService.getLogById(logId);
-        if (existingLog == null) {
-            // Log not found
-            return null;
-        }
-
-        // Update the log properties
-        existingLog.setObject(updatedLog.getObject());
-        existingLog.setError(updatedLog.getError());
-        existingLog.setPayload(updatedLog.getPayload());
-        existingLog.setStatus(updatedLog.getStatus());
-        existingLog.setStatus_code(updatedLog.getStatus_code());
-
-        // Update the log in the cache
-        cacheService.updateLog(existingLog);
-
-        return existingLog;
-    }
-
+//    @PutMapping("/logs/{logId}")
+//    public Log updateLogById(@PathVariable String logId, @RequestBody Log updatedLog) {
+//        CacheService cacheService = context.getBean(CacheService.class);
+//
+//        // Get the log by ID
+//        Log existingLog = cacheService.getLogById(logId);
+//        if (existingLog == null) {
+//            // Log not found
+//            return null;
+//        }
+//
+//        // Update the log properties
+//        existingLog.setObject(updatedLog.getObject());
+//        existingLog.setError(updatedLog.getError());
+//        existingLog.setPayload(updatedLog.getPayload());
+//        existingLog.setStatus(updatedLog.getStatus());
+//        existingLog.setStatus_code(updatedLog.getStatus_code());
+//
+//        // Update the log in the cache
+//        cacheService.updateLog(existingLog);
+//
+//        return existingLog;
+//    }
+//
 
 
 
