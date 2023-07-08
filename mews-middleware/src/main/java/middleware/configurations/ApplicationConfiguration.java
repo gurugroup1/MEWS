@@ -40,6 +40,13 @@ public class ApplicationConfiguration {
     @Value("${salesforce_property_object}")
     private String salesforcePropertyObject;
 
+    public String getSalesforcePMSAccount() {
+        return salesforcePMSAccount;
+    }
+
+    @Value("${salesforce_pms_account}")
+    private String salesforcePMSAccount;
+
     @Value("${mews.clientName}")
     private String mewsClientName;
 

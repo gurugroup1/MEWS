@@ -26,6 +26,10 @@ public class SalesforceConnectorService {
         return executeGetSObject(object, sfAccessToken, bookingId);
     }
 
+    public String setDataInSalesforce(String object, String sfAccessToken, String jsonBody) throws IOException {
+        return executePostSObject(object, sfAccessToken, jsonBody);
+    }
+
     private String executeGetSObject(String object, String sfAccessToken, String bookingId) throws IOException {
         Request request = new Request.Builder()
                 .url(String.format(applicationConfiguration.getSalesforceSObjectrUrlPrefix(), applicationConfiguration.getSalesforceSObjectUrl(), object + "/" + bookingId))
@@ -41,6 +45,27 @@ public class SalesforceConnectorService {
             return calloutResponse.body().string();
         }
     }
+
+    private String executePostSObject(String object, String sfAccessToken, String jsonBody) throws IOException {
+        MediaType mediaType = MediaType.parse("application/json");
+        RequestBody body = RequestBody.create(mediaType, jsonBody);
+        System.out.println(jsonBody);
+        Request request = new Request.Builder()
+                .url(String.format(applicationConfiguration.getSalesforceSObjectrUrlPrefix(),
+                        applicationConfiguration.getSalesforceSObjectUrl(), object))
+                .post(body)
+                .addHeader("Content-Type", "application/json")
+                .addHeader("Authorization", "Bearer " + sfAccessToken)
+                .build();
+
+        try (Response response = httpClient.newCall(request).execute()) {
+            if (!response.isSuccessful()) {
+                throw new IOException("Unexpected code " + response);
+            }
+            return response.body().string();
+        }
+    }
+
 
     public String getAccessTokenFromSalesforce(SecretKeyAWS secretKey) throws IOException {
         RequestBody body = new MultipartBody.Builder().setType(MultipartBody.FORM)

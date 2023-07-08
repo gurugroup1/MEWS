@@ -1,6 +1,8 @@
 package middleware.controllers;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import middleware.configurations.ApplicationConfiguration;
+import middleware.models.*;
 import middleware.services.SalesforceConnectorService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,6 +25,17 @@ public class SalesforceController {
         this.applicationConfiguration = Objects.requireNonNull(applicationConfiguration, "Application configuration must not be null");
         this.secretKeyManagerController = Objects.requireNonNull(secretKeyManagerController, "Secret key manager controller must not be null");
         this.salesforceConnectorService = Objects.requireNonNull(salesforceConnectorService, "Salesforce connector service must not be null");
+    }
+
+    public PSMAccountRequest createPSMAccountPayload() throws JsonProcessingException {
+
+        PSMAccountRequest payload = new PSMAccountRequest();
+        payload.setName("test12");
+        return payload;
+    }
+
+    public String addRecordInSalesforce(String object, String sfAccessToken,String request) throws IOException {
+        return salesforceConnectorService.setDataInSalesforce(object,sfAccessToken,request);
     }
 
     public String getRecordFromSalesforce(String object, String sfAccessToken, String bookingId) throws IOException {
