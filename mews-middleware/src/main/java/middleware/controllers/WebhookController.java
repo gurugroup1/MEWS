@@ -65,10 +65,34 @@ public class WebhookController {
             if (bookingId != null) {
                 logger.info("Booking Id: " + bookingId);
 
-                PSMAccountRequest pmsAccountRequest = this.salesforceController.createPSMAccountPayload();
                 SalesforceTokenResponse salesforceToken = retrieveSalesforceToken();
-                String mewsBookerRequestString = objectMapper.writeValueAsString(pmsAccountRequest);
-                this.salesforceController.addRecordInSalesforce(applicationConfiguration.getSalesforcePMSAccount(),salesforceToken.getAccess_token(), mewsBookerRequestString);
+
+                PSMAccountRequest pmsAccountRequest = this.salesforceController.createPSMAccountPayload();
+                String pmsAccountRequestString = objectMapper.writeValueAsString(pmsAccountRequest);
+                this.salesforceController.addRecordInSalesforce(applicationConfiguration.getSalesforcePMSAccount(),salesforceToken.getAccess_token(), pmsAccountRequestString);
+
+                SalesforceGuestRequest guestRequest = this.salesforceController.createGuestBookerPayload();
+                String guestRequestString = objectMapper.writeValueAsString(guestRequest);
+                this.salesforceController.addRecordInSalesforce(applicationConfiguration.getSalesforceGuest(),salesforceToken.getAccess_token(), guestRequestString);
+
+                SalesforcePSMBlockRequest pmsBlockRequest = this.salesforceController.createPMSBlockPayload();
+                String pmsBlockRequestString = objectMapper.writeValueAsString(pmsBlockRequest);
+                this.salesforceController.addRecordInSalesforce(applicationConfiguration.getSalesforcePMSBlock(),salesforceToken.getAccess_token(), pmsBlockRequestString);
+
+                SalesforcePMSBlockInventory mewsBlockInventoryRequest = this.salesforceController.createMewsBlockInventoryPayload();
+                String mewsBlockInventoryRequestString = objectMapper.writeValueAsString(mewsBlockInventoryRequest);
+                this.salesforceController.addRecordInSalesforce(applicationConfiguration.getSalesforceMewsBlockinventory(),salesforceToken.getAccess_token(), mewsBlockInventoryRequestString);
+
+                SalesforcePMSBlockRate salesforcePMSBlockRateRequest = this.salesforceController.createPMSBlockRatesPayload();
+                String salesforcePMSBlockRateRequestString = objectMapper.writeValueAsString(salesforcePMSBlockRateRequest);
+                this.salesforceController.addRecordInSalesforce(applicationConfiguration.getSalesforcePMSBlockRates(),salesforceToken.getAccess_token(), salesforcePMSBlockRateRequestString);
+
+
+
+
+
+
+
 
 //                Optional<SalesforceBookingResponse> booking = retrieveAndParseResponse(bookingId, SalesforceBookingResponse.class, applicationConfiguration.getSalesforceBookingObject());
 //                if (booking.isPresent()) {

@@ -40,6 +40,32 @@ public class ApplicationConfiguration {
     @Value("${salesforce_property_object}")
     private String salesforcePropertyObject;
 
+    public String getSalesforceGuest() {
+        return salesforceGuest;
+    }
+
+    public String getSalesforcePMSBlock() {
+        return salesforcePMSBlock;
+    }
+
+    public String getSalesforceMewsBlockinventory() {
+        return salesforceMewsBlockinventory;
+    }
+
+    public String getSalesforcePMSBlockRates() {
+        return salesforcePMSBlockRates;
+    }
+
+    @Value("${salesforce_guest}")
+    private String salesforceGuest;
+    @Value("${salesforce_pms_block}")
+    private String salesforcePMSBlock;
+    @Value("${salesforce_mews_block_inventories}")
+    private String salesforceMewsBlockinventory;
+    @Value("${salesforce_pms_block_rates}")
+    private String salesforcePMSBlockRates;
+
+
     public String getSalesforcePMSAccount() {
         return salesforcePMSAccount;
     }
