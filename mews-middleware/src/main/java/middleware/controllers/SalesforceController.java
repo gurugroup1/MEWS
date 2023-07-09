@@ -28,42 +28,36 @@ public class SalesforceController {
     }
 
     public SalesforceBookingRequest createBookingPayload() throws JsonProcessingException {
-
         SalesforceBookingRequest payload = new SalesforceBookingRequest();
-        payload.setName("Little Maidsss asdasd");
+        payload.setName("Booking Testing Name");
         return payload;
     }
 
     public PSMAccountRequest createPSMAccountPayload() throws JsonProcessingException {
-
         PSMAccountRequest payload = new PSMAccountRequest();
         payload.setName("New test 123");
         return payload;
     }
 
     public SalesforceGuestRequest createGuestBookerPayload() throws JsonProcessingException {
-
         SalesforceGuestRequest payload = new SalesforceGuestRequest();
         payload.setFirstName("New test 123");
         return payload;
     }
 
     public SalesforcePSMBlockRequest createPMSBlockPayload() throws JsonProcessingException {
-
         SalesforcePSMBlockRequest payload = new SalesforcePSMBlockRequest();
         payload.setName("New test 123");
         return payload;
     }
 
     public SalesforcePMSBlockInventory createMewsBlockInventoryPayload() throws JsonProcessingException {
-
         SalesforcePMSBlockInventory payload = new SalesforcePMSBlockInventory();
         payload.setPmsBlock("a1kFg000000xTdtIAE");
         return payload;
     }
 
     public SalesforcePMSBlockRate createPMSBlockRatesPayload() throws JsonProcessingException {
-
         SalesforcePMSBlockRate payload = new SalesforcePMSBlockRate();
         payload.setPmsBlock("a1kFg000000xTdtIAE");
         return payload;

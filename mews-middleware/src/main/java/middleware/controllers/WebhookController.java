@@ -91,13 +91,6 @@ public class WebhookController {
                 String salesforceBookingRequestString = objectMapper.writeValueAsString(salesforceBookingRequest);
                 this.salesforceController.updateRecordInSalesforce(applicationConfiguration.getSalesforceBookingObject(),salesforceToken.getAccess_token(), salesforceBookingRequestString,bookingId);
 
-
-
-
-
-
-
-
 //                Optional<SalesforceBookingResponse> booking = retrieveAndParseResponse(bookingId, SalesforceBookingResponse.class, applicationConfiguration.getSalesforceBookingObject());
 //                if (booking.isPresent()) {
 //                    setResponseAPI("Booking", bookingId, requestBody, booking.get(), "Salesforce", "Success", "None", apiResponse);
