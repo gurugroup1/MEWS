@@ -73,18 +73,46 @@ public class BookingCommand implements Command {
                                     apiResponse.setStatus(ResponseStatus.SUCCESS);
                                     MewsCompanyRequest mewsCompanyRequest = mewsController.createCompanyPayload(booking.get(), account.get(), contact.get());
                                     Optional<MewsCompanyResponse> mewsCompanyResponse = addCompanyInMews(mewsCompanyRequest);
-
                                     if (mewsCompanyResponse.isPresent()) {
                                         responseData.put("mewsCompanyResponse", mewsCompanyResponse.get());
                                         apiResponse.setStatus(ResponseStatus.SUCCESS);
-
                                         MewsBookerRequest mewsBookerRequest = this.mewsController.createBookerPayload(booking.get(),account.get(),contact.get());
                                         Optional<MewsBookerResponse> bookerResponse = this.addBookerInMews(mewsBookerRequest);
                                         if (bookerResponse.isPresent()) {
                                             responseData.put("mewsBookerResponse", bookerResponse.get());
                                             apiResponse.setStatus(ResponseStatus.SUCCESS);
-                                            apiResponse.setMessage("Booking, account, contact, rate, property ,Created MEWS Company , Created MEWS Booker and data processed successfully");
+                                            MewsAvailabilityBlockRequest mewsAvailabilityBlockRequest = this.mewsController.createAvailabilityBlockPayload(booking.get(),rate.get(),property.get(),bookerResponse.get());
+                                            Optional<MewsAvailabilityBlockResponse> availabilityBlockResponse = this.addAvailabilityBlockInMews(mewsAvailabilityBlockRequest);
+                                            if (availabilityBlockResponse.isPresent()) {
+                                                responseData.put("mewsAvailabilityBlockResponse", bookerResponse.get());
+                                                apiResponse.setStatus(ResponseStatus.SUCCESS);
+                                                MewsUpdateAvailabilityRequest mewsUpdateAvailabilityRequest = this.mewsController.createUpdateAvailabilityPayload(booking.get(),rate.get(),property.get(),bookerResponse.get());
+                                                String mewsUpdateAvailabilityResponse = this.mewsController.updateAvailability(mewsUpdateAvailabilityRequest);
+                                                if (mewsUpdateAvailabilityResponse.equals("{}")) {
+                                                    responseData.put("mewsAvailabilityBlockResponse", bookerResponse.get());
+                                                    apiResponse.setStatus(ResponseStatus.SUCCESS);
+                                                    MewsUpdateRateRequest mewsUpdateRateRequest = this.mewsController.createUpdateRatePayload(booking.get(),rate.get(),property.get(),bookerResponse.get());
+                                                    String mewsUpdateRateResponse = this.mewsController.updateRate(mewsUpdateRateRequest);
+                                                    if (mewsUpdateRateResponse.equals("{}")) {
+                                                        responseData.put("mewsUpdateRatePriceResponse", bookerResponse.get());
+                                                        apiResponse.setStatus(ResponseStatus.SUCCESS);
+                                                        apiResponse.setMessage("Booking, account, contact, rate, property ,created company in Mews , created booker in Mews, created Availability in Mews, update availability block in Mews, update rate block in Mews and data processed successfully");
 
+                                                    } else {
+                                                        logger.info("Failed to update rate block in Mews");
+                                                        apiResponse.setStatus(ResponseStatus.FAILED);
+                                                        apiResponse.setMessage("Failed to update rate block in Mews");
+                                                    }
+                                                } else {
+                                                    logger.info("Failed to update availability in Mews");
+                                                    apiResponse.setStatus(ResponseStatus.FAILED);
+                                                    apiResponse.setMessage("Failed to update availability in Mews");
+                                                }
+                                            } else {
+                                                logger.info("Failed to add availability block in Mews");
+                                                apiResponse.setStatus(ResponseStatus.FAILED);
+                                                apiResponse.setMessage("Failed to add availability block in Mews");
+                                            }
                                         } else {
                                             logger.info("Failed to add booker in Mews");
                                             apiResponse.setStatus(ResponseStatus.FAILED);
@@ -213,7 +241,19 @@ public class BookingCommand implements Command {
 
         return Optional.ofNullable(parseResponse(response, MewsBookerResponse.class, "Booker Response"));
     }
-    
+    public Optional<MewsAvailabilityBlockResponse> addAvailabilityBlockInMews(MewsAvailabilityBlockRequest payload) throws Exception {
+        String response = mewsController.addAvailabilityBlock(payload);
+
+        if (response == null || response.isEmpty()) {
+            throw new Exception("Empty Availability Block response from Mews.");
+        }
+
+        logger.info("Mews Company Response: " + response);
+
+        return Optional.ofNullable(parseResponse(response, MewsAvailabilityBlockResponse.class, "Availability Block Response"));
+    }
+
+
     private SalesforceTokenResponse retrieveSalesforceToken() throws Exception {
         SalesforceTokenResponse salesforceToken = authController.retrieveSalesforceTokenFromAWS();
         if (salesforceToken == null || salesforceToken.getAccess_token() == null) {
