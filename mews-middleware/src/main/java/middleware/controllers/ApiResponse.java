@@ -22,6 +22,16 @@ public class ApiResponse {
     private Object salesforceCreatePMSAccountResponse;
     private Object salesforceCreateGuestResponse;
     private Object salesforceCreatePMSBlockResponse;
+
+    public Object getMewsBlockInventoryResponse() {
+        return mewsBlockInventoryResponse;
+    }
+
+    public void setMewsBlockInventoryResponse(Object mewsBlockInventoryResponse) {
+        this.mewsBlockInventoryResponse = mewsBlockInventoryResponse;
+    }
+
+    private Object mewsBlockInventoryResponse;
     private Object salesforceCreatePMSBlockRatesResponse;
     private Object salesforceUpdateGuestRoomResponse;
     private Object salesforceUpdateBookingResponse;

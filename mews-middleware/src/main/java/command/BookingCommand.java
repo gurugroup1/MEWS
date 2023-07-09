@@ -102,8 +102,61 @@ public class BookingCommand implements Command {
                                                         if (pmsAccountResponse != null && !pmsAccountResponse.isEmpty()) {
                                                             responseData.put("salesforceCreatePMSAccountResponse", pmsAccountResponse);
                                                             apiResponse.setStatus(ResponseStatus.SUCCESS);
-                                                            apiResponse.setMessage("Booking, account, contact, rate, property ,created company in Mews , created booker in Mews, created Availability in Mews, update availability block in Mews, update rate block in Mews, created PMS account in salesforce and data processed successfully");
-
+                                                            SalesforceGuestRequest guestRequest = this.salesforceController.createGuestBookerPayload();
+                                                            String guestRequestString = objectMapper.writeValueAsString(guestRequest);
+                                                            String guestRequestResponse = this.salesforceController.addRecordInSalesforce(applicationConfiguration.getSalesforceGuest(),salesforceToken.getAccess_token(), guestRequestString);
+                                                            if (guestRequestResponse != null && !guestRequestResponse.isEmpty()) {
+                                                                responseData.put("salesforceCreateGuestResponse", guestRequestResponse);
+                                                                apiResponse.setStatus(ResponseStatus.SUCCESS);
+                                                                SalesforcePSMBlockRequest pmsBlockRequest = this.salesforceController.createPMSBlockPayload();
+                                                                String pmsBlockRequestString = objectMapper.writeValueAsString(pmsBlockRequest);
+                                                                String pmsBlockRequestResponse = this.salesforceController.addRecordInSalesforce(applicationConfiguration.getSalesforcePMSBlock(),salesforceToken.getAccess_token(), pmsBlockRequestString);
+                                                                if (pmsBlockRequestResponse != null && !pmsBlockRequestResponse.isEmpty()) {
+                                                                    responseData.put("salesforceCreatePMSBlockResponse", pmsBlockRequestResponse);
+                                                                    apiResponse.setStatus(ResponseStatus.SUCCESS);
+                                                                    SalesforcePMSBlockInventory mewsBlockInventoryRequest = this.salesforceController.createMewsBlockInventoryPayload();
+                                                                    String mewsBlockInventoryRequestString = objectMapper.writeValueAsString(mewsBlockInventoryRequest);
+                                                                    String mewsBlockInventoryResponse =  this.salesforceController.addRecordInSalesforce(applicationConfiguration.getSalesforceMewsBlockinventory(),salesforceToken.getAccess_token(), mewsBlockInventoryRequestString);
+                                                                    if (mewsBlockInventoryResponse != null && !mewsBlockInventoryResponse.isEmpty()) {
+                                                                        responseData.put("mewsBlockInventoryResponse", mewsBlockInventoryResponse);
+                                                                        apiResponse.setStatus(ResponseStatus.SUCCESS);
+                                                                        SalesforcePMSBlockRate salesforcePMSBlockRateRequest = this.salesforceController.createPMSBlockRatesPayload();
+                                                                        String salesforcePMSBlockRateRequestString = objectMapper.writeValueAsString(salesforcePMSBlockRateRequest);
+                                                                        String salesforcePMSBlockRateResponse = this.salesforceController.addRecordInSalesforce(applicationConfiguration.getSalesforcePMSBlockRates(),salesforceToken.getAccess_token(), salesforcePMSBlockRateRequestString);
+                                                                        if (salesforcePMSBlockRateResponse != null && !salesforcePMSBlockRateResponse.isEmpty()) {
+                                                                            responseData.put("salesforceCreatePMSBlockRatesResponse", salesforcePMSBlockRateResponse);
+                                                                            apiResponse.setStatus(ResponseStatus.SUCCESS);
+                                                                            SalesforceBookingRequest salesforceBookingRequest = this.salesforceController.createBookingPayload();
+                                                                            String salesforceBookingRequestString = objectMapper.writeValueAsString(salesforceBookingRequest);
+                                                                            String salesforceBookingResponse = this.salesforceController.updateRecordInSalesforce(applicationConfiguration.getSalesforceBookingObject(),salesforceToken.getAccess_token(), salesforceBookingRequestString,bookingId);
+                                                                            if (salesforceBookingResponse != null && !salesforceBookingResponse.isEmpty()) {
+                                                                                responseData.put("salesforceUpdateBookingResponse", salesforceBookingResponse);
+                                                                                apiResponse.setStatus(ResponseStatus.SUCCESS);
+                                                                                apiResponse.setMessage("Booking, account, contact, rate, property ,created company in Mews , created booker in Mews, created Availability in Mews, update availability block in Mews, update rate block in Mews, created PMS account in salesforce,created Guest in salesforce, created PMS Block in salesforce, created Mews block inventory in salesforce, created PMS block rate in salesforce, update booking in salesforce and data processed successfully");
+                                                                            } else {
+                                                                                logger.info("Failed to update booking in salesforce");
+                                                                                apiResponse.setStatus(ResponseStatus.FAILED);
+                                                                                apiResponse.setMessage("Failed to update booking in salesforce");
+                                                                            }
+                                                                        } else {
+                                                                            logger.info("Failed to create PMS block rate in salesforce");
+                                                                            apiResponse.setStatus(ResponseStatus.FAILED);
+                                                                            apiResponse.setMessage("Failed to PMS block rate in salesforce");
+                                                                        }
+                                                                    } else {
+                                                                        logger.info("Failed to create Mews block inventory in salesforce");
+                                                                        apiResponse.setStatus(ResponseStatus.FAILED);
+                                                                        apiResponse.setMessage("Failed to Mews block inventory in salesforce");
+                                                                    }                                                                  }
+                                                                else {
+                                                                    logger.info("Failed to create PMS block in salesforce");
+                                                                    apiResponse.setStatus(ResponseStatus.FAILED);
+                                                                    apiResponse.setMessage("Failed to create PMS Block in salesforce");
+                                                                }                                                            } else {
+                                                                logger.info("Failed to create guest in salesforce");
+                                                                apiResponse.setStatus(ResponseStatus.FAILED);
+                                                                apiResponse.setMessage("Failed to create guest in salesforce");
+                                                            }
                                                         } else {
                                                             logger.info("Failed to create PMS account in salesforce");
                                                             apiResponse.setStatus(ResponseStatus.FAILED);
