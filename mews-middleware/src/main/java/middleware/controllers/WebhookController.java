@@ -67,111 +67,112 @@ public class WebhookController {
 
                 SalesforceTokenResponse salesforceToken = retrieveSalesforceToken();
 
-                PSMAccountRequest pmsAccountRequest = this.salesforceController.createPSMAccountPayload();
-                String pmsAccountRequestString = objectMapper.writeValueAsString(pmsAccountRequest);
-                this.salesforceController.addRecordInSalesforce(applicationConfiguration.getSalesforcePMSAccount(),salesforceToken.getAccess_token(), pmsAccountRequestString);
+                Optional<SalesforceBookingResponse> booking = retrieveAndParseResponse(bookingId, SalesforceBookingResponse.class, applicationConfiguration.getSalesforceBookingObject());
+                if (booking.isPresent()) {
+                    setResponseAPI("Booking", bookingId, requestBody, booking.get(), "Salesforce", "Success", "None", apiResponse);
+                    Optional<SalesforceAccountResponse> account = retrieveAndParseResponse(booking.get().getThn__Company__c(), SalesforceAccountResponse.class, applicationConfiguration.getSalesforceAccountObject());
+                    if (account.isPresent()) {
+                        setResponseAPI("Account", bookingId, booking.get().getThn__Company_Contact__c(), account.get(), "Salesforce", "Success", "None", apiResponse);
+                        Optional<SalesforceContactResponse> contact = retrieveAndParseResponse(booking.get().getThn__Company_Contact__c(), SalesforceContactResponse.class, applicationConfiguration.getSalesforceCompanyContactObject());
+                        if (contact.isPresent()) {
+                            setResponseAPI("Contact", bookingId, booking.get().getThn__Company_Contact__c(), contact.get(), "Salesforce", "Success", "None", apiResponse);
+                            Optional<SalesforceRateResponse> rate = retrieveAndParseResponse(booking.get().getThn__Block_Rate__c(), SalesforceRateResponse.class, applicationConfiguration.getSalesforceRateObject());
+                            if (rate.isPresent()) {
+                                setResponseAPI("Rate", bookingId, booking.get().getThn__Block_Rate__c(), rate.get(), "Salesforce", "Success", "None", apiResponse);
+                                Optional<SalesforcePropertyResponse> property = retrieveAndParseResponse(rate.get().getHotel(), SalesforcePropertyResponse.class, applicationConfiguration.getSalesforcePropertyObject());
 
-                SalesforceGuestRequest guestRequest = this.salesforceController.createGuestBookerPayload();
-                String guestRequestString = objectMapper.writeValueAsString(guestRequest);
-                this.salesforceController.addRecordInSalesforce(applicationConfiguration.getSalesforceGuest(),salesforceToken.getAccess_token(), guestRequestString);
+                                if (property.isPresent()) {
+                                    setResponseAPI("Property", bookingId, rate.get().getHotel(), property.get(), "Salesforce", "Success", "None", apiResponse);
+                                    MewsCompanyRequest mewsCompanyRequest = this.mewsController.createCompanyPayload(booking.get(),account.get(),contact.get());
+                                    Optional<MewsCompanyResponse> mewsCompanyResponse = this.addCompanyInMews(mewsCompanyRequest);
+                                    String mewsCompanyRequestString = objectMapper.writeValueAsString(mewsCompanyRequest);
+                                    if (mewsCompanyResponse.isPresent()) {
+                                        setResponseAPI("MewsCompany", bookingId, mewsCompanyRequestString, mewsCompanyResponse.get(), "Mews", "Success", "None", apiResponse);
+                                        MewsBookerRequest mewsBookerRequest = this.mewsController.createBookerPayload(booking.get(),account.get(),contact.get());
+                                        String mewsBookerRequestString = objectMapper.writeValueAsString(mewsBookerRequest);
+                                        Optional<MewsBookerResponse> bookerResponse = this.addBookerInMews(mewsBookerRequest);
+                                        if (bookerResponse.isPresent()) {
+                                            setResponseAPI("MewsBooker", bookingId, mewsBookerRequestString, bookerResponse.get(), "Mews", "Success", "None", apiResponse);
+                                            MewsAvailabilityBlockRequest mewsAvailabilityBlockRequest = this.mewsController.createAvailabilityBlockPayload(booking.get(),rate.get(),property.get(),bookerResponse.get());
+                                            String mewsAvailabilityBlockRequestString = objectMapper.writeValueAsString(mewsAvailabilityBlockRequest);
+                                            Optional<MewsAvailabilityBlockResponse> availabilityBlockResponse = this.addAvailabilityBlockInMews(mewsAvailabilityBlockRequest);
+                                            if (availabilityBlockResponse.isPresent()) {
+                                                setResponseAPI("MewsAvailabilityBlock", bookingId, mewsAvailabilityBlockRequestString, availabilityBlockResponse.get(), "Mews", "Success", "None", apiResponse);
+                                                MewsUpdateAvailabilityRequest mewsUpdateAvailabilityRequest = this.mewsController.createUpdateAvailabilityPayload(booking.get(),rate.get(),property.get(),bookerResponse.get());
+                                                String mewsUpdateAvailabilityRequestString = objectMapper.writeValueAsString(mewsUpdateAvailabilityRequest);
+                                                String updateAvailabilityResponse = this.mewsController.updateAvailability(mewsUpdateAvailabilityRequest);
+                                                if (updateAvailabilityResponse.equals("{}")) {
+                                                    setResponseAPI("MewsUpdateAvailability", bookingId, mewsUpdateAvailabilityRequestString, null, "Mews", "Success", "None", apiResponse);
+                                                    MewsUpdateRateRequest mewsUpdateRateRequest = this.mewsController.createUpdateRatePayload(booking.get(),rate.get(),property.get(),bookerResponse.get());
+                                                    String mewsUpdateRateRequestString = objectMapper.writeValueAsString(mewsUpdateRateRequest);
+                                                    String mewsUpdateRateResponse = this.mewsController.updateAvailability(mewsUpdateAvailabilityRequest);
+                                                    if (mewsUpdateRateResponse.equals("{}")) {
+                                                        setResponseAPI("MewsUpdateRate", bookingId, mewsUpdateRateRequestString, null, "Mews", "Success", "None", apiResponse);
+                                                        // New block of code starts here
+                                                        PSMAccountRequest pmsAccountRequest = this.salesforceController.createPSMAccountPayload();
+                                                        String pmsAccountRequestString = objectMapper.writeValueAsString(pmsAccountRequest);
+                                                        this.salesforceController.addRecordInSalesforce(applicationConfiguration.getSalesforcePMSAccount(),salesforceToken.getAccess_token(), pmsAccountRequestString);
 
-                SalesforcePSMBlockRequest pmsBlockRequest = this.salesforceController.createPMSBlockPayload();
-                String pmsBlockRequestString = objectMapper.writeValueAsString(pmsBlockRequest);
-                this.salesforceController.addRecordInSalesforce(applicationConfiguration.getSalesforcePMSBlock(),salesforceToken.getAccess_token(), pmsBlockRequestString);
+                                                        SalesforceGuestRequest guestRequest = this.salesforceController.createGuestBookerPayload();
+                                                        String guestRequestString = objectMapper.writeValueAsString(guestRequest);
+                                                        this.salesforceController.addRecordInSalesforce(applicationConfiguration.getSalesforceGuest(),salesforceToken.getAccess_token(), guestRequestString);
 
-                SalesforcePMSBlockInventory mewsBlockInventoryRequest = this.salesforceController.createMewsBlockInventoryPayload();
-                String mewsBlockInventoryRequestString = objectMapper.writeValueAsString(mewsBlockInventoryRequest);
-                this.salesforceController.addRecordInSalesforce(applicationConfiguration.getSalesforceMewsBlockinventory(),salesforceToken.getAccess_token(), mewsBlockInventoryRequestString);
+                                                        SalesforcePSMBlockRequest pmsBlockRequest = this.salesforceController.createPMSBlockPayload();
+                                                        String pmsBlockRequestString = objectMapper.writeValueAsString(pmsBlockRequest);
+                                                        this.salesforceController.addRecordInSalesforce(applicationConfiguration.getSalesforcePMSBlock(),salesforceToken.getAccess_token(), pmsBlockRequestString);
 
-                SalesforcePMSBlockRate salesforcePMSBlockRateRequest = this.salesforceController.createPMSBlockRatesPayload();
-                String salesforcePMSBlockRateRequestString = objectMapper.writeValueAsString(salesforcePMSBlockRateRequest);
-                this.salesforceController.addRecordInSalesforce(applicationConfiguration.getSalesforcePMSBlockRates(),salesforceToken.getAccess_token(), salesforcePMSBlockRateRequestString);
+                                                        SalesforcePMSBlockInventory mewsBlockInventoryRequest = this.salesforceController.createMewsBlockInventoryPayload();
+                                                        String mewsBlockInventoryRequestString = objectMapper.writeValueAsString(mewsBlockInventoryRequest);
+                                                        this.salesforceController.addRecordInSalesforce(applicationConfiguration.getSalesforceMewsBlockinventory(),salesforceToken.getAccess_token(), mewsBlockInventoryRequestString);
 
-                SalesforceBookingRequest salesforceBookingRequest = this.salesforceController.createBookingPayload();
-                String salesforceBookingRequestString = objectMapper.writeValueAsString(salesforceBookingRequest);
-                this.salesforceController.updateRecordInSalesforce(applicationConfiguration.getSalesforceBookingObject(),salesforceToken.getAccess_token(), salesforceBookingRequestString,bookingId);
+                                                        SalesforcePMSBlockRate salesforcePMSBlockRateRequest = this.salesforceController.createPMSBlockRatesPayload();
+                                                        String salesforcePMSBlockRateRequestString = objectMapper.writeValueAsString(salesforcePMSBlockRateRequest);
+                                                        this.salesforceController.addRecordInSalesforce(applicationConfiguration.getSalesforcePMSBlockRates(),salesforceToken.getAccess_token(), salesforcePMSBlockRateRequestString);
 
-//                Optional<SalesforceBookingResponse> booking = retrieveAndParseResponse(bookingId, SalesforceBookingResponse.class, applicationConfiguration.getSalesforceBookingObject());
-//                if (booking.isPresent()) {
-//                    setResponseAPI("Booking", bookingId, requestBody, booking.get(), "Salesforce", "Success", "None", apiResponse);
-//                    Optional<SalesforceAccountResponse> account = retrieveAndParseResponse(booking.get().getThn__Company__c(), SalesforceAccountResponse.class, applicationConfiguration.getSalesforceAccountObject());
-//                    if (account.isPresent()) {
-//                        setResponseAPI("Account", bookingId, booking.get().getThn__Company_Contact__c(), account.get(), "Salesforce", "Success", "None", apiResponse);
-//                        Optional<SalesforceContactResponse> contact = retrieveAndParseResponse(booking.get().getThn__Company_Contact__c(), SalesforceContactResponse.class, applicationConfiguration.getSalesforceCompanyContactObject());
-//                        if (contact.isPresent()) {
-//                            setResponseAPI("Contact", bookingId, booking.get().getThn__Company_Contact__c(), contact.get(), "Salesforce", "Success", "None", apiResponse);
-//                            Optional<SalesforceRateResponse> rate = retrieveAndParseResponse(booking.get().getThn__Block_Rate__c(), SalesforceRateResponse.class, applicationConfiguration.getSalesforceRateObject());
-//                            if (rate.isPresent()) {
-//                                setResponseAPI("Rate", bookingId, booking.get().getThn__Block_Rate__c(), rate.get(), "Salesforce", "Success", "None", apiResponse);
-//                                Optional<SalesforcePropertyResponse> property = retrieveAndParseResponse(rate.get().getHotel(), SalesforcePropertyResponse.class, applicationConfiguration.getSalesforcePropertyObject());
-//
-//                                if (property.isPresent()) {
-//                                    setResponseAPI("Property", bookingId, rate.get().getHotel(), property.get(), "Salesforce", "Success", "None", apiResponse);
-//                                    MewsCompanyRequest mewsCompanyRequest = this.mewsController.createCompanyPayload(booking.get(),account.get(),contact.get());
-//                                    Optional<MewsCompanyResponse> mewsCompanyResponse = this.addCompanyInMews(mewsCompanyRequest);
-//                                    String mewsCompanyRequestString = objectMapper.writeValueAsString(mewsCompanyRequest);
-//                                    if (mewsCompanyResponse.isPresent()) {
-//                                        setResponseAPI("MewsCompany", bookingId, mewsCompanyRequestString, mewsCompanyResponse.get(), "Mews", "Success", "None", apiResponse);
-//                                        MewsBookerRequest mewsBookerRequest = this.mewsController.createBookerPayload(booking.get(),account.get(),contact.get());
-//                                        String mewsBookerRequestString = objectMapper.writeValueAsString(mewsBookerRequest);
-//                                        Optional<MewsBookerResponse> bookerResponse = this.addBookerInMews(mewsBookerRequest);
-//                                        if (bookerResponse.isPresent()) {
-//                                            setResponseAPI("MewsBooker", bookingId, mewsBookerRequestString, bookerResponse.get(), "Mews", "Success", "None", apiResponse);
-//                                            MewsAvailabilityBlockRequest mewsAvailabilityBlockRequest = this.mewsController.createAvailabilityBlockPayload(booking.get(),rate.get(),property.get(),bookerResponse.get());
-//                                            String mewsAvailabilityBlockRequestString = objectMapper.writeValueAsString(mewsAvailabilityBlockRequest);
-//                                            Optional<MewsAvailabilityBlockResponse> availabilityBlockResponse = this.addAvailabilityBlockInMews(mewsAvailabilityBlockRequest);
-//                                            if (availabilityBlockResponse.isPresent()) {
-//                                                setResponseAPI("MewsAvailabilityBlock", bookingId, mewsAvailabilityBlockRequestString, availabilityBlockResponse.get(), "Mews", "Success", "None", apiResponse);
-//                                                MewsUpdateAvailabilityRequest mewsUpdateAvailabilityRequest = this.mewsController.createUpdateAvailabilityPayload(booking.get(),rate.get(),property.get(),bookerResponse.get());
-//                                                String mewsUpdateAvailabilityRequestString = objectMapper.writeValueAsString(mewsUpdateAvailabilityRequest);
-//                                                String updateAvailabilityResponse = this.mewsController.updateAvailability(mewsUpdateAvailabilityRequest);
-//                                                if (updateAvailabilityResponse.equals("{}")) {
-//                                                    setResponseAPI("MewsUpdateAvailability", bookingId, mewsUpdateAvailabilityRequestString, null, "Mews", "Success", "None", apiResponse);
-//                                                    MewsUpdateRateRequest mewsUpdateRateRequest = this.mewsController.createUpdateRatePayload(booking.get(),rate.get(),property.get(),bookerResponse.get());
-//                                                    String mewsUpdateRateRequestString = objectMapper.writeValueAsString(mewsUpdateRateRequest);
-//                                                    String mewsUpdateRateResponse = this.mewsController.updateAvailability(mewsUpdateAvailabilityRequest);
-//                                                    if (mewsUpdateRateResponse.equals("{}")) {
-//                                                        setResponseAPI("MewsUpdateRate", bookingId, mewsUpdateRateRequestString, null, "Mews", "Success", "None", apiResponse);
-//                                                    } else {
-//                                                        setResponseAPI("MewsUpdateRate", bookingId, mewsAvailabilityBlockRequestString, null, "Mews", "Failed", "Error retrieving or parsing Mews Update Rate ", apiResponse);
-//                                                        logger.error("Error retrieving or parsing Mews Update Rate Response");
-//                                                    }
-//                                                } else {
-//                                                    setResponseAPI("MewsUpdateAvailability", bookingId, mewsAvailabilityBlockRequestString, null, "Mews", "Failed", "Error retrieving or parsing Mews Update Availability ", apiResponse);
-//                                                    logger.error("Error retrieving or parsing Mews Update Availability Response");
-//                                                }
-//                                            } else {
-//                                                setResponseAPI("MewsAvailabilityBlock", bookingId, mewsAvailabilityBlockRequestString, null, "Mews", "Failed", "Error retrieving or parsing Mews Availability Block Response", apiResponse);
-//                                                logger.error("Error retrieving or parsing Mews Availability Block Response");
-//                                            }
-//                                        } else {
-//                                            setResponseAPI("MewsBooker", bookingId, rate.get().getHotel(), null, "Mews", "Failed", "Error retrieving or parsing Mews Booker Response", apiResponse);
-//                                            logger.error("Error retrieving or parsing Mews Booker Response");
-//                                        }
-//                                    } else {
-//                                        setResponseAPI("MewsCompany", bookingId, rate.get().getHotel(), null, "Mews", "Failed", "Error retrieving or parsing Mews Company Response", apiResponse);
-//                                        logger.error("Error retrieving or parsing Mews Company Response");
-//                                    }
-//                                } else {
-//                                    setResponseAPI("Property", bookingId, rate.get().getHotel(), null, "Salesforce", "Failed", "Error retrieving or parsing Salesforce Property Response", apiResponse);
-//                                    logger.error("Error retrieving or parsing Salesforce Property Response");
-//                                }
-//                            } else {
-//                                setResponseAPI("Rate", bookingId, booking.get().getThn__Block_Rate__c(), null, "Salesforce", "Failed", "Error retrieving or parsing Salesforce Rate Response", apiResponse);
-//                                logger.error("Error retrieving or parsing Salesforce Rate Response");
-//                            }
-//                        } else {
-//                            setResponseAPI("Contact", bookingId, booking.get().getThn__Company_Contact__c(), null, "Salesforce", "Failed", "Error retrieving or parsing Salesforce Contact Response", apiResponse);
-//                            logger.error("Error retrieving or parsing Salesforce Contact Response");
-//                        }
-//                    } else {
-//                        setResponseAPI("Account", bookingId,  booking.get().getThn__Company_Contact__c(), null, "Salesforce", "Failed", "Error retrieving or parsing Salesforce Account Response", apiResponse);
-//                        logger.error("Error retrieving or parsing Salesforce Account Response");
-//                    }
-//                } else {
-//                    setResponseAPI("Booking", bookingId, requestBody, null, "Salesforce", "Failed", "Error retrieving or parsing Salesforce Booking Response", apiResponse);
-//                    logger.error("Error retrieving or parsing Salesforce Booking Response");
-//                }
+                                                        SalesforceBookingRequest salesforceBookingRequest = this.salesforceController.createBookingPayload();
+                                                        String salesforceBookingRequestString = objectMapper.writeValueAsString(salesforceBookingRequest);
+                                                        this.salesforceController.updateRecordInSalesforce(applicationConfiguration.getSalesforceBookingObject(),salesforceToken.getAccess_token(), salesforceBookingRequestString,bookingId);
+                                                        // New block of code ends here
+                                                    } else {
+                                                        setResponseAPI("MewsUpdateRate", bookingId, mewsAvailabilityBlockRequestString, null, "Mews", "Failed", "Error retrieving or parsing Mews Update Rate ", apiResponse);
+                                                        logger.error("Error retrieving or parsing Mews Update Rate Response");
+                                                    }
+                                                } else {
+                                                    setResponseAPI("MewsUpdateAvailability", bookingId, mewsAvailabilityBlockRequestString, null, "Mews", "Failed", "Error retrieving or parsing Mews Update Availability ", apiResponse);
+                                                    logger.error("Error retrieving or parsing Mews Update Availability Response");
+                                                }
+                                            } else {
+                                                setResponseAPI("MewsAvailabilityBlock", bookingId, mewsAvailabilityBlockRequestString, null, "Mews", "Failed", "Error retrieving or parsing Mews Availability Block Response", apiResponse);
+                                                logger.error("Error retrieving or parsing Mews Availability Block Response");
+                                            }
+                                        } else {
+                                            setResponseAPI("MewsBooker", bookingId, rate.get().getHotel(), null, "Mews", "Failed", "Error retrieving or parsing Mews Booker Response", apiResponse);
+                                            logger.error("Error retrieving or parsing Mews Booker Response");
+                                        }
+                                    } else {
+                                        setResponseAPI("MewsCompany", bookingId, rate.get().getHotel(), null, "Mews", "Failed", "Error retrieving or parsing Mews Company Response", apiResponse);
+                                        logger.error("Error retrieving or parsing Mews Company Response");
+                                    }
+                                } else {
+                                    setResponseAPI("Property", bookingId, rate.get().getHotel(), null, "Salesforce", "Failed", "Error retrieving or parsing Salesforce Property Response", apiResponse);
+                                    logger.error("Error retrieving or parsing Salesforce Property Response");
+                                }
+                            } else {
+                                setResponseAPI("Rate", bookingId, booking.get().getThn__Block_Rate__c(), null, "Salesforce", "Failed", "Error retrieving or parsing Salesforce Rate Response", apiResponse);
+                                logger.error("Error retrieving or parsing Salesforce Rate Response");
+                            }
+                        } else {
+                            setResponseAPI("Contact", bookingId, booking.get().getThn__Company_Contact__c(), null, "Salesforce", "Failed", "Error retrieving or parsing Salesforce Contact Response", apiResponse);
+                            logger.error("Error retrieving or parsing Salesforce Contact Response");
+                        }
+                    } else {
+                        setResponseAPI("Account", bookingId,  booking.get().getThn__Company_Contact__c(), null, "Salesforce", "Failed", "Error retrieving or parsing Salesforce Account Response", apiResponse);
+                        logger.error("Error retrieving or parsing Salesforce Account Response");
+                    }
+                } else {
+                    setResponseAPI("Booking", bookingId, requestBody, null, "Salesforce", "Failed", "Error retrieving or parsing Salesforce Booking Response", apiResponse);
+                    logger.error("Error retrieving or parsing Salesforce Booking Response");
+                }
             } else {
                 logger.info("Request body does not contain booking Id");
                 return "Failed"; // return a failure response if bookingId is not provided
