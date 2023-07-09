@@ -70,7 +70,7 @@ public class MewsController {
         mewsBookerRequest.setNationalityCode(contact.getThn__Nationality__c());
         mewsBookerRequest.setBirthDate(contact.getBirthdate());
 //        mewsBookerRequest.setEmail(contact.getEmail());
-      mewsBookerRequest.setEmail("Doe01212312312222@gmail.com");
+      mewsBookerRequest.setEmail("Doe91@gmail.com");
         mewsBookerRequest.setPhone(contact.getPhone());
         mewsBookerRequest.setLoyaltyCode(contact.getLoyalty__c());
 

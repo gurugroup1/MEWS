@@ -3,6 +3,7 @@ package middleware.controllers;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import middleware.enums.ResponseStatus;
+
 import java.util.Map;
 
 public class ApiResponse {
@@ -10,49 +11,60 @@ public class ApiResponse {
     private String message;
     private Object bookingResponse;
     private Object accountResponse;
-
-    public Object getRateResponse() {
-        return rateResponse;
-    }
-
-    public void setRateResponse(Object rateResponse) {
-        this.rateResponse = rateResponse;
-    }
-
-    public Object getPropertyResponse() {
-        return propertyResponse;
-    }
-
-    public void setPropertyResponse(Object propertyResponse) {
-        this.propertyResponse = propertyResponse;
-    }
-
     private Object rateResponse;
     private Object propertyResponse;
-
-    public Object getContactResponse() {
-        return contactResponse;
-    }
-
-    public void setContactResponse(Object contactResponse) {
-        this.contactResponse = contactResponse;
-    }
-
     private Object contactResponse;
+
+    public Object getMewsCompanyResponse() {
+        return mewsCompanyResponse;
+    }
+
+    public void setMewsCompanyResponse(Object mewsCompanyResponse) {
+        this.mewsCompanyResponse = mewsCompanyResponse;
+    }
+
+    public Object getMewsBookerResponse() {
+        return mewsBookerResponse;
+    }
+
+    public void setMewsBookerResponse(Object mewsBookerResponse) {
+        this.mewsBookerResponse = mewsBookerResponse;
+    }
+
+    public Object getMewsAvailabilityBlockResponse() {
+        return mewsAvailabilityBlockResponse;
+    }
+
+    public void setMewsAvailabilityBlockResponse(Object mewsAvailabilityBlockResponse) {
+        this.mewsAvailabilityBlockResponse = mewsAvailabilityBlockResponse;
+    }
+
+    public Object getMewsUpdateAvailabilityResponse() {
+        return mewsUpdateAvailabilityResponse;
+    }
+
+    public void setMewsUpdateAvailabilityResponse(Object mewsUpdateAvailabilityResponse) {
+        this.mewsUpdateAvailabilityResponse = mewsUpdateAvailabilityResponse;
+    }
+
+    public Object getMewsUpdateRatePriceResponse() {
+        return mewsUpdateRatePriceResponse;
+    }
+
+    public void setMewsUpdateRatePriceResponse(Object mewsUpdateRatePriceResponse) {
+        this.mewsUpdateRatePriceResponse = mewsUpdateRatePriceResponse;
+    }
+
+    private Object mewsCompanyResponse;
+    private Object mewsBookerResponse;
+    private Object mewsAvailabilityBlockResponse;
+    private Object mewsUpdateAvailabilityResponse;
+    private Object mewsUpdateRatePriceResponse;
+
     private Map<String, Object> data;
 
     public void setData(Map<String, Object> data) {
         this.data = data;
-    }
-
-    @Override
-    public String toString() {
-        try {
-            // Convert the response to JSON
-            return new ObjectMapper().writeValueAsString(this);
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException("Failed to convert the response to JSON", e);
-        }
     }
 
     public ResponseStatus getStatus() {
@@ -87,7 +99,41 @@ public class ApiResponse {
         this.accountResponse = accountResponse;
     }
 
+    public Object getRateResponse() {
+        return rateResponse;
+    }
+
+    public void setRateResponse(Object rateResponse) {
+        this.rateResponse = rateResponse;
+    }
+
+    public Object getPropertyResponse() {
+        return propertyResponse;
+    }
+
+    public void setPropertyResponse(Object propertyResponse) {
+        this.propertyResponse = propertyResponse;
+    }
+
+    public Object getContactResponse() {
+        return contactResponse;
+    }
+
+    public void setContactResponse(Object contactResponse) {
+        this.contactResponse = contactResponse;
+    }
+
     public Map<String, Object> getData() {
         return data;
+    }
+
+    @Override
+    public String toString() {
+        try {
+            // Convert the response to JSON
+            return new ObjectMapper().writeValueAsString(this);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException("Failed to convert the response to JSON", e);
+        }
     }
 }
