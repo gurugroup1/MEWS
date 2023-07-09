@@ -127,7 +127,9 @@ public class BookingCommand implements Command {
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            apiResponse.setStatus(ResponseStatus.FAILED);
+            apiResponse.setMessage("An error occurred: " + e.getMessage());
+            return apiResponse;
         }
 
         return apiResponse;
