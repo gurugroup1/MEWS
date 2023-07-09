@@ -87,6 +87,10 @@ public class WebhookController {
                 String salesforcePMSBlockRateRequestString = objectMapper.writeValueAsString(salesforcePMSBlockRateRequest);
                 this.salesforceController.addRecordInSalesforce(applicationConfiguration.getSalesforcePMSBlockRates(),salesforceToken.getAccess_token(), salesforcePMSBlockRateRequestString);
 
+                SalesforceBookingRequest salesforceBookingRequest = this.salesforceController.createBookingPayload();
+                String salesforceBookingRequestString = objectMapper.writeValueAsString(salesforceBookingRequest);
+                this.salesforceController.updateRecordInSalesforce(applicationConfiguration.getSalesforceBookingObject(),salesforceToken.getAccess_token(), salesforceBookingRequestString,bookingId);
+
 
 
 

@@ -27,6 +27,13 @@ public class SalesforceController {
         this.salesforceConnectorService = Objects.requireNonNull(salesforceConnectorService, "Salesforce connector service must not be null");
     }
 
+    public SalesforceBookingRequest createBookingPayload() throws JsonProcessingException {
+
+        SalesforceBookingRequest payload = new SalesforceBookingRequest();
+        payload.setName("Little Maidsss asdasd");
+        return payload;
+    }
+
     public PSMAccountRequest createPSMAccountPayload() throws JsonProcessingException {
 
         PSMAccountRequest payload = new PSMAccountRequest();
@@ -62,17 +69,19 @@ public class SalesforceController {
         return payload;
     }
 
-
-
-    public String addRecordInSalesforce(String object, String sfAccessToken,String request) throws IOException {
-        return salesforceConnectorService.setDataInSalesforce(object,sfAccessToken,request);
-    }
-
     public String getRecordFromSalesforce(String object, String sfAccessToken, String bookingId) throws IOException {
         return salesforceConnectorService.getDataFromSalesforce(
                 Objects.requireNonNull(object, "Salesforce Object must not be null"),
                 Objects.requireNonNull(sfAccessToken, "Salesforce access token must not be null"),
                 Objects.requireNonNull(bookingId, "Reference Id must not be null")
         );
+    }
+
+    public String addRecordInSalesforce(String object, String sfAccessToken,String request) throws IOException {
+        return salesforceConnectorService.setDataInSalesforce(object,sfAccessToken,request);
+    }
+
+    public String updateRecordInSalesforce(String object, String sfAccessToken,String request,String Id) throws IOException {
+        return salesforceConnectorService.updateDataInSalesforce(object,sfAccessToken,request,Id);
     }
 }

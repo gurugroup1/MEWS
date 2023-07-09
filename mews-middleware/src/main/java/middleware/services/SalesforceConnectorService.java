@@ -30,6 +30,10 @@ public class SalesforceConnectorService {
         return executePostSObject(object, sfAccessToken, jsonBody);
     }
 
+    public String updateDataInSalesforce(String object, String sfAccessToken, String jsonBody,String id) throws IOException {
+        return executeUpdateSObject(object, sfAccessToken, jsonBody,id);
+    }
+
     private String executeGetSObject(String object, String sfAccessToken, String bookingId) throws IOException {
         Request request = new Request.Builder()
                 .url(String.format(applicationConfiguration.getSalesforceSObjectrUrlPrefix(), applicationConfiguration.getSalesforceSObjectUrl(), object + "/" + bookingId))
@@ -49,11 +53,29 @@ public class SalesforceConnectorService {
     private String executePostSObject(String object, String sfAccessToken, String jsonBody) throws IOException {
         MediaType mediaType = MediaType.parse("application/json");
         RequestBody body = RequestBody.create(mediaType, jsonBody);
-        System.out.println(jsonBody);
         Request request = new Request.Builder()
                 .url(String.format(applicationConfiguration.getSalesforceSObjectrUrlPrefix(),
                         applicationConfiguration.getSalesforceSObjectUrl(), object))
                 .post(body)
+                .addHeader("Content-Type", "application/json")
+                .addHeader("Authorization", "Bearer " + sfAccessToken)
+                .build();
+
+        try (Response response = httpClient.newCall(request).execute()) {
+            if (!response.isSuccessful()) {
+                throw new IOException("Unexpected code " + response);
+            }
+            return response.body().string();
+        }
+    }
+
+    private String executeUpdateSObject(String object, String sfAccessToken, String jsonBody, String id) throws IOException {
+        MediaType mediaType = MediaType.parse("application/json");
+        System.out.println(jsonBody);
+        RequestBody body = RequestBody.create(mediaType, jsonBody);
+        Request request = new Request.Builder()
+                .url(String.format(applicationConfiguration.getSalesforceSObjectrUrlPrefix(), applicationConfiguration.getSalesforceSObjectUrl(), object + "/" + id))
+                .patch(body)
                 .addHeader("Content-Type", "application/json")
                 .addHeader("Authorization", "Bearer " + sfAccessToken)
                 .build();
