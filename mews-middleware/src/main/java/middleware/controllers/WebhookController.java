@@ -8,18 +8,16 @@ import middleware.entity.Log;
 import middleware.enums.Status;
 import middleware.models.*;
 import middleware.services.*;
+import middleware.util.DateTimeUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.web.bind.annotation.*;
 import java.util.Optional;
-
 import java.io.IOException;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.Objects;
-import java.util.Optional;
+
 
 @CrossOrigin(origins = {"${cross.origin}"}) //It's better to configure this in the application properties
 @RestController
@@ -282,7 +280,7 @@ public class WebhookController {
 
         apiResponse.setBookingId(objectId);
         apiResponse.setStatus(status);
-        apiResponse.setCreatedDate(getTimeNow());
+        apiResponse.setCreatedDate(DateTimeUtils.getTimeNow());
 
         try {
             String jsonResponse = objectMapper.writeValueAsString(apiResponse);
@@ -297,12 +295,6 @@ public class WebhookController {
         } catch (JsonProcessingException e) {
             e.printStackTrace();
         }
-    }
-
-    public String getTimeNow() {
-        LocalDate currentDate = LocalDate.now();
-        String formattedDate = currentDate.format(DateTimeFormatter.ISO_DATE);
-        return formattedDate;
     }
 
     private <T> Optional<T> retrieveAndParseResponse(String parameter, Class<T> responseClass, String object) {
@@ -393,16 +385,6 @@ public class WebhookController {
             return parsedResponse;
         } catch (IOException e) {
             throw new Exception("Unable to parse " + responseType.getSimpleName() + " Response", e);
-        }
-    }
-
-
-    private void checkForErrorResponse(String response) throws Exception {
-        JsonNode jsonResponse = objectMapper.readTree(response);
-        if (jsonResponse.has("error")) {
-            String errorMessage = jsonResponse.get("error").asText();
-            String message = jsonResponse.get("message").asText();
-            throw new Exception("Salesforce API error: " + errorMessage + " - " + message);
         }
     }
 
