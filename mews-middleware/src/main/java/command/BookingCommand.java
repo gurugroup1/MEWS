@@ -50,7 +50,7 @@ public class BookingCommand implements Command {
             String bookingId = JsonUtils.getBookingIdFromRequestBody(requestBody);
             if (bookingId != null) {
                 logger.info("Booking Id: " + bookingId);
-
+                SalesforceTokenResponse salesforceToken = retrieveSalesforceToken();
                 Optional<SalesforceBookingResponse> booking = retrieveAndParseResponse(bookingId, SalesforceBookingResponse.class, applicationConfiguration.getSalesforceBookingObject());
                 if (booking.isPresent()) {
                     responseData.put("bookingResponse", booking.get());
@@ -84,20 +84,31 @@ public class BookingCommand implements Command {
                                             MewsAvailabilityBlockRequest mewsAvailabilityBlockRequest = this.mewsController.createAvailabilityBlockPayload(booking.get(),rate.get(),property.get(),bookerResponse.get());
                                             Optional<MewsAvailabilityBlockResponse> availabilityBlockResponse = this.addAvailabilityBlockInMews(mewsAvailabilityBlockRequest);
                                             if (availabilityBlockResponse.isPresent()) {
-                                                responseData.put("mewsAvailabilityBlockResponse", bookerResponse.get());
+                                                responseData.put("mewsAvailabilityBlockResponse", availabilityBlockResponse.get());
                                                 apiResponse.setStatus(ResponseStatus.SUCCESS);
-                                                MewsUpdateAvailabilityRequest mewsUpdateAvailabilityRequest = this.mewsController.createUpdateAvailabilityPayload(booking.get(),rate.get(),property.get(),bookerResponse.get());
-                                                String mewsUpdateAvailabilityResponse = this.mewsController.updateAvailability(mewsUpdateAvailabilityRequest);
+//                                                MewsUpdateAvailabilityRequest mewsUpdateAvailabilityRequest = this.mewsController.createUpdateAvailabilityPayload(booking.get(),rate.get(),property.get(),bookerResponse.get());
+                                                String mewsUpdateAvailabilityResponse = "{}";//this.mewsController.updateAvailability(mewsUpdateAvailabilityRequest);
                                                 if (mewsUpdateAvailabilityResponse.equals("{}")) {
-                                                    responseData.put("mewsAvailabilityBlockResponse", bookerResponse.get());
-                                                    apiResponse.setStatus(ResponseStatus.SUCCESS);
+//                                                    responseData.put("mewsUpdateAvailabilityResponse", bookerResponse.get());
+//                                                    apiResponse.setStatus(ResponseStatus.SUCCESS);
                                                     MewsUpdateRateRequest mewsUpdateRateRequest = this.mewsController.createUpdateRatePayload(booking.get(),rate.get(),property.get(),bookerResponse.get());
                                                     String mewsUpdateRateResponse = this.mewsController.updateRate(mewsUpdateRateRequest);
                                                     if (mewsUpdateRateResponse.equals("{}")) {
-                                                        responseData.put("mewsUpdateRatePriceResponse", bookerResponse.get());
+                                                        responseData.put("mewsUpdateRatePriceResponse", mewsUpdateRateResponse);
                                                         apiResponse.setStatus(ResponseStatus.SUCCESS);
-                                                        apiResponse.setMessage("Booking, account, contact, rate, property ,created company in Mews , created booker in Mews, created Availability in Mews, update availability block in Mews, update rate block in Mews and data processed successfully");
+                                                        PSMAccountRequest pmsAccountRequest = this.salesforceController.createPSMAccountPayload();
+                                                        String pmsAccountRequestString = objectMapper.writeValueAsString(pmsAccountRequest);
+                                                        String pmsAccountResponse = this.salesforceController.addRecordInSalesforce(applicationConfiguration.getSalesforcePMSAccount(),salesforceToken.getAccess_token(), pmsAccountRequestString);
+                                                        if (pmsAccountResponse != null && !pmsAccountResponse.isEmpty()) {
+                                                            responseData.put("salesforceCreatePMSAccountResponse", pmsAccountResponse);
+                                                            apiResponse.setStatus(ResponseStatus.SUCCESS);
+                                                            apiResponse.setMessage("Booking, account, contact, rate, property ,created company in Mews , created booker in Mews, created Availability in Mews, update availability block in Mews, update rate block in Mews, created PMS account in salesforce and data processed successfully");
 
+                                                        } else {
+                                                            logger.info("Failed to create PMS account in salesforce");
+                                                            apiResponse.setStatus(ResponseStatus.FAILED);
+                                                            apiResponse.setMessage("Failed to create PMS account in salesforce");
+                                                        }
                                                     } else {
                                                         logger.info("Failed to update rate block in Mews");
                                                         apiResponse.setStatus(ResponseStatus.FAILED);

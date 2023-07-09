@@ -35,7 +35,7 @@ public class SalesforceController {
 
     public PSMAccountRequest createPSMAccountPayload() throws JsonProcessingException {
         PSMAccountRequest payload = new PSMAccountRequest();
-        payload.setName("New test 123");
+        payload.setName("Testing Account 1");
         return payload;
     }
 

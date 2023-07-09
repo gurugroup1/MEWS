@@ -14,58 +14,18 @@ public class ApiResponse {
     private Object rateResponse;
     private Object propertyResponse;
     private Object contactResponse;
-
-    public Object getMewsCompanyResponse() {
-        return mewsCompanyResponse;
-    }
-
-    public void setMewsCompanyResponse(Object mewsCompanyResponse) {
-        this.mewsCompanyResponse = mewsCompanyResponse;
-    }
-
-    public Object getMewsBookerResponse() {
-        return mewsBookerResponse;
-    }
-
-    public void setMewsBookerResponse(Object mewsBookerResponse) {
-        this.mewsBookerResponse = mewsBookerResponse;
-    }
-
-    public Object getMewsAvailabilityBlockResponse() {
-        return mewsAvailabilityBlockResponse;
-    }
-
-    public void setMewsAvailabilityBlockResponse(Object mewsAvailabilityBlockResponse) {
-        this.mewsAvailabilityBlockResponse = mewsAvailabilityBlockResponse;
-    }
-
-    public Object getMewsUpdateAvailabilityResponse() {
-        return mewsUpdateAvailabilityResponse;
-    }
-
-    public void setMewsUpdateAvailabilityResponse(Object mewsUpdateAvailabilityResponse) {
-        this.mewsUpdateAvailabilityResponse = mewsUpdateAvailabilityResponse;
-    }
-
-    public Object getMewsUpdateRatePriceResponse() {
-        return mewsUpdateRatePriceResponse;
-    }
-
-    public void setMewsUpdateRatePriceResponse(Object mewsUpdateRatePriceResponse) {
-        this.mewsUpdateRatePriceResponse = mewsUpdateRatePriceResponse;
-    }
-
     private Object mewsCompanyResponse;
     private Object mewsBookerResponse;
     private Object mewsAvailabilityBlockResponse;
     private Object mewsUpdateAvailabilityResponse;
     private Object mewsUpdateRatePriceResponse;
-
+    private Object salesforceCreatePMSAccountResponse;
+    private Object salesforceCreateGuestResponse;
+    private Object salesforceCreatePMSBlockResponse;
+    private Object salesforceCreatePMSBlockRatesResponse;
+    private Object salesforceUpdateGuestRoomResponse;
+    private Object salesforceUpdateBookingResponse;
     private Map<String, Object> data;
-
-    public void setData(Map<String, Object> data) {
-        this.data = data;
-    }
 
     public ResponseStatus getStatus() {
         return status;
@@ -123,8 +83,100 @@ public class ApiResponse {
         this.contactResponse = contactResponse;
     }
 
+    public Object getMewsCompanyResponse() {
+        return mewsCompanyResponse;
+    }
+
+    public void setMewsCompanyResponse(Object mewsCompanyResponse) {
+        this.mewsCompanyResponse = mewsCompanyResponse;
+    }
+
+    public Object getMewsBookerResponse() {
+        return mewsBookerResponse;
+    }
+
+    public void setMewsBookerResponse(Object mewsBookerResponse) {
+        this.mewsBookerResponse = mewsBookerResponse;
+    }
+
+    public Object getMewsAvailabilityBlockResponse() {
+        return mewsAvailabilityBlockResponse;
+    }
+
+    public void setMewsAvailabilityBlockResponse(Object mewsAvailabilityBlockResponse) {
+        this.mewsAvailabilityBlockResponse = mewsAvailabilityBlockResponse;
+    }
+
+    public Object getMewsUpdateAvailabilityResponse() {
+        return mewsUpdateAvailabilityResponse;
+    }
+
+    public void setMewsUpdateAvailabilityResponse(Object mewsUpdateAvailabilityResponse) {
+        this.mewsUpdateAvailabilityResponse = mewsUpdateAvailabilityResponse;
+    }
+
+    public Object getMewsUpdateRatePriceResponse() {
+        return mewsUpdateRatePriceResponse;
+    }
+
+    public void setMewsUpdateRatePriceResponse(Object mewsUpdateRatePriceResponse) {
+        this.mewsUpdateRatePriceResponse = mewsUpdateRatePriceResponse;
+    }
+
+    public Object getSalesforceCreatePMSAccountResponse() {
+        return salesforceCreatePMSAccountResponse;
+    }
+
+    public void setSalesforceCreatePMSAccountResponse(Object salesforceCreatePMSAccountResponse) {
+        this.salesforceCreatePMSAccountResponse = salesforceCreatePMSAccountResponse;
+    }
+
+    public Object getSalesforceCreateGuestResponse() {
+        return salesforceCreateGuestResponse;
+    }
+
+    public void setSalesforceCreateGuestResponse(Object salesforceCreateGuestResponse) {
+        this.salesforceCreateGuestResponse = salesforceCreateGuestResponse;
+    }
+
+    public Object getSalesforceCreatePMSBlockResponse() {
+        return salesforceCreatePMSBlockResponse;
+    }
+
+    public void setSalesforceCreatePMSBlockResponse(Object salesforceCreatePMSBlockResponse) {
+        this.salesforceCreatePMSBlockResponse = salesforceCreatePMSBlockResponse;
+    }
+
+    public Object getSalesforceCreatePMSBlockRatesResponse() {
+        return salesforceCreatePMSBlockRatesResponse;
+    }
+
+    public void setSalesforceCreatePMSBlockRatesResponse(Object salesforceCreatePMSBlockRatesResponse) {
+        this.salesforceCreatePMSBlockRatesResponse = salesforceCreatePMSBlockRatesResponse;
+    }
+
+    public Object getSalesforceUpdateGuestRoomResponse() {
+        return salesforceUpdateGuestRoomResponse;
+    }
+
+    public void setSalesforceUpdateGuestRoomResponse(Object salesforceUpdateGuestRoomResponse) {
+        this.salesforceUpdateGuestRoomResponse = salesforceUpdateGuestRoomResponse;
+    }
+
+    public Object getSalesforceUpdateBookingResponse() {
+        return salesforceUpdateBookingResponse;
+    }
+
+    public void setSalesforceUpdateBookingResponse(Object salesforceUpdateBookingResponse) {
+        this.salesforceUpdateBookingResponse = salesforceUpdateBookingResponse;
+    }
+
     public Map<String, Object> getData() {
         return data;
+    }
+
+    public void setData(Map<String, Object> data) {
+        this.data = data;
     }
 
     @Override
