@@ -1,4 +1,4 @@
-package command;
+package middleware.command;
 
 import middleware.controllers.ApiResponse;
 
