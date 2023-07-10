@@ -7,11 +7,16 @@ import org.springframework.jdbc.datasource.init.DataSourceInitializer;
 import org.springframework.jdbc.datasource.init.ResourceDatabasePopulator;
 
 import javax.sql.DataSource;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @SpringBootApplication
 public class MiddlewareApplication {
-    public static void main(String[] args) {
-        SpringApplication.run(MiddlewareApplication.class, args);
-    }
+    private static final Logger logger = LoggerFactory.getLogger(MiddlewareApplication.class);
 
+    public static void main(String[] args) {
+        logger.info("Starting Middleware Application...");
+        SpringApplication.run(MiddlewareApplication.class, args);
+        logger.info("Middleware Application started successfully.");
+    }
 }
