@@ -1,12 +1,15 @@
-<appender name="cloudwatch" class="com.amazonaws.services.logs.logback.CloudWatchAppender">
-    <logGroupName>mewslogs</logGroupName>
-    <logStreamName>i-0d0e56315d7a32bce</logStreamName>
-    <layout>
-        <pattern>%date{ISO8601} [%thread] %-5level %logger{36} - %msg%n</pattern>
-    </layout>
-    <credentialsProvider>
-        <static>
-            <accessKey>AKIA5CHQLX4WD3OXE4UW</accessKey>
-        </static>
-    </credentialsProvider>
-</appender>
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <include resource="org/springframework/boot/logging/logback/base.xml" />
+
+    <!-- Configure root logger to only output logs of level ERROR and above -->
+    <root level="ERROR">
+        <appender-ref ref="CONSOLE" />
+    </root>
+
+    <!-- Set the log level for specific loggers -->
+    <logger name="org.springframework" level="INFO" />
+
+    <!-- Add other loggers as needed -->
+
+</configuration>
