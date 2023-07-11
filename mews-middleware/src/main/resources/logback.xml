@@ -1,15 +1,12 @@
-<?xml version="1.0" encoding="UTF-8"?>
 <configuration>
-    <include resource="org/springframework/boot/logging/logback/base.xml" />
+    <appender name="FILE" class="ch.qos.logback.core.FileAppender">
+        <file>/var/log/myapp/application.log</file> <!-- Specify the path where you want to store the log file -->
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level [%thread] %logger{36} - %msg%n</pattern>
+        </encoder>
+    </appender>
 
-    <!-- Configure root logger to only output logs of level ERROR and above -->
-    <root level="ERROR">
-        <appender-ref ref="CONSOLE" />
+    <root level="INFO"> <!-- Change the log level as per your requirements -->
+        <appender-ref ref="FILE"/>
     </root>
-
-    <!-- Set the log level for specific loggers -->
-    <logger name="org.springframework" level="INFO" />
-
-    <!-- Add other loggers as needed -->
-
 </configuration>
