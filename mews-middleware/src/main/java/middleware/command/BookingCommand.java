@@ -31,9 +31,7 @@ public class BookingCommand implements Command {
     private final SalesforceController salesforceController;
     private final AuthController authController;
     private final ObjectMapper objectMapper;
-    public static String stringify(Object obj) {
-        return new Gson().toJson(obj);
-    }
+
     public BookingCommand(Logger logger, ApplicationConfiguration applicationConfiguration, SalesforceConnectorService salesforceConnectorService, MewsConnectorService mewsConnectorService, MewsController mewsController, SecretKeyManagerController secretKeyManagerController, SalesforceController salesforceController, AuthController authController, ObjectMapper objectMapper) {
         this.applicationConfiguration = applicationConfiguration;
         this.salesforceConnectorService = salesforceConnectorService;
@@ -226,14 +224,16 @@ public class BookingCommand implements Command {
         } catch (Exception e) {
             apiResponse.setStatus(ResponseStatus.FAILED);
             apiResponse.setMessage("An error occurred: " + e.getMessage());
-            String stringifyApiResponse = stringify(apiResponse);
-            logger.info("Response: " + stringifyApiResponse);
+            Gson gson = new Gson();
+            String jsonString = gson.toJson(apiResponse);
+            logger.info("Response: " + jsonString);
             logger.info("****Mews Middleware Stopped****");
 
             return apiResponse;
         }
-        String stringifyApiResponse = stringify(apiResponse);
-        logger.info("Response: " + stringifyApiResponse);
+        Gson gson = new Gson();
+        String jsonString = gson.toJson(apiResponse);
+        logger.info("Response: " + jsonString);
         logger.info("****Mews Middleware Stopped****");
 
         return apiResponse;
