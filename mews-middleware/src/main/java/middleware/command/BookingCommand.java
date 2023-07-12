@@ -2,7 +2,6 @@ package middleware.command;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
-import com.google.gson.Gson;
 import middleware.configurations.ApplicationConfiguration;
 import middleware.controllers.*;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -224,16 +223,12 @@ public class BookingCommand implements Command {
         } catch (Exception e) {
             apiResponse.setStatus(ResponseStatus.FAILED);
             apiResponse.setMessage("An error occurred: " + e.getMessage());
-            Gson gson = new Gson();
-            String jsonString = gson.toJson(apiResponse);
-            logger.info("Response: " + jsonString);
+            logger.info("Response: " + apiResponse);
             logger.info("****Mews Middleware Stopped****");
 
             return apiResponse;
         }
-        Gson gson = new Gson();
-        String jsonString = gson.toJson(apiResponse);
-        logger.info("Response: " + jsonString);
+        logger.info("Response: " + apiResponse);
         logger.info("****Mews Middleware Stopped****");
 
         return apiResponse;
