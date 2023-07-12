@@ -158,6 +158,20 @@ public class MewsController {
 
         return request;
     }
+    public MewsGetCompanyRequest createGetCompanyPayload(SalesforceAccountResponse account) throws JsonProcessingException {
+
+        MewsGetCompanyRequest request = new MewsGetCompanyRequest();
+        request.setClient(applicationConfiguration.getMewsClientName());
+        request.setAccessToken(applicationConfiguration.getMewsAccessToken());
+        request.setClientToken(applicationConfiguration.getMewsClientToken());
+        request.setNames(account.getName());
+
+        MewsGetCompanyRequest.Limitation limitation = new MewsGetCompanyRequest.Limitation();
+        limitation.setCount(10);
+        request.setLimitation(limitation);
+
+        return request;
+    }
 
     public String addCompany(MewsCompanyRequest request) throws IOException {
         return mewsConnectorService.pushToMews(request,"companies");
@@ -177,5 +191,7 @@ public class MewsController {
     public String updateRate(MewsUpdateRateRequest request) throws IOException {
         return mewsConnectorService.updateToMews(request,"rates/updatePrice");
     }
-
+    public String getAllCompany(MewsGetCompanyRequest request) throws IOException {
+        return mewsConnectorService.getRecordFromMews(request,"companies");
+    }
 }

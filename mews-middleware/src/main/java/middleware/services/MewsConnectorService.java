@@ -26,6 +26,31 @@ public class MewsConnectorService {
         this.objectMapper = new ObjectMapper();
     }
 
+    public String getRecordFromMews(Object request, String object) throws IOException {
+        ObjectWriter ow = objectMapper.writer().withDefaultPrettyPrinter();
+        String jsonStr = ow.writeValueAsString(request);
+        return executeGetRequest(jsonStr, object);
+    }
+
+    public String executeGetRequest(String jsonStr, String object) throws IOException {
+        MediaType mediaType = MediaType.parse("application/json");
+        Request request = new Request.Builder()
+                .url(applicationConfiguration.getMewsApiUrl() + "/" + object + "/getAll")
+                .method("POST", RequestBody.create(mediaType, jsonStr))
+                .addHeader("Content-Type", "application/json")
+                .addHeader("Authorization", "Bearer " + applicationConfiguration.getMewsAccessToken())
+                .build();
+        System.out.println("Request Body " + object + " : " + jsonStr);
+        try (Response calloutResponse = httpClient.newCall(request).execute()) {
+            if (!calloutResponse.isSuccessful()) {
+                String errorMessage = "Error in " + object + " call: " + calloutResponse.code() + " - " + calloutResponse.message();
+                throw new IOException(errorMessage);
+            }
+            String responseBody = calloutResponse.body().string();
+            System.out.println("Success Body " + object + " : " + responseBody);
+            return responseBody;
+        }
+    }
     public String pushToMews(Object request, String object) throws IOException {
         ObjectWriter ow = objectMapper.writer().withDefaultPrettyPrinter();
         String jsonStr = ow.writeValueAsString(request);
