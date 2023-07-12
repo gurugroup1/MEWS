@@ -85,6 +85,33 @@ public class MewsController {
         return mewsBookerRequest;
     }
 
+    public MewsGetBookerRequest createGetBookerPayload(SalesforceAccountResponse account,SalesforceContactResponse contact) throws JsonProcessingException {
+
+        MewsGetBookerRequest request = new MewsGetBookerRequest();
+        request.setClient(applicationConfiguration.getMewsClientName());
+        request.setAccessToken(applicationConfiguration.getMewsAccessToken());
+        request.setClientToken(applicationConfiguration.getMewsClientToken());
+        List<String> email = new ArrayList<>();
+        email.add(contact.getEmail());
+        request.setEmail(email);
+
+        MewsGetBookerRequest.Limitation limitation = new MewsGetBookerRequest.Limitation();
+        limitation.setCount(10);
+        request.setLimitation(limitation);
+
+        return request;
+    }
+    public MewsUpdateBookerRequest createUpdateBookerPayload(SalesforceAccountResponse account,SalesforceContactResponse contact) throws JsonProcessingException {
+
+        MewsUpdateBookerRequest request = new MewsUpdateBookerRequest();
+        request.setClient(applicationConfiguration.getMewsClientName());
+        request.setAccessToken(applicationConfiguration.getMewsAccessToken());
+        request.setClientToken(applicationConfiguration.getMewsClientToken());
+        request.setCustomerId("a3649c04-21ce-414d-b357-b02600ef49ea");
+
+        return request;
+    }
+
     public MewsAvailabilityBlockRequest createAvailabilityBlockPayload(SalesforceBookingResponse book,SalesforceRateResponse rate, SalesforcePropertyResponse property,MewsBookerResponse booker) throws JsonProcessingException {
 
         MewsAvailabilityBlockRequest mewsAvailabilityBlockRequest = new MewsAvailabilityBlockRequest();
@@ -164,9 +191,9 @@ public class MewsController {
         request.setClient(applicationConfiguration.getMewsClientName());
         request.setAccessToken(applicationConfiguration.getMewsAccessToken());
         request.setClientToken(applicationConfiguration.getMewsClientToken());
-        List<String> names = new ArrayList<>();
-        names.add(account.getName());
-        request.setNames(names);
+        List<String> emails = new ArrayList<>();
+        emails.add(account.getName());
+        request.setNames(emails);
 
         MewsGetCompanyRequest.Limitation limitation = new MewsGetCompanyRequest.Limitation();
         limitation.setCount(10);
@@ -193,7 +220,9 @@ public class MewsController {
     public String addBooker(MewsBookerRequest request) throws IOException {
         return mewsConnectorService.pushToMews(request,"customers");
     }
-
+    public String getBooker(MewsGetBookerRequest request) throws IOException {
+        return mewsConnectorService.getRecordFromMews(request,"customers");
+    }
     public String addAvailabilityBlock(MewsAvailabilityBlockRequest request) throws IOException {
         return mewsConnectorService.pushToMews(request,"availabilityBlocks");
     }
@@ -207,8 +236,12 @@ public class MewsController {
     public String getCompany(MewsGetCompanyRequest request) throws IOException {
         return mewsConnectorService.getRecordFromMews(request,"companies");
     }
+    public String updateBooker(MewsUpdateBookerRequest request) throws IOException {
+        return mewsConnectorService.updateToMews(request,"customers/update");
+    }
 
-    public String updateCompany(MewsGetCompanyRequest request) throws IOException {
+    public String updateCompany(MewsUpdateCompanyRequest request) throws IOException {
         return mewsConnectorService.updateToMews(request,"companies/update");
     }
+
 }
