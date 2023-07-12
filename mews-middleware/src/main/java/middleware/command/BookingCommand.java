@@ -2,6 +2,7 @@ package middleware.command;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.google.gson.Gson;
 import middleware.configurations.ApplicationConfiguration;
 import middleware.controllers.*;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -12,6 +13,7 @@ import middleware.services.SalesforceConnectorService;
 import middleware.util.JsonUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -29,7 +31,9 @@ public class BookingCommand implements Command {
     private final SalesforceController salesforceController;
     private final AuthController authController;
     private final ObjectMapper objectMapper;
-
+    public static String stringify(Object obj) {
+        return new Gson().toJson(obj);
+    }
     public BookingCommand(Logger logger, ApplicationConfiguration applicationConfiguration, SalesforceConnectorService salesforceConnectorService, MewsConnectorService mewsConnectorService, MewsController mewsController, SecretKeyManagerController secretKeyManagerController, SalesforceController salesforceController, AuthController authController, ObjectMapper objectMapper) {
         this.applicationConfiguration = applicationConfiguration;
         this.salesforceConnectorService = salesforceConnectorService;
@@ -222,12 +226,14 @@ public class BookingCommand implements Command {
         } catch (Exception e) {
             apiResponse.setStatus(ResponseStatus.FAILED);
             apiResponse.setMessage("An error occurred: " + e.getMessage());
-            logger.info("Response: " + apiResponse);
+            String stringifyApiResponse = stringify(apiResponse);
+            logger.info("Response: " + stringifyApiResponse);
             logger.info("****Mews Middleware Stopped****");
 
             return apiResponse;
         }
-        logger.info("Response: " + apiResponse);
+        String stringifyApiResponse = stringify(apiResponse);
+        logger.info("Response: " + stringifyApiResponse);
         logger.info("****Mews Middleware Stopped****");
 
         return apiResponse;
