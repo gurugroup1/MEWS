@@ -164,7 +164,9 @@ public class MewsController {
         request.setClient(applicationConfiguration.getMewsClientName());
         request.setAccessToken(applicationConfiguration.getMewsAccessToken());
         request.setClientToken(applicationConfiguration.getMewsClientToken());
-        request.setNames(account.getName());
+        List<String> names = new ArrayList<>();
+        names.add(account.getName());
+        request.setNames(names);
 
         MewsGetCompanyRequest.Limitation limitation = new MewsGetCompanyRequest.Limitation();
         limitation.setCount(10);

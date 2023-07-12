@@ -1,29 +1,23 @@
 package middleware.models;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import java.util.List;
+
 public class MewsGetCompanyRequest {
-
-    @JsonProperty("ClientToken")
-    private String clientToken;
-
-    @JsonProperty("AccessToken")
-    private String accessToken;
-
-    @JsonProperty("Client")
     private String client;
-
-    @JsonProperty("Names")
-    private String names;
-
-    @JsonProperty("Limitation")
+    private String accessToken;
+    private String clientToken;
+    private List<String> names;
     private Limitation limitation;
 
-    public String getClientToken() {
-        return clientToken;
+    // Getters and Setters
+
+    public String getClient() {
+        return client;
     }
 
-    public void setClientToken(String clientToken) {
-        this.clientToken = clientToken;
+    public void setClient(String client) {
+        this.client = client;
     }
 
     public String getAccessToken() {
@@ -34,19 +28,19 @@ public class MewsGetCompanyRequest {
         this.accessToken = accessToken;
     }
 
-    public String getClient() {
-        return client;
+    public String getClientToken() {
+        return clientToken;
     }
 
-    public void setClient(String client) {
-        this.client = client;
+    public void setClientToken(String clientToken) {
+        this.clientToken = clientToken;
     }
 
-    public String getNames() {
+    public List<String> getNames() {
         return names;
     }
 
-    public void setNames(String names) {
+    public void setNames(List<String> names) {
         this.names = names;
     }
 
@@ -57,10 +51,13 @@ public class MewsGetCompanyRequest {
     public void setLimitation(Limitation limitation) {
         this.limitation = limitation;
     }
-    public static class Limitation {
 
-        @JsonProperty("Count")
+    // Limitation class
+
+    public static class Limitation {
         private int count;
+
+        // Getter and Setter
 
         public int getCount() {
             return count;
@@ -69,10 +66,7 @@ public class MewsGetCompanyRequest {
         public void setCount(int count) {
             this.count = count;
         }
-
-
     }
-
-
 }
+
 

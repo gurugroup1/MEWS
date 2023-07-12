@@ -74,8 +74,14 @@ public class BookingCommand implements Command {
                                     responseData.put("propertyResponse", property.get());
                                     apiResponse.setStatus(ResponseStatus.SUCCESS);
                                     MewsGetCompanyRequest mewsGetCompanyRequest = mewsController.createGetCompanyPayload(account.get());
-                                    String mewsCompanyResponse = mewsController.getAllCompany(mewsGetCompanyRequest);
-                                    System.out.println("mewsCompanyResponse" + mewsCompanyResponse);
+                                    Optional<MewsGetCompanyResponse> getCompany = this.getCompanyFromMews(mewsGetCompanyRequest);
+                                    System.out.println("mewsCompanyResponse" + getCompany.get().getCompanies());
+                                    if(getCompany.get().getCompanies().length > 0){
+                                        System.out.println("Company exist");
+                                    } else{
+                                        MewsCompanyRequest mewsCompanyRequest = mewsController.createCompanyPayload(booking.get(), account.get(), contact.get());
+                                        Optional<MewsCompanyResponse> mewsCompanyResponse = addCompanyInMews(mewsCompanyRequest);
+                                    }
 //                                    if (mewsCompanyResponse.isPresent()) {
 //                                        responseData.put("mewsCompanyResponse", mewsCompanyResponse.get());
 //                                        apiResponse.setStatus(ResponseStatus.SUCCESS);
@@ -315,6 +321,17 @@ public class BookingCommand implements Command {
 
 
         return Optional.ofNullable(parseResponse(response, MewsAvailabilityBlockResponse.class, "Availability Block Response"));
+    }
+
+    public Optional<MewsGetCompanyResponse> getCompanyFromMews(MewsGetCompanyRequest payload) throws Exception {
+        String response = mewsController.getAllCompany(payload);
+
+        if (response == null || response.isEmpty()) {
+            throw new Exception("Empty company response from Mews.");
+        }
+
+
+        return Optional.ofNullable(parseResponse(response, MewsGetCompanyResponse.class, "Booker Response"));
     }
 
 
