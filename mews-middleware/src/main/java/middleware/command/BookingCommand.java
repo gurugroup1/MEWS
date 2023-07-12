@@ -260,8 +260,6 @@ public class BookingCommand implements Command {
                 return Optional.empty();
             }
 
-//            logger.info("Salesforce " + responseClass.getSimpleName() + " Response: " + response);
-
             // Parse the response
             T parsedResponse = objectMapper.readValue(response, responseClass);
             return Optional.ofNullable(parsedResponse);
@@ -280,8 +278,6 @@ public class BookingCommand implements Command {
                 throw new Exception("Error in " + responseType.getSimpleName() + " response from Mews: " + errorMessage);
             }
 
-//            logger.info(responseType.getSimpleName() + " Response: " + response);
-
             // Parse the response
             T parsedResponse = objectMapper.readValue(response, responseType);
             return parsedResponse;
@@ -296,8 +292,6 @@ public class BookingCommand implements Command {
             throw new Exception("Empty company response from Mews.");
         }
 
-//        logger.info("Mews Company Response: " + response);
-
         return Optional.ofNullable(parseResponse(response, MewsCompanyResponse.class, "Company Response"));
     }
     public Optional<MewsBookerResponse> addBookerInMews(MewsBookerRequest payload) throws Exception {
@@ -307,7 +301,6 @@ public class BookingCommand implements Command {
             throw new Exception("Empty company response from Mews.");
         }
 
-//        logger.info("Mews Company Response: " + response);
 
         return Optional.ofNullable(parseResponse(response, MewsBookerResponse.class, "Booker Response"));
     }
@@ -318,7 +311,6 @@ public class BookingCommand implements Command {
             throw new Exception("Empty Availability Block response from Mews.");
         }
 
-//        logger.info("Mews Company Response: " + response);
 
         return Optional.ofNullable(parseResponse(response, MewsAvailabilityBlockResponse.class, "Availability Block Response"));
     }
