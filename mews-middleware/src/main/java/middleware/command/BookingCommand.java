@@ -324,7 +324,7 @@ public class BookingCommand implements Command {
     }
 
     public Optional<MewsGetCompanyResponse> getCompanyFromMews(MewsGetCompanyRequest payload) throws Exception {
-        String response = mewsController.getAllCompany(payload);
+        String response = mewsController.getCompany(payload);
 
         if (response == null || response.isEmpty()) {
             throw new Exception("Empty company response from Mews.");

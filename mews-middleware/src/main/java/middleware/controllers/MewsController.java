@@ -193,7 +193,7 @@ public class MewsController {
     public String updateRate(MewsUpdateRateRequest request) throws IOException {
         return mewsConnectorService.updateToMews(request,"rates/updatePrice");
     }
-    public String getAllCompany(MewsGetCompanyRequest request) throws IOException {
+    public String getCompany(MewsGetCompanyRequest request) throws IOException {
         return mewsConnectorService.getRecordFromMews(request,"companies");
     }
 }
