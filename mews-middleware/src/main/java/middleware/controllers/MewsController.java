@@ -181,7 +181,7 @@ public class MewsController {
         request.setClient(applicationConfiguration.getMewsClientName());
         request.setAccessToken(applicationConfiguration.getMewsAccessToken());
         request.setClientToken(applicationConfiguration.getMewsClientToken());
-        request.setCompanyId("7d01667a-3713-41da-92e2-b02600e94d47");
+        request.setCompanyId(account.getThn__Mews_Id__c());
 
         return request;
     }

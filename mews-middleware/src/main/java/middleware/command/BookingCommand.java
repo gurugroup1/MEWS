@@ -76,13 +76,16 @@ public class BookingCommand implements Command {
                                     MewsGetCompanyRequest mewsGetCompanyRequest = mewsController.createGetCompanyPayload(account.get());
                                     Optional<MewsGetCompanyResponse> getCompany = this.getCompanyFromMews(mewsGetCompanyRequest);
                                     System.out.println("mewsCompanyResponse" + getCompany.get().getCompanies());
+                                    Optional<MewsCompanyResponse> mewsUpdateCompanyResponse;
+                                    Optional<MewsCompanyResponse> mewsCompanyResponse;
                                     if(getCompany.get().getCompanies().length > 0){
-                                        System.out.println("Company exist");
+                                        MewsUpdateCompanyRequest mewsCompanyRequest = mewsController.createUpdateCompanyPayload(account.get());
+//                                       mewsUpdateCompanyResponse = updateCom(mewsCompanyRequest);
                                     } else{
                                         MewsCompanyRequest mewsCompanyRequest = mewsController.createCompanyPayload(booking.get(), account.get(), contact.get());
-                                        Optional<MewsCompanyResponse> mewsCompanyResponse = addCompanyInMews(mewsCompanyRequest);
+                                        mewsCompanyResponse = addCompanyInMews(mewsCompanyRequest);
                                     }
-//                                    if (mewsCompanyResponse.isPresent()) {
+//                                    if (mewsCompanyResponse.isPresent() || mewsUpdateCompanyResponse.isPresent()) {
 //                                        responseData.put("mewsCompanyResponse", mewsCompanyResponse.get());
 //                                        apiResponse.setStatus(ResponseStatus.SUCCESS);
 //                                        MewsBookerRequest mewsBookerRequest = this.mewsController.createBookerPayload(booking.get(),account.get(),contact.get());
@@ -240,8 +243,6 @@ public class BookingCommand implements Command {
 
         return apiResponse;
     }
-
-
     private <T> Optional<T> retrieveAndParseResponse(String parameter, Class<T> responseClass, String object) {
         try {
             SalesforceTokenResponse salesforceToken = retrieveSalesforceToken();
@@ -276,7 +277,6 @@ public class BookingCommand implements Command {
             return Optional.empty();
         }
     }
-
     private <T> T parseResponse(String response, Class<T> responseType, String object) throws Exception {
         try {
             JsonNode responseJson = objectMapper.readTree(response);
@@ -293,7 +293,6 @@ public class BookingCommand implements Command {
             throw new Exception("Unable to parse " + responseType.getSimpleName() + " Response", e);
         }
     }
-
     public Optional<MewsCompanyResponse> addCompanyInMews(MewsCompanyRequest payload) throws Exception {
         String response = mewsController.addCompany(payload);
 
@@ -303,7 +302,6 @@ public class BookingCommand implements Command {
 
         return Optional.ofNullable(parseResponse(response, MewsCompanyResponse.class, "Company Response"));
     }
-
     public Optional<MewsBookerResponse> addBookerInMews(MewsBookerRequest payload) throws Exception {
         String response = mewsController.addBooker(payload);
 
@@ -314,7 +312,6 @@ public class BookingCommand implements Command {
 
         return Optional.ofNullable(parseResponse(response, MewsBookerResponse.class, "Booker Response"));
     }
-
     public Optional<MewsAvailabilityBlockResponse> addAvailabilityBlockInMews(MewsAvailabilityBlockRequest payload) throws Exception {
         String response = mewsController.addAvailabilityBlock(payload);
 
@@ -325,7 +322,6 @@ public class BookingCommand implements Command {
 
         return Optional.ofNullable(parseResponse(response, MewsAvailabilityBlockResponse.class, "Availability Block Response"));
     }
-
     public Optional<MewsGetCompanyResponse> getCompanyFromMews(MewsGetCompanyRequest payload) throws Exception {
         String response = mewsController.getCompany(payload);
 
@@ -336,8 +332,6 @@ public class BookingCommand implements Command {
 
         return Optional.ofNullable(parseResponse(response, MewsGetCompanyResponse.class, "Booker Response"));
     }
-
-
     private SalesforceTokenResponse retrieveSalesforceToken() throws Exception {
         SalesforceTokenResponse salesforceToken = authController.retrieveSalesforceTokenFromAWS();
         if (salesforceToken == null || salesforceToken.getAccess_token() == null) {
