@@ -293,6 +293,7 @@ public class BookingCommand implements Command {
             throw new Exception("Unable to parse " + responseType.getSimpleName() + " Response", e);
         }
     }
+
     public Optional<MewsCompanyResponse> addCompanyInMews(MewsCompanyRequest payload) throws Exception {
         String response = mewsController.addCompany(payload);
 
@@ -302,6 +303,7 @@ public class BookingCommand implements Command {
 
         return Optional.ofNullable(parseResponse(response, MewsCompanyResponse.class, "Company Response"));
     }
+
     public Optional<MewsBookerResponse> addBookerInMews(MewsBookerRequest payload) throws Exception {
         String response = mewsController.addBooker(payload);
 
@@ -312,6 +314,7 @@ public class BookingCommand implements Command {
 
         return Optional.ofNullable(parseResponse(response, MewsBookerResponse.class, "Booker Response"));
     }
+
     public Optional<MewsAvailabilityBlockResponse> addAvailabilityBlockInMews(MewsAvailabilityBlockRequest payload) throws Exception {
         String response = mewsController.addAvailabilityBlock(payload);
 
