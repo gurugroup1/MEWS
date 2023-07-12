@@ -245,8 +245,6 @@ public class BookingCommand implements Command {
                     parameter
             );
 
-            System.out.println(responseClass.getSimpleName() + " response: " + response);
-
             if (response == null || response.isEmpty()) {
                 logger.error("Empty Salesforce " + responseClass.getSimpleName() + " response.");
                 return Optional.empty();

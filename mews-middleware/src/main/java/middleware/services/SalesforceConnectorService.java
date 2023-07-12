@@ -71,7 +71,6 @@ public class SalesforceConnectorService {
 
     private String executeUpdateSObject(String object, String sfAccessToken, String jsonBody, String id) throws IOException {
         MediaType mediaType = MediaType.parse("application/json");
-        System.out.println(jsonBody);
         RequestBody body = RequestBody.create(mediaType, jsonBody);
         Request request = new Request.Builder()
                 .url(String.format(applicationConfiguration.getSalesforceSObjectrUrlPrefix(), applicationConfiguration.getSalesforceSObjectUrl(), object + "/" + id))
