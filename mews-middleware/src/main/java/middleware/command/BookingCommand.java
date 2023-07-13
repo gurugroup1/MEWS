@@ -93,119 +93,135 @@ public class BookingCommand implements Command {
                                         MewsGetBookerRequest mewsGetBookerRequest = mewsController.createGetBookerPayload(account.get(), contact.get());
                                         Optional<MewsGetBookerResponse> getBooker = this.getBookerFromMews(mewsGetBookerRequest);
                                         System.out.println("mewsBookerResponse" + getBooker.get().getCustomers());
+                                        Optional<MewsUpdateBookerResponse>  mewsUpdateBookerResponse = null;
+                                        Optional<MewsBookerResponse> bookerResponse = null;
                                         if (getBooker.get().getCustomers().length > 0) {
-                                            MewsUpdateBookerRequest mewsBookerRequest = mewsController.createUpdateBookerPayload(account.get(), contact.get());
-                                            Optional<MewsUpdateBookerResponse>  mewsUpdateBookerResponse = updateBookerInMews(mewsBookerRequest);
-                                            System.out.println("booker exist");
-                                        } else {
-                                        MewsBookerRequest mewsBookerRequest = this.mewsController.createBookerPayload(booking.get(), account.get(), contact.get());
-                                        Optional<MewsBookerResponse> bookerResponse = this.addBookerInMews(mewsBookerRequest);
-                                        }
-//                                        if (bookerResponse.isPresent()) {
-//                                            responseData.put("mewsBookerResponse", bookerResponse.get());
-//                                            apiResponse.setStatus(ResponseStatus.SUCCESS);
-//                                            MewsAvailabilityBlockRequest mewsAvailabilityBlockRequest = this.mewsController.createAvailabilityBlockPayload(booking.get(), rate.get(), property.get(), bookerResponse.get());
-//                                            Optional<MewsAvailabilityBlockResponse> availabilityBlockResponse = this.addAvailabilityBlockInMews(mewsAvailabilityBlockRequest);
-//                                            if (availabilityBlockResponse.isPresent()) {
-//                                                responseData.put("mewsAvailabilityBlockResponse", availabilityBlockResponse.get());
-//                                                apiResponse.setStatus(ResponseStatus.SUCCESS);
-////                                                MewsUpdateAvailabilityRequest mewsUpdateAvailabilityRequest = this.mewsController.createUpdateAvailabilityPayload(booking.get(),rate.get(),property.get(),bookerResponse.get());
-//                                                String mewsUpdateAvailabilityResponse = "{}";//this.mewsController.updateAvailability(mewsUpdateAvailabilityRequest);
-//                                                if (mewsUpdateAvailabilityResponse.equals("{}")) {
-////                                                    responseData.put("mewsUpdateAvailabilityResponse", bookerResponse.get());
-////                                                    apiResponse.setStatus(ResponseStatus.SUCCESS);
-//                                                    MewsUpdateRateRequest mewsUpdateRateRequest = this.mewsController.createUpdateRatePayload(booking.get(), rate.get(), property.get(), bookerResponse.get());
-//                                                    String mewsUpdateRateResponse = this.mewsController.updateRate(mewsUpdateRateRequest);
-//                                                    if (mewsUpdateRateResponse.equals("{}")) {
-//                                                        responseData.put("mewsUpdateRatePriceResponse", mewsUpdateRateResponse);
+                                            MewsUpdateBookerRequest mewsBookerRequest = mewsController.createUpdateBookerPayload(account.get(), contact.get(), getBooker.get());
+                                            mewsUpdateBookerResponse = updateBookerInMews(mewsBookerRequest);
+                                            } else {
+                                                MewsBookerRequest mewsBookerRequest = this.mewsController.createBookerPayload(booking.get(), account.get(), contact.get());
+                                                 bookerResponse = this.addBookerInMews(mewsBookerRequest);
+                                            }
+                                            if ((bookerResponse != null && bookerResponse.isPresent()) || (mewsUpdateBookerResponse != null && mewsUpdateBookerResponse.isPresent())) {
+
+                                                if (bookerResponse != null) {
+                                                    responseData.put("mewsBookerResponse", bookerResponse.get());
+                                                }
+                                                    apiResponse.setStatus(ResponseStatus.SUCCESS);
+                                                    MewsGetAvailabilityBlockRequest mewsGetAvailabilityBlockRequest = mewsController.createGetAvailabilityBlockPayload(account.get(), contact.get());
+                                                    Optional<MewsGetAvailabilityBlockResponse> getMewsAvailabilityBlock = this.getAvailabilityBlockFromMews(mewsGetAvailabilityBlockRequest);
+                                                    System.out.println("mewsGetAvailabilityBlockResponse" + getMewsAvailabilityBlock.get().getAvailabilityBlocks());
+                                                   Optional<MewsAvailabilityBlockResponse> availabilityBlockResponse = null;
+                                                    String mewsUpdateAvailabilityBlockResponse = "{}";
+                                                if (getMewsAvailabilityBlock.get().getAvailabilityBlocks().length > 0) {
+                                                    MewsUpdateAvailabilityBlockRequest mewsUpdateAvailabilityBlockRequestRequest = mewsController.createUpdateBookerPayload(account.get(), contact.get(), getBooker.get());
+                                                    mewsUpdateBookerResponse = updateInMews(mewsUpdateAvailabilityBlockRequestRequest);
+                                                } else {
+                                                    MewsAvailabilityBlockRequest mewsAvailabilityBlockRequest = this.mewsController.createAvailabilityBlockPayload(booking.get(), rate.get(), property.get(), bookerResponse.get());
+                                                     availabilityBlockResponse = this.addAvailabilityBlockInMews(mewsAvailabilityBlockRequest);
+                                                }
+//                                                    if (availabilityBlockResponse.isPresent()) {
+//                                                        responseData.put("mewsAvailabilityBlockResponse", availabilityBlockResponse.get());
 //                                                        apiResponse.setStatus(ResponseStatus.SUCCESS);
-//                                                        PSMAccountRequest pmsAccountRequest = this.salesforceController.createPSMAccountPayload();
-//                                                        String pmsAccountRequestString = objectMapper.writeValueAsString(pmsAccountRequest);
-//                                                        String pmsAccountResponse = this.salesforceController.addRecordInSalesforce(applicationConfiguration.getSalesforcePMSAccount(), salesforceToken.getAccess_token(), pmsAccountRequestString);
-//                                                        if (pmsAccountResponse != null && !pmsAccountResponse.isEmpty()) {
-//                                                            responseData.put("salesforceCreatePMSAccountResponse", pmsAccountResponse);
-//                                                            apiResponse.setStatus(ResponseStatus.SUCCESS);
-//                                                            SalesforceGuestRequest guestRequest = this.salesforceController.createGuestBookerPayload();
-//                                                            String guestRequestString = objectMapper.writeValueAsString(guestRequest);
-//                                                            String guestRequestResponse = this.salesforceController.addRecordInSalesforce(applicationConfiguration.getSalesforceGuest(), salesforceToken.getAccess_token(), guestRequestString);
-//                                                            if (guestRequestResponse != null && !guestRequestResponse.isEmpty()) {
-//                                                                responseData.put("salesforceCreateGuestResponse", guestRequestResponse);
+//        //                                                MewsUpdateAvailabilityRequest mewsUpdateAvailabilityRequest = this.mewsController.createUpdateAvailabilityPayload(booking.get(),rate.get(),property.get(),bookerResponse.get());
+//                                                        String mewsUpdateAvailabilityResponse = "{}";//this.mewsController.updateAvailability(mewsUpdateAvailabilityRequest);
+//                                                        if (mewsUpdateAvailabilityResponse.equals("{}")) {
+//        //                                                    responseData.put("mewsUpdateAvailabilityResponse", bookerResponse.get());
+//        //                                                    apiResponse.setStatus(ResponseStatus.SUCCESS);
+//                                                            MewsUpdateRateRequest mewsUpdateRateRequest = this.mewsController.createUpdateRatePayload(booking.get(), rate.get(), property.get(), bookerResponse.get());
+//                                                            String mewsUpdateRateResponse = this.mewsController.updateRate(mewsUpdateRateRequest);
+//                                                            if (mewsUpdateRateResponse.equals("{}")) {
+//                                                                responseData.put("mewsUpdateRatePriceResponse", mewsUpdateRateResponse);
 //                                                                apiResponse.setStatus(ResponseStatus.SUCCESS);
-//                                                                SalesforcePSMBlockRequest pmsBlockRequest = this.salesforceController.createPMSBlockPayload();
-//                                                                String pmsBlockRequestString = objectMapper.writeValueAsString(pmsBlockRequest);
-//                                                                String pmsBlockRequestResponse = this.salesforceController.addRecordInSalesforce(applicationConfiguration.getSalesforcePMSBlock(), salesforceToken.getAccess_token(), pmsBlockRequestString);
-//                                                                if (pmsBlockRequestResponse != null && !pmsBlockRequestResponse.isEmpty()) {
-//                                                                    responseData.put("salesforceCreatePMSBlockResponse", pmsBlockRequestResponse);
+//                                                                PSMAccountRequest pmsAccountRequest = this.salesforceController.createPSMAccountPayload();
+//                                                                String pmsAccountRequestString = objectMapper.writeValueAsString(pmsAccountRequest);
+//                                                                String pmsAccountResponse = this.salesforceController.addRecordInSalesforce(applicationConfiguration.getSalesforcePMSAccount(), salesforceToken.getAccess_token(), pmsAccountRequestString);
+//                                                                if (pmsAccountResponse != null && !pmsAccountResponse.isEmpty()) {
+//                                                                    responseData.put("salesforceCreatePMSAccountResponse", pmsAccountResponse);
 //                                                                    apiResponse.setStatus(ResponseStatus.SUCCESS);
-//                                                                    SalesforcePMSBlockInventory mewsBlockInventoryRequest = this.salesforceController.createMewsBlockInventoryPayload();
-//                                                                    String mewsBlockInventoryRequestString = objectMapper.writeValueAsString(mewsBlockInventoryRequest);
-//                                                                    String mewsBlockInventoryResponse = this.salesforceController.addRecordInSalesforce(applicationConfiguration.getSalesforceMewsBlockinventory(), salesforceToken.getAccess_token(), mewsBlockInventoryRequestString);
-//                                                                    if (mewsBlockInventoryResponse != null && !mewsBlockInventoryResponse.isEmpty()) {
-//                                                                        responseData.put("mewsBlockInventoryResponse", mewsBlockInventoryResponse);
+//                                                                    SalesforceGuestRequest guestRequest = this.salesforceController.createGuestBookerPayload();
+//                                                                    String guestRequestString = objectMapper.writeValueAsString(guestRequest);
+//                                                                    String guestRequestResponse = this.salesforceController.addRecordInSalesforce(applicationConfiguration.getSalesforceGuest(), salesforceToken.getAccess_token(), guestRequestString);
+//                                                                    if (guestRequestResponse != null && !guestRequestResponse.isEmpty()) {
+//                                                                        responseData.put("salesforceCreateGuestResponse", guestRequestResponse);
 //                                                                        apiResponse.setStatus(ResponseStatus.SUCCESS);
-//                                                                        SalesforcePMSBlockRate salesforcePMSBlockRateRequest = this.salesforceController.createPMSBlockRatesPayload();
-//                                                                        String salesforcePMSBlockRateRequestString = objectMapper.writeValueAsString(salesforcePMSBlockRateRequest);
-//                                                                        String salesforcePMSBlockRateResponse = this.salesforceController.addRecordInSalesforce(applicationConfiguration.getSalesforcePMSBlockRates(), salesforceToken.getAccess_token(), salesforcePMSBlockRateRequestString);
-//                                                                        if (salesforcePMSBlockRateResponse != null && !salesforcePMSBlockRateResponse.isEmpty()) {
-//                                                                            responseData.put("salesforceCreatePMSBlockRatesResponse", salesforcePMSBlockRateResponse);
+//                                                                        SalesforcePSMBlockRequest pmsBlockRequest = this.salesforceController.createPMSBlockPayload();
+//                                                                        String pmsBlockRequestString = objectMapper.writeValueAsString(pmsBlockRequest);
+//                                                                        String pmsBlockRequestResponse = this.salesforceController.addRecordInSalesforce(applicationConfiguration.getSalesforcePMSBlock(), salesforceToken.getAccess_token(), pmsBlockRequestString);
+//                                                                        if (pmsBlockRequestResponse != null && !pmsBlockRequestResponse.isEmpty()) {
+//                                                                            responseData.put("salesforceCreatePMSBlockResponse", pmsBlockRequestResponse);
 //                                                                            apiResponse.setStatus(ResponseStatus.SUCCESS);
-//                                                                            SalesforceBookingRequest salesforceBookingRequest = this.salesforceController.createBookingPayload();
-//                                                                            String salesforceBookingRequestString = objectMapper.writeValueAsString(salesforceBookingRequest);
-//                                                                            String salesforceBookingResponse = this.salesforceController.updateRecordInSalesforce(applicationConfiguration.getSalesforceBookingObject(), salesforceToken.getAccess_token(), salesforceBookingRequestString, bookingId);
-//                                                                            if (salesforceBookingResponse.isEmpty()) {
-//                                                                                responseData.put("salesforceUpdateBookingResponse", salesforceBookingResponse);
+//                                                                            SalesforcePMSBlockInventory mewsBlockInventoryRequest = this.salesforceController.createMewsBlockInventoryPayload();
+//                                                                            String mewsBlockInventoryRequestString = objectMapper.writeValueAsString(mewsBlockInventoryRequest);
+//                                                                            String mewsBlockInventoryResponse = this.salesforceController.addRecordInSalesforce(applicationConfiguration.getSalesforceMewsBlockinventory(), salesforceToken.getAccess_token(), mewsBlockInventoryRequestString);
+//                                                                            if (mewsBlockInventoryResponse != null && !mewsBlockInventoryResponse.isEmpty()) {
+//                                                                                responseData.put("mewsBlockInventoryResponse", mewsBlockInventoryResponse);
 //                                                                                apiResponse.setStatus(ResponseStatus.SUCCESS);
-//                                                                                apiResponse.setMessage("Booking, account, contact, rate, property ,created company in Mews , created booker in Mews, created Availability in Mews, update availability block in Mews, update rate block in Mews, created PMS account in salesforce,created Guest in salesforce, created PMS Block in salesforce, created Mews block inventory in salesforce, created PMS block rate in salesforce, update booking in salesforce and data processed successfully");
+//                                                                                SalesforcePMSBlockRate salesforcePMSBlockRateRequest = this.salesforceController.createPMSBlockRatesPayload();
+//                                                                                String salesforcePMSBlockRateRequestString = objectMapper.writeValueAsString(salesforcePMSBlockRateRequest);
+//                                                                                String salesforcePMSBlockRateResponse = this.salesforceController.addRecordInSalesforce(applicationConfiguration.getSalesforcePMSBlockRates(), salesforceToken.getAccess_token(), salesforcePMSBlockRateRequestString);
+//                                                                                if (salesforcePMSBlockRateResponse != null && !salesforcePMSBlockRateResponse.isEmpty()) {
+//                                                                                    responseData.put("salesforceCreatePMSBlockRatesResponse", salesforcePMSBlockRateResponse);
+//                                                                                    apiResponse.setStatus(ResponseStatus.SUCCESS);
+//                                                                                    SalesforceBookingRequest salesforceBookingRequest = this.salesforceController.createBookingPayload();
+//                                                                                    String salesforceBookingRequestString = objectMapper.writeValueAsString(salesforceBookingRequest);
+//                                                                                    String salesforceBookingResponse = this.salesforceController.updateRecordInSalesforce(applicationConfiguration.getSalesforceBookingObject(), salesforceToken.getAccess_token(), salesforceBookingRequestString, bookingId);
+//                                                                                    if (salesforceBookingResponse.isEmpty()) {
+//                                                                                        responseData.put("salesforceUpdateBookingResponse", salesforceBookingResponse);
+//                                                                                        apiResponse.setStatus(ResponseStatus.SUCCESS);
+//                                                                                        apiResponse.setMessage("Booking, account, contact, rate, property ,created company in Mews , created booker in Mews, created Availability in Mews, update availability block in Mews, update rate block in Mews, created PMS account in salesforce,created Guest in salesforce, created PMS Block in salesforce, created Mews block inventory in salesforce, created PMS block rate in salesforce, update booking in salesforce and data processed successfully");
+//                                                                                    } else {
+//                                                                                        logger.info("Failed to update booking in salesforce");
+//                                                                                        apiResponse.setStatus(ResponseStatus.FAILED);
+//                                                                                        apiResponse.setMessage("Failed to update booking in salesforce");
+//                                                                                    }
+//                                                                                } else {
+//                                                                                    logger.info("Failed to create PMS block rate in salesforce");
+//                                                                                    apiResponse.setStatus(ResponseStatus.FAILED);
+//                                                                                    apiResponse.setMessage("Failed to PMS block rate in salesforce");
+//                                                                                }
 //                                                                            } else {
-//                                                                                logger.info("Failed to update booking in salesforce");
+//                                                                                logger.info("Failed to create Mews block inventory in salesforce");
 //                                                                                apiResponse.setStatus(ResponseStatus.FAILED);
-//                                                                                apiResponse.setMessage("Failed to update booking in salesforce");
+//                                                                                apiResponse.setMessage("Failed to Mews block inventory in salesforce");
 //                                                                            }
 //                                                                        } else {
-//                                                                            logger.info("Failed to create PMS block rate in salesforce");
+//                                                                            logger.info("Failed to create PMS block in salesforce");
 //                                                                            apiResponse.setStatus(ResponseStatus.FAILED);
-//                                                                            apiResponse.setMessage("Failed to PMS block rate in salesforce");
+//                                                                            apiResponse.setMessage("Failed to create PMS Block in salesforce");
 //                                                                        }
 //                                                                    } else {
-//                                                                        logger.info("Failed to create Mews block inventory in salesforce");
+//                                                                        logger.info("Failed to create guest in salesforce");
 //                                                                        apiResponse.setStatus(ResponseStatus.FAILED);
-//                                                                        apiResponse.setMessage("Failed to Mews block inventory in salesforce");
+//                                                                        apiResponse.setMessage("Failed to create guest in salesforce");
 //                                                                    }
 //                                                                } else {
-//                                                                    logger.info("Failed to create PMS block in salesforce");
+//                                                                    logger.info("Failed to create PMS account in salesforce");
 //                                                                    apiResponse.setStatus(ResponseStatus.FAILED);
-//                                                                    apiResponse.setMessage("Failed to create PMS Block in salesforce");
+//                                                                    apiResponse.setMessage("Failed to create PMS account in salesforce");
 //                                                                }
 //                                                            } else {
-//                                                                logger.info("Failed to create guest in salesforce");
+//                                                                logger.info("Failed to update rate block in Mews");
 //                                                                apiResponse.setStatus(ResponseStatus.FAILED);
-//                                                                apiResponse.setMessage("Failed to create guest in salesforce");
+//                                                                apiResponse.setMessage("Failed to update rate block in Mews");
 //                                                            }
 //                                                        } else {
-//                                                            logger.info("Failed to create PMS account in salesforce");
+//                                                            logger.info("Failed to update availability in Mews");
 //                                                            apiResponse.setStatus(ResponseStatus.FAILED);
-//                                                            apiResponse.setMessage("Failed to create PMS account in salesforce");
+//                                                            apiResponse.setMessage("Failed to update availability in Mews");
 //                                                        }
 //                                                    } else {
-//                                                        logger.info("Failed to update rate block in Mews");
+//                                                        logger.info("Failed to add availability block in Mews");
 //                                                        apiResponse.setStatus(ResponseStatus.FAILED);
-//                                                        apiResponse.setMessage("Failed to update rate block in Mews");
+//                                                        apiResponse.setMessage("Failed to add availability block in Mews");
 //                                                    }
-//                                                } else {
-//                                                    logger.info("Failed to update availability in Mews");
-//                                                    apiResponse.setStatus(ResponseStatus.FAILED);
-//                                                    apiResponse.setMessage("Failed to update availability in Mews");
-//                                                }
-//                                            } else {
-//                                                logger.info("Failed to add availability block in Mews");
-//                                                apiResponse.setStatus(ResponseStatus.FAILED);
-//                                                apiResponse.setMessage("Failed to add availability block in Mews");
-//                                            }
-//                                        } else {
-//                                            logger.info("Failed to add booker in Mews");
-//                                            apiResponse.setStatus(ResponseStatus.FAILED);
-//                                            apiResponse.setMessage("Failed to add booker in Mews");
-//                                        }
+
+                                            }
+                                                else {
+                                                        logger.info("Failed to add booker in Mews");
+                                                        apiResponse.setStatus(ResponseStatus.FAILED);
+                                                        apiResponse.setMessage("Failed to add booker in Mews");
+                                                    }
                                     } else {
                                         logger.info("Failed to add company in Mews");
                                         apiResponse.setStatus(ResponseStatus.FAILED);
@@ -334,6 +350,7 @@ public class BookingCommand implements Command {
 
         return Optional.ofNullable(parseResponse(response, MewsAvailabilityBlockResponse.class, "Availability Block Response"));
     }
+
     public Optional<MewsUpdateCompanyResponse> updateCompanyInMews(MewsUpdateCompanyRequest payload) throws Exception {
         String response = mewsController.updateCompany(payload);
 
@@ -374,6 +391,16 @@ public class BookingCommand implements Command {
 
 
         return Optional.ofNullable(parseResponse(response, MewsGetBookerResponse.class, "Get Booker Response"));
+    }
+    public Optional<MewsGetAvailabilityBlockResponse> getAvailabilityBlockFromMews(MewsGetAvailabilityBlockRequest payload) throws Exception {
+        String response = mewsController.getMewsAvailabilityBlock(payload);
+
+        if (response == null || response.isEmpty()) {
+            throw new Exception("Empty company response from Mews.");
+        }
+
+
+        return Optional.ofNullable(parseResponse(response, MewsGetAvailabilityBlockResponse.class, "Get Availability Block Response"));
     }
     private SalesforceTokenResponse retrieveSalesforceToken() throws Exception {
         SalesforceTokenResponse salesforceToken = authController.retrieveSalesforceTokenFromAWS();

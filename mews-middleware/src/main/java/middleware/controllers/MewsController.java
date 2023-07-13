@@ -101,14 +101,63 @@ public class MewsController {
 
         return request;
     }
-    public MewsUpdateBookerRequest createUpdateBookerPayload(SalesforceAccountResponse account,SalesforceContactResponse contact) throws JsonProcessingException {
+    public MewsUpdateBookerRequest createUpdateBookerPayload(SalesforceAccountResponse account,SalesforceContactResponse contact,MewsGetBookerResponse getbooker) throws JsonProcessingException {
 
         MewsUpdateBookerRequest request = new MewsUpdateBookerRequest();
         request.setClient(applicationConfiguration.getMewsClientName());
         request.setAccessToken(applicationConfiguration.getMewsAccessToken());
         request.setClientToken(applicationConfiguration.getMewsClientToken());
-        request.setCustomerId("a3649c04-21ce-414d-b357-b02600ef49ea");
 
+        MewsGetBookerResponse.Customer customer = getbooker.getCustomers()[0];
+
+        request.setCustomerId(customer.getId());
+
+        return request;
+    }
+
+    public MewsUpdateAvailabilityBlockRequest createUpdateAvailabilityBlockPayload(SalesforceAccountResponse account,SalesforceContactResponse contact,MewsGetAvailabilityBlockResponse getAvailabilityBlockId) throws JsonProcessingException {
+
+        MewsUpdateAvailabilityBlockRequest request = new MewsUpdateAvailabilityBlockRequest();
+        request.setClient(applicationConfiguration.getMewsClientName());
+        request.setAccessToken(applicationConfiguration.getMewsAccessToken());
+        request.setClientToken(applicationConfiguration.getMewsClientToken());
+
+        MewsGetAvailabilityBlockResponse.AvailabilityBlock availabilityBlock = getAvailabilityBlockId.getAvailabilityBlocks()[0];
+        List<MewsUpdateAvailabilityBlockRequest.AvailabilityBlock> availabilityBlocks = new ArrayList<>();
+        // Create a new AvailabilityBlock object and set the ID
+        MewsUpdateAvailabilityBlockRequest.AvailabilityBlock block = new MewsUpdateAvailabilityBlockRequest.AvailabilityBlock();
+        block.setAvailabilityBlockId(availabilityBlock.getId());
+
+        // Add the availability block to the list
+        availabilityBlocks.add(block);
+
+        // Set the availability blocks in the request
+        request.setAvailabilityBlocks(availabilityBlocks);
+        return request;
+    }
+    public MewsGetAvailabilityBlockRequest createGetAvailabilityBlockPayload(SalesforceAccountResponse account,SalesforceContactResponse contact) throws JsonProcessingException {
+
+        MewsGetAvailabilityBlockRequest request = new MewsGetAvailabilityBlockRequest();
+        request.setClient(applicationConfiguration.getMewsClientName());
+        request.setAccessToken(applicationConfiguration.getMewsAccessToken());
+        request.setClientToken(applicationConfiguration.getMewsClientToken());
+
+        MewsGetAvailabilityBlockRequest.CreatedUtc createdUtc = new MewsGetAvailabilityBlockRequest.CreatedUtc();
+        createdUtc.setStartUtc("2023-07-11T00:00:00Z");
+        createdUtc.setEndUtc("2023-07-12T00:00:00Z");
+        request.setCreatedUtc(createdUtc);
+
+        MewsGetAvailabilityBlockRequest.Extent extent = new MewsGetAvailabilityBlockRequest.Extent();
+        extent.setAdjustments(true);
+        extent.setRates(false);
+        extent.setServiceOrders(false);
+        extent.setAvailabilityBlocks(true);
+        request.setExtent(extent);
+
+
+        MewsGetAvailabilityBlockRequest.Limitation limitation = new MewsGetAvailabilityBlockRequest.Limitation();
+        limitation.setCount(1);
+        request.setLimitation(limitation);
         return request;
     }
 
@@ -226,7 +275,12 @@ public class MewsController {
     public String addAvailabilityBlock(MewsAvailabilityBlockRequest request) throws IOException {
         return mewsConnectorService.pushToMews(request,"availabilityBlocks");
     }
-
+    public String getMewsAvailabilityBlock(MewsGetAvailabilityBlockRequest request) throws IOException {
+        return mewsConnectorService.getRecordFromMews(request,"availabilityBlocks");
+    }
+    public String updateAvailabilityBlock(MewsUpdateAvailabilityBlockRequest request) throws IOException {
+        return mewsConnectorService.updateToMews(request,"availabilityBlocks/update");
+    }
     public String updateAvailability(MewsUpdateAvailabilityRequest request) throws IOException {
         return mewsConnectorService.updateToMews(request,"services/updateAvailability");
     }
