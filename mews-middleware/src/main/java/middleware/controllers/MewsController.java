@@ -115,14 +115,14 @@ public class MewsController {
         return request;
     }
 
-    public MewsUpdateAvailabilityBlockRequest createUpdateAvailabilityBlockPayload(SalesforceAccountResponse account,SalesforceContactResponse contact,MewsGetAvailabilityBlockResponse getAvailabilityBlockId) throws JsonProcessingException {
+    public MewsUpdateAvailabilityBlockRequest createUpdateAvailabilityBlockPayload(SalesforceAccountResponse account,SalesforceContactResponse contact,MewsGetAvailabilityBlockResponse availabilityBlockId) throws JsonProcessingException {
 
         MewsUpdateAvailabilityBlockRequest request = new MewsUpdateAvailabilityBlockRequest();
         request.setClient(applicationConfiguration.getMewsClientName());
         request.setAccessToken(applicationConfiguration.getMewsAccessToken());
         request.setClientToken(applicationConfiguration.getMewsClientToken());
 
-        MewsGetAvailabilityBlockResponse.AvailabilityBlock availabilityBlock = getAvailabilityBlockId.getAvailabilityBlocks()[0];
+        MewsGetAvailabilityBlockResponse.AvailabilityBlock availabilityBlock = availabilityBlockId.getAvailabilityBlocks()[0];
         List<MewsUpdateAvailabilityBlockRequest.AvailabilityBlock> availabilityBlocks = new ArrayList<>();
         // Create a new AvailabilityBlock object and set the ID
         MewsUpdateAvailabilityBlockRequest.AvailabilityBlock block = new MewsUpdateAvailabilityBlockRequest.AvailabilityBlock();
