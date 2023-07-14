@@ -130,7 +130,7 @@ public class MewsController {
         request.setClient(applicationConfiguration.getMewsClientName());
         request.setAccessToken(applicationConfiguration.getMewsAccessToken());
         request.setClientToken(applicationConfiguration.getMewsClientToken());
-        request.setCustomerId(customer);
+        request.setCustomerId(getbooker.getCustomers()[0].getId());
 
         request.setFirstName(contactFirstName != null && firstName != null ?
                 (contactFirstName.equals(firstName) ? firstName : contactFirstName) :
@@ -179,7 +179,11 @@ public class MewsController {
         return request;
     }
 
-    public MewsUpdateAvailabilityBlockRequest createUpdateAvailabilityBlockPayload(SalesforceAccountResponse account,SalesforceContactResponse contact,MewsGetAvailabilityBlockResponse availabilityBlockId) throws JsonProcessingException {
+    public MewsUpdateAvailabilityBlockRequest createUpdateAvailabilityBlockPayload(SalesforceAccountResponse account,SalesforceBookingResponse book,SalesforceContactResponse contact, SalesforcePropertyResponse property,MewsGetAvailabilityBlockResponse availabilityBlockId) throws JsonProcessingException {
+        String name = availabilityBlockId.getAvailabilityBlocks()[0].getName();
+        String releasedUtcMews = availabilityBlockId.getAvailabilityBlocks()[0].getReleasedUtc();
+        String contactName = contact.getName();
+        String releaseBookUtc = book.getThn__Release_Date__c();
 
         MewsUpdateAvailabilityBlockRequest request = new MewsUpdateAvailabilityBlockRequest();
         request.setClient(applicationConfiguration.getMewsClientName());
@@ -190,6 +194,13 @@ public class MewsController {
         List<MewsUpdateAvailabilityBlockRequest.AvailabilityBlock> availabilityBlocks = new ArrayList<>();
         MewsUpdateAvailabilityBlockRequest.AvailabilityBlock block = new MewsUpdateAvailabilityBlockRequest.AvailabilityBlock();
         block.setAvailabilityBlockId(availabilityBlock.getId());
+
+        MewsUpdateAvailabilityBlockRequest.AvailabilityBlock.Name updatename = new MewsUpdateAvailabilityBlockRequest.AvailabilityBlock.Name();
+        updatename.setValue(contactName != null && name != null ? (contactName.equals(name) ? name : contactName) : (name != null ? name : contactName));
+        block.setName(updatename);
+        MewsUpdateAvailabilityBlockRequest.AvailabilityBlock.ReleasedUtc updateReleasedUtc = new MewsUpdateAvailabilityBlockRequest.AvailabilityBlock.ReleasedUtc();
+        updateReleasedUtc.setValue(releaseBookUtc != null && releasedUtcMews != null ? (releaseBookUtc.equals(releasedUtcMews) ? releasedUtcMews : releaseBookUtc) : (releasedUtcMews != null ? releasedUtcMews : releaseBookUtc)); // Set the desired name
+        block.setReleasedUtc(updateReleasedUtc);
 
         availabilityBlocks.add(block);
 
@@ -352,9 +363,9 @@ public class MewsController {
         updatedIata.setValue(accountIata != null && iata != null ? (accountIata.equals(iata) ? iata : accountIata) : (iata != null ? iata : accountIata));
         request.setIata(updatedIata);
 
-        MewsUpdateCompanyRequest.WebsiteUrlModel updatedWebsiteUrlModel = new MewsUpdateCompanyRequest.WebsiteUrlModel();
-        updatedWebsiteUrlModel.setValue(accountWebsiteUrl != null && websiteUrl != null ? (accountWebsiteUrl.equals(websiteUrl) ? websiteUrl : accountWebsiteUrl) : (websiteUrl != null ? websiteUrl : accountWebsiteUrl));
-        request.setWebsiteUrl(updatedWebsiteUrlModel);
+//        MewsUpdateCompanyRequest.WebsiteUrlModel updatedWebsiteUrlModel = new MewsUpdateCompanyRequest.WebsiteUrlModel();
+//        updatedWebsiteUrlModel.setValue(accountWebsiteUrl != null && websiteUrl != null ? (accountWebsiteUrl.equals(websiteUrl) ? websiteUrl : accountWebsiteUrl) : (websiteUrl != null ? websiteUrl : accountWebsiteUrl));
+//        request.setWebsiteUrl(updatedWebsiteUrlModel);
 
         MewsUpdateCompanyRequest.ContactModel updatedContactModel = new MewsUpdateCompanyRequest.ContactModel();
         updatedContactModel.setValue(contactName != null && contactNameMews != null ? (contactName.equals(contactNameMews) ? contactNameMews : contactName) : (contactNameMews != null ? contactNameMews : contactName));
@@ -372,9 +383,9 @@ public class MewsController {
         updatedNotesModel.setValue(quoteNotes != null && notes != null ? (quoteNotes.equals(notes) ? notes : quoteNotes) : (notes != null ? notes : quoteNotes));
         request.setNotes(updatedNotesModel);
 
-        request.setIdentifier(accountIdentifier != null && identifier != null ?
-                (accountIdentifier.equals(identifier) ? identifier : accountIdentifier) :
-                (identifier != null ? identifier : accountIdentifier));
+//        request.setIdentifier(accountIdentifier != null && identifier != null ?
+//                (accountIdentifier.equals(identifier) ? identifier : accountIdentifier) :
+//                (identifier != null ? identifier : accountIdentifier));
 
         request.setTaxIdentifier(accountTaxIdentifier != null && taxIdentifier != null ?
                 (accountTaxIdentifier.equals(taxIdentifier) ? taxIdentifier : accountTaxIdentifier) :
@@ -391,7 +402,6 @@ public class MewsController {
         request.setAccountingCode(accountAccountingCode != null && accountingCode != null ?
                 (accountAccountingCode.equals(accountingCode) ? accountingCode : accountAccountingCode) :
                 (accountingCode != null ? accountingCode : accountAccountingCode));
-
 
         return request;
     }

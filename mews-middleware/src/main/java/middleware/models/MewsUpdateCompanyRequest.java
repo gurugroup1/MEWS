@@ -12,23 +12,11 @@ public class MewsUpdateCompanyRequest {
     @JsonProperty("Client")
     private String client;
 
-    @JsonProperty("ChainId")
-    private String chainId;
-
     @JsonProperty("CompanyId")
     private String companyId;
 
     @JsonProperty("Name")
     private NameModel name;
-
-    @JsonProperty("Options")
-    private OptionsModel options;
-
-    @JsonProperty("MotherCompanyId")
-    private MotherCompanyIdModel motherCompanyId;
-
-    @JsonProperty("Identifier")
-    private String identifier;
 
     @JsonProperty("TaxIdentifier")
     private String taxIdentifier;
@@ -41,9 +29,6 @@ public class MewsUpdateCompanyRequest {
 
     @JsonProperty("AccountingCode")
     private String accountingCode;
-
-    @JsonProperty("InvoiceDueInterval")
-    private InvoiceDueIntervalModel invoiceDueInterval;
 
     @JsonProperty("ContactPerson")
     private ContactPersonModel contactPerson;
@@ -60,17 +45,6 @@ public class MewsUpdateCompanyRequest {
     @JsonProperty("Department")
     private DepartmentModel department;
 
-    @JsonProperty("DunsNumber")
-    private DunsNumberModel dunsNumber;
-
-    @JsonProperty("CreditRating")
-    private CreditRatingModel creditRating;
-
-    @JsonProperty("ExternalIdentifier")
-    private ExternalIdentifierModel externalIdentifier;
-
-    @JsonProperty("ReferenceIdentifier")
-    private ReferenceIdentifierModel referenceIdentifier;
 
     @JsonProperty("WebsiteUrl")
     private WebsiteUrlModel websiteUrl;
@@ -99,14 +73,6 @@ public class MewsUpdateCompanyRequest {
         this.client = client;
     }
 
-    public String getChainId() {
-        return chainId;
-    }
-
-    public void setChainId(String chainId) {
-        this.chainId = chainId;
-    }
-
     public String getCompanyId() {
         return companyId;
     }
@@ -121,30 +87,6 @@ public class MewsUpdateCompanyRequest {
 
     public void setName(NameModel name) {
         this.name = name;
-    }
-
-    public OptionsModel getOptions() {
-        return options;
-    }
-
-    public void setOptions(OptionsModel options) {
-        this.options = options;
-    }
-
-    public MotherCompanyIdModel getMotherCompanyId() {
-        return motherCompanyId;
-    }
-
-    public void setMotherCompanyId(MotherCompanyIdModel motherCompanyId) {
-        this.motherCompanyId = motherCompanyId;
-    }
-
-    public String getIdentifier() {
-        return identifier;
-    }
-
-    public void setIdentifier(String identifier) {
-        this.identifier = identifier;
     }
 
     public String getTaxIdentifier() {
@@ -177,14 +119,6 @@ public class MewsUpdateCompanyRequest {
 
     public void setAccountingCode(String accountingCode) {
         this.accountingCode = accountingCode;
-    }
-
-    public InvoiceDueIntervalModel getInvoiceDueInterval() {
-        return invoiceDueInterval;
-    }
-
-    public void setInvoiceDueInterval(InvoiceDueIntervalModel invoiceDueInterval) {
-        this.invoiceDueInterval = invoiceDueInterval;
     }
 
     public ContactPersonModel getContactPerson() {
@@ -225,38 +159,6 @@ public class MewsUpdateCompanyRequest {
 
     public void setDepartment(DepartmentModel department) {
         this.department = department;
-    }
-
-    public DunsNumberModel getDunsNumber() {
-        return dunsNumber;
-    }
-
-    public void setDunsNumber(DunsNumberModel dunsNumber) {
-        this.dunsNumber = dunsNumber;
-    }
-
-    public CreditRatingModel getCreditRating() {
-        return creditRating;
-    }
-
-    public void setCreditRating(CreditRatingModel creditRating) {
-        this.creditRating = creditRating;
-    }
-
-    public ExternalIdentifierModel getExternalIdentifier() {
-        return externalIdentifier;
-    }
-
-    public void setExternalIdentifier(ExternalIdentifierModel externalIdentifier) {
-        this.externalIdentifier = externalIdentifier;
-    }
-
-    public ReferenceIdentifierModel getReferenceIdentifier() {
-        return referenceIdentifier;
-    }
-
-    public void setReferenceIdentifier(ReferenceIdentifierModel referenceIdentifier) {
-        this.referenceIdentifier = referenceIdentifier;
     }
 
     public WebsiteUrlModel getWebsiteUrl() {
@@ -332,31 +234,6 @@ public class MewsUpdateCompanyRequest {
         }
     }
 
-    public static class MotherCompanyIdModel {
-        @JsonProperty("Value")
-        private String value;
-
-        public String getValue() {
-            return value;
-        }
-
-        public void setValue(String value) {
-            this.value = value;
-        }
-    }
-
-    public static class InvoiceDueIntervalModel {
-        @JsonProperty("Value")
-        private String value;
-
-        public String getValue() {
-            return value;
-        }
-
-        public void setValue(String value) {
-            this.value = value;
-        }
-    }
 
     public static class ContactPersonModel {
         @JsonProperty("Value")
@@ -420,32 +297,6 @@ public class MewsUpdateCompanyRequest {
 
         public void setValue(String value) {
             this.value = value;
-        }
-    }
-
-    public static class DunsNumberModel {
-        @JsonProperty("Value")
-        private String value;
-
-        public String getValue() {
-            return value;
-        }
-
-        public void setValue(String value) {
-            this.value = value;
-        }
-    }
-
-    public static class CreditRatingModel {
-        @JsonProperty("Basic")
-        private BasicModel basic;
-
-        public BasicModel getBasic() {
-            return basic;
-        }
-
-        public void setBasic(BasicModel basic) {
-            this.basic = basic;
         }
     }
 
