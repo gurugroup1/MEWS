@@ -101,16 +101,80 @@ public class MewsController {
 
         return request;
     }
-    public MewsUpdateBookerRequest createUpdateBookerPayload(SalesforceAccountResponse account,SalesforceContactResponse contact,MewsGetBookerResponse getbooker) throws JsonProcessingException {
+    public MewsUpdateBookerRequest createUpdateBookerPayload(SalesforceBookingResponse book,SalesforceAccountResponse account,SalesforceContactResponse contact,MewsGetBookerResponse getbooker) throws JsonProcessingException {
+        String firstName = getbooker.getCustomers()[0].getFirstName();
+        String lastName = getbooker.getCustomers()[0].getLastName();
+        String secondLastName = getbooker.getCustomers()[0].getSecondLastName();
+        String Title = getbooker.getCustomers()[0].getTitle();
+        String nationalityCode = getbooker.getCustomers()[0].getNationalityCode();
+        String birthDate = getbooker.getCustomers()[0].getBirthDate();
+        String birthPlace = getbooker.getCustomers()[0].getBirthPlace();
+        String email = getbooker.getCustomers()[0].getEmail();
+        String phone = getbooker.getCustomers()[0].getPhone();
+        String loyaltyCode = getbooker.getCustomers()[0].getLoyaltyCode();
+        String notes = getbooker.getCustomers()[0].getNotes();
+        String contactFirstName = contact.getFirstName();
+        String contactLastName = contact.getLastName();
+        String contactSecondLastName = contact.getName();
+        String contactTile = contact.getTitle();
+        String contactNationalityCode = contact.getThn__Nationality__c();
+        String contactBirthDate = contact.getBirthdate();
+        String bookBirthPlace = book.getOrigin__c();
+        String contactEmail = contact.getEmail();
+        String contactPhone = contact.getPhone();
+        String contactLoyaltyCode = contact.getLoyalty__c();
+        String bookNotes = book.getQuote_Notes__c();
+        String customer = getbooker.getCustomers()[0].getId();
 
         MewsUpdateBookerRequest request = new MewsUpdateBookerRequest();
         request.setClient(applicationConfiguration.getMewsClientName());
         request.setAccessToken(applicationConfiguration.getMewsAccessToken());
         request.setClientToken(applicationConfiguration.getMewsClientToken());
+        request.setCustomerId(customer);
 
-        MewsGetBookerResponse.Customer customer = getbooker.getCustomers()[0];
+        request.setFirstName(contactFirstName != null && firstName != null ?
+                (contactFirstName.equals(firstName) ? firstName : contactFirstName) :
+                (firstName != null ? firstName : contactFirstName));
 
-        request.setCustomerId(customer.getId());
+        request.setLastName(contactLastName != null && lastName != null ?
+                (contactLastName.equals(lastName) ? lastName : contactLastName) :
+                (lastName != null ? lastName : contactLastName));
+
+        request.setSecondLastName(contactSecondLastName != null && secondLastName != null ?
+                (contactSecondLastName.equals(secondLastName) ? secondLastName : contactSecondLastName) :
+                (secondLastName != null ? secondLastName : contactSecondLastName));
+
+        request.setTitle(contactTile != null && Title != null ?
+                (contactTile.equals(Title) ? Title : contactTile) :
+                (Title != null ? Title : contactTile));
+
+        request.setNationalityCode(contactNationalityCode != null && nationalityCode != null ?
+                (contactNationalityCode.equals(nationalityCode) ? nationalityCode : contactNationalityCode) :
+                (nationalityCode != null ? nationalityCode : contactNationalityCode));
+
+        request.setBirthDate(contactBirthDate != null && birthDate != null ?
+                (contactBirthDate.equals(birthDate) ? birthDate : contactBirthDate) :
+                (birthDate != null ? birthDate : contactBirthDate));
+
+        request.setBirthPlace(bookBirthPlace != null && birthPlace != null ?
+                (bookBirthPlace.equals(birthPlace) ? birthPlace : bookBirthPlace) :
+                (birthPlace != null ? birthPlace : bookBirthPlace));
+
+        request.setEmail(contactEmail != null && email != null ?
+                (contactEmail.equals(email) ? email : contactEmail) :
+                (email != null ? email : contactEmail));
+
+        request.setPhone(contactPhone != null && phone != null ?
+                (contactPhone.equals(phone) ? phone : contactPhone) :
+                (phone != null ? phone : contactPhone));
+
+        request.setLoyaltyCode(contactLoyaltyCode != null && loyaltyCode != null ?
+                (contactLoyaltyCode.equals(loyaltyCode) ? loyaltyCode : contactLoyaltyCode) :
+                (loyaltyCode != null ? loyaltyCode : contactLoyaltyCode));
+
+        request.setNotes(bookNotes != null && notes != null ?
+                (bookNotes.equals(notes) ? notes : bookNotes) :
+                (notes != null ? notes : bookNotes));
 
         return request;
     }
@@ -124,14 +188,11 @@ public class MewsController {
 
         MewsGetAvailabilityBlockResponse.AvailabilityBlock availabilityBlock = availabilityBlockId.getAvailabilityBlocks()[0];
         List<MewsUpdateAvailabilityBlockRequest.AvailabilityBlock> availabilityBlocks = new ArrayList<>();
-        // Create a new AvailabilityBlock object and set the ID
         MewsUpdateAvailabilityBlockRequest.AvailabilityBlock block = new MewsUpdateAvailabilityBlockRequest.AvailabilityBlock();
         block.setAvailabilityBlockId(availabilityBlock.getId());
 
-        // Add the availability block to the list
         availabilityBlocks.add(block);
 
-        // Set the availability blocks in the request
         request.setAvailabilityBlocks(availabilityBlocks);
         return request;
     }
@@ -255,6 +316,8 @@ public class MewsController {
         String identifier = companies.getCompanies()[0].getIdentifier();
         String accountIdentifier = account.getThn__Identifier__c();
         String taxIdentifier = companies.getCompanies()[0].getTaxIdentifier();
+        String contactNameMews = companies.getCompanies()[0].getContact();
+        String contactPerson = companies.getCompanies()[0].getContactPerson();
         String accountTaxIdentifier = account.getThn__TaxIdentifier__c();
         String additionalTaxIdentifier = companies.getCompanies()[0].getAdditionalTaxIdentifier();
         String accountAdditionalTaxIdentifier = account.getThn__Additional_Tax_Identifier__c();
@@ -270,7 +333,10 @@ public class MewsController {
         String contactDepartment = contact.getDepartment();
         String notes = companies.getCompanies()[0].getNotes();
         String quoteNotes = book.getQuote_Notes__c();
-
+        String contactEmail = contact.getEmail();
+        String contactName = contact.getName();
+        String accountName = account.getName();
+        String companyName = companies.getCompanies()[0].getName();
         MewsUpdateCompanyRequest request = new MewsUpdateCompanyRequest();
         request.setClient(applicationConfiguration.getMewsClientName());
         request.setAccessToken(applicationConfiguration.getMewsAccessToken());
@@ -278,8 +344,33 @@ public class MewsController {
         request.setCompanyId(account.getThn__Mews_Id__c());
 
 
-        request.setName(account.getName().equals(companies.getCompanies()[0].getName()) ?
-                companies.getCompanies()[0].getName() : account.getName());
+        MewsUpdateCompanyRequest.NameModel updatedName = new MewsUpdateCompanyRequest.NameModel();
+        updatedName.setValue(accountName != null && companyName != null ? (accountName.equals(companyName) ? companyName : accountName) : (companyName != null ? companyName : accountName));
+        request.setName(updatedName);
+
+        MewsUpdateCompanyRequest.IataModel updatedIata = new MewsUpdateCompanyRequest.IataModel();
+        updatedIata.setValue(accountIata != null && iata != null ? (accountIata.equals(iata) ? iata : accountIata) : (iata != null ? iata : accountIata));
+        request.setIata(updatedIata);
+
+        MewsUpdateCompanyRequest.WebsiteUrlModel updatedWebsiteUrlModel = new MewsUpdateCompanyRequest.WebsiteUrlModel();
+        updatedWebsiteUrlModel.setValue(accountWebsiteUrl != null && websiteUrl != null ? (accountWebsiteUrl.equals(websiteUrl) ? websiteUrl : accountWebsiteUrl) : (websiteUrl != null ? websiteUrl : accountWebsiteUrl));
+        request.setWebsiteUrl(updatedWebsiteUrlModel);
+
+        MewsUpdateCompanyRequest.ContactModel updatedContactModel = new MewsUpdateCompanyRequest.ContactModel();
+        updatedContactModel.setValue(contactName != null && contactNameMews != null ? (contactName.equals(contactNameMews) ? contactNameMews : contactName) : (contactNameMews != null ? contactNameMews : contactName));
+        request.setContact(updatedContactModel);
+
+        MewsUpdateCompanyRequest.ContactPersonModel updatedContactPersonModel = new MewsUpdateCompanyRequest.ContactPersonModel();
+        updatedContactPersonModel.setValue(contactEmail != null && contactPerson != null ? (contactEmail.equals(contactPerson) ? contactPerson : contactEmail) : (contactPerson != null ? contactPerson : contactEmail));
+        request.setContactPerson(updatedContactPersonModel);
+
+        MewsUpdateCompanyRequest.DepartmentModel updatedDepartmentModel = new MewsUpdateCompanyRequest.DepartmentModel();
+        updatedDepartmentModel.setValue(contactDepartment != null && department != null ? (contactDepartment.equals(department) ? department : contactDepartment) : (department != null ? department : contactDepartment));
+        request.setDepartment(updatedDepartmentModel);
+
+        MewsUpdateCompanyRequest.NotesModel updatedNotesModel = new MewsUpdateCompanyRequest.NotesModel();
+        updatedNotesModel.setValue(quoteNotes != null && notes != null ? (quoteNotes.equals(notes) ? notes : quoteNotes) : (notes != null ? notes : quoteNotes));
+        request.setNotes(updatedNotesModel);
 
         request.setIdentifier(accountIdentifier != null && identifier != null ?
                 (accountIdentifier.equals(identifier) ? identifier : accountIdentifier) :
@@ -301,21 +392,6 @@ public class MewsController {
                 (accountAccountingCode.equals(accountingCode) ? accountingCode : accountAccountingCode) :
                 (accountingCode != null ? accountingCode : accountAccountingCode));
 
-        request.setIata(accountIata != null && iata != null ?
-                (accountIata.equals(iata) ? iata : accountIata) :
-                (iata != null ? iata : accountIata));
-
-        request.setWebsiteUrl(accountWebsiteUrl != null && websiteUrl != null ?
-                (accountWebsiteUrl.equals(websiteUrl) ? websiteUrl : accountWebsiteUrl) :
-                (websiteUrl != null ? websiteUrl : accountWebsiteUrl));
-
-        request.setDepartment(contactDepartment != null && department != null ?
-                (contactDepartment.equals(department) ? department : contactDepartment) :
-                (department != null ? department : contactDepartment));
-
-        request.setNotes(quoteNotes != null && notes != null ?
-                (quoteNotes.equals(notes) ? notes : quoteNotes) :
-                (notes != null ? notes : quoteNotes));
 
         return request;
     }

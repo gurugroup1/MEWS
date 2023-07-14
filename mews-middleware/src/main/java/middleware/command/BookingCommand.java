@@ -85,30 +85,30 @@ public class BookingCommand implements Command {
                                         MewsCompanyRequest mewsCompanyRequest = mewsController.createCompanyPayload(booking.get(), account.get(), contact.get());
                                         mewsCompanyResponse = addCompanyInMews(mewsCompanyRequest);
                                     }
-//                                    if ((mewsCompanyResponse != null && mewsCompanyResponse.isPresent()) || (mewsUpdateCompanyResponse != null && mewsUpdateCompanyResponse.isPresent())) {
-//                                        if (mewsCompanyResponse != null) {
-//                                            responseData.put("mewsCompanyResponse", mewsCompanyResponse.get());
-//                                        }
-//                                        apiResponse.setStatus(ResponseStatus.SUCCESS);
-//                                        MewsGetBookerRequest mewsGetBookerRequest = mewsController.createGetBookerPayload(account.get(), contact.get());
-//                                        Optional<MewsGetBookerResponse> getBooker = this.getBookerFromMews(mewsGetBookerRequest);
-//                                        System.out.println("mewsBookerResponse" + getBooker.get().getCustomers());
-//                                        Optional<MewsUpdateBookerResponse>  mewsUpdateBookerResponse = null;
-//                                        Optional<MewsBookerResponse> bookerResponse = null;
-//                                        if (getBooker.get().getCustomers().length > 0) {
-////                                            MewsUpdateBookerRequest mewsBookerRequest = mewsController.createUpdateBookerPayload(account.get(), contact.get(), getBooker.get());
-////                                            mewsUpdateBookerResponse = updateBookerInMews(mewsBookerRequest);
+                                    if ((mewsCompanyResponse != null && mewsCompanyResponse.isPresent()) || (mewsUpdateCompanyResponse != null && mewsUpdateCompanyResponse.isPresent())) {
+                                        if (mewsCompanyResponse != null) {
+                                            responseData.put("mewsCompanyResponse", mewsCompanyResponse.get());
+                                        }
+                                        apiResponse.setStatus(ResponseStatus.SUCCESS);
+                                        MewsGetBookerRequest mewsGetBookerRequest = mewsController.createGetBookerPayload(account.get(), contact.get());
+                                        Optional<MewsGetBookerResponse> getBooker = this.getBookerFromMews(mewsGetBookerRequest);
+                                        System.out.println("mewsBookerResponse" + getBooker.get().getCustomers());
+                                        Optional<MewsUpdateBookerResponse>  mewsUpdateBookerResponse = null;
+                                        Optional<MewsBookerResponse> bookerResponse = null;
+                                        if (getBooker.get().getCustomers().length > 0) {
+                                            MewsUpdateBookerRequest mewsBookerRequest = mewsController.createUpdateBookerPayload(booking.get(), account.get(), contact.get(), getBooker.get());
+                                            mewsUpdateBookerResponse = updateBookerInMews(mewsBookerRequest);
 //                                            MewsBookerRequest mewsBookerRequest = this.mewsController.createBookerPayload(booking.get(), account.get(), contact.get());
 //                                            bookerResponse = this.addBookerInMews(mewsBookerRequest);
-//                                            } else {
-//                                                MewsBookerRequest mewsBookerRequest = this.mewsController.createBookerPayload(booking.get(), account.get(), contact.get());
-//                                                 bookerResponse = this.addBookerInMews(mewsBookerRequest);
-//                                            }
-//                                            if ((bookerResponse != null && bookerResponse.isPresent()) || (mewsUpdateBookerResponse != null && mewsUpdateBookerResponse.isPresent())) {
-//
-//                                                if (bookerResponse != null && bookerResponse.isPresent()) {
-//                                                    responseData.put("mewsBookerResponse", bookerResponse.get());
-//                                                }
+                                            } else {
+                                                MewsBookerRequest mewsBookerRequest = this.mewsController.createBookerPayload(booking.get(), account.get(), contact.get());
+                                                 bookerResponse = this.addBookerInMews(mewsBookerRequest);
+                                            }
+                                            if ((bookerResponse != null && bookerResponse.isPresent()) || (mewsUpdateBookerResponse != null && mewsUpdateBookerResponse.isPresent())) {
+
+                                                if (bookerResponse != null && bookerResponse.isPresent()) {
+                                                    responseData.put("mewsBookerResponse", bookerResponse.get());
+                                                }
 //                                                apiResponse.setStatus(ResponseStatus.SUCCESS);
 //                                                MewsGetAvailabilityBlockRequest mewsGetAvailabilityBlockRequest = mewsController.createGetAvailabilityBlockPayload(account.get(), contact.get());
 //                                                Optional<MewsGetAvailabilityBlockResponse> getMewsAvailabilityBlock = this.getAvailabilityBlockFromMews(mewsGetAvailabilityBlockRequest);
@@ -227,17 +227,17 @@ public class BookingCommand implements Command {
 //                                                        apiResponse.setMessage("Failed to add availability block in Mews");
 //                                                    }
 //
-//                                            }
-//                                                else {
-//                                                        logger.info("Failed to add booker in Mews");
-//                                                        apiResponse.setStatus(ResponseStatus.FAILED);
-//                                                        apiResponse.setMessage("Failed to add booker in Mews");
-//                                                    }
-//                                    } else {
-//                                        logger.info("Failed to add company in Mews");
-//                                        apiResponse.setStatus(ResponseStatus.FAILED);
-//                                        apiResponse.setMessage("Failed to add company in Mews");
-//                                    }
+                                            }
+                                                else {
+                                                        logger.info("Failed to add booker in Mews");
+                                                        apiResponse.setStatus(ResponseStatus.FAILED);
+                                                        apiResponse.setMessage("Failed to add booker in Mews");
+                                                    }
+                                    } else {
+                                        logger.info("Failed to add company in Mews");
+                                        apiResponse.setStatus(ResponseStatus.FAILED);
+                                        apiResponse.setMessage("Failed to add company in Mews");
+                                    }
                                 } else {
                                     logger.info("No Property found for the rate hotel ID");
                                     apiResponse.setStatus(ResponseStatus.FAILED);

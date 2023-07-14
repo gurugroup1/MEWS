@@ -48,7 +48,7 @@ public class MewsGetBookerResponse {
         private String languageCode;
 
         @JsonProperty("BirthDate")
-        private LocalDateTime birthDate;
+        private String birthDate;
 
         @JsonProperty("BirthPlace")
         private String birthPlace;
@@ -230,11 +230,11 @@ public class MewsGetBookerResponse {
             this.languageCode = languageCode;
         }
 
-        public LocalDateTime getBirthDate() {
+        public String getBirthDate() {
             return birthDate;
         }
 
-        public void setBirthDate(LocalDateTime birthDate) {
+        public void setBirthDate(String birthDate) {
             this.birthDate = birthDate;
         }
 

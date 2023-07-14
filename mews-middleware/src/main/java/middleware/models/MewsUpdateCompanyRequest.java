@@ -19,13 +19,13 @@ public class MewsUpdateCompanyRequest {
     private String companyId;
 
     @JsonProperty("Name")
-    private String name;
+    private NameModel name;
 
     @JsonProperty("Options")
-    private Options options;
+    private OptionsModel options;
 
     @JsonProperty("MotherCompanyId")
-    private String motherCompanyId;
+    private MotherCompanyIdModel motherCompanyId;
 
     @JsonProperty("Identifier")
     private String identifier;
@@ -43,39 +43,37 @@ public class MewsUpdateCompanyRequest {
     private String accountingCode;
 
     @JsonProperty("InvoiceDueInterval")
-    private String invoiceDueInterval;
+    private InvoiceDueIntervalModel invoiceDueInterval;
 
     @JsonProperty("ContactPerson")
-    private String contactPerson;
+    private ContactPersonModel contactPerson;
 
     @JsonProperty("Contact")
-    private String contact;
+    private ContactModel contact;
 
     @JsonProperty("Notes")
-    private String notes;
+    private NotesModel notes;
 
     @JsonProperty("Iata")
-    private String iata;
+    private IataModel iata;
 
     @JsonProperty("Department")
-    private String department;
+    private DepartmentModel department;
 
     @JsonProperty("DunsNumber")
-    private String dunsNumber;
+    private DunsNumberModel dunsNumber;
 
     @JsonProperty("CreditRating")
-    private CreditRating creditRating;
+    private CreditRatingModel creditRating;
 
     @JsonProperty("ExternalIdentifier")
-    private String externalIdentifier;
+    private ExternalIdentifierModel externalIdentifier;
 
     @JsonProperty("ReferenceIdentifier")
-    private String referenceIdentifier;
+    private ReferenceIdentifierModel referenceIdentifier;
 
     @JsonProperty("WebsiteUrl")
-    private String websiteUrl;
-
-    // Getters and setters for the fields
+    private WebsiteUrlModel websiteUrl;
 
     public String getClientToken() {
         return clientToken;
@@ -117,27 +115,27 @@ public class MewsUpdateCompanyRequest {
         this.companyId = companyId;
     }
 
-    public String getName() {
+    public NameModel getName() {
         return name;
     }
 
-    public void setName(String name) {
+    public void setName(NameModel name) {
         this.name = name;
     }
 
-    public Options getOptions() {
+    public OptionsModel getOptions() {
         return options;
     }
 
-    public void setOptions(Options options) {
+    public void setOptions(OptionsModel options) {
         this.options = options;
     }
 
-    public String getMotherCompanyId() {
+    public MotherCompanyIdModel getMotherCompanyId() {
         return motherCompanyId;
     }
 
-    public void setMotherCompanyId(String motherCompanyId) {
+    public void setMotherCompanyId(MotherCompanyIdModel motherCompanyId) {
         this.motherCompanyId = motherCompanyId;
     }
 
@@ -145,8 +143,8 @@ public class MewsUpdateCompanyRequest {
         return identifier;
     }
 
-    public String setIdentifier(String identifier) {
-        return identifier;
+    public void setIdentifier(String identifier) {
+        this.identifier = identifier;
     }
 
     public String getTaxIdentifier() {
@@ -181,128 +179,325 @@ public class MewsUpdateCompanyRequest {
         this.accountingCode = accountingCode;
     }
 
-    public String getInvoiceDueInterval() {
+    public InvoiceDueIntervalModel getInvoiceDueInterval() {
         return invoiceDueInterval;
     }
 
-    public void setInvoiceDueInterval(String invoiceDueInterval) {
+    public void setInvoiceDueInterval(InvoiceDueIntervalModel invoiceDueInterval) {
         this.invoiceDueInterval = invoiceDueInterval;
     }
 
-    public String getContactPerson() {
+    public ContactPersonModel getContactPerson() {
         return contactPerson;
     }
 
-    public void setContactPerson(String contactPerson) {
+    public void setContactPerson(ContactPersonModel contactPerson) {
         this.contactPerson = contactPerson;
     }
 
-    public String getContact() {
+    public ContactModel getContact() {
         return contact;
     }
 
-    public void setContact(String contact) {
+    public void setContact(ContactModel contact) {
         this.contact = contact;
     }
 
-    public String getNotes() {
+    public NotesModel getNotes() {
         return notes;
     }
 
-    public void setNotes(String notes) {
+    public void setNotes(NotesModel notes) {
         this.notes = notes;
     }
 
-    public String getIata() {
+    public IataModel getIata() {
         return iata;
     }
 
-    public void setIata(String iata) {
+    public void setIata(IataModel iata) {
         this.iata = iata;
     }
 
-    public String getDepartment() {
+    public DepartmentModel getDepartment() {
         return department;
     }
 
-    public void setDepartment(String department) {
+    public void setDepartment(DepartmentModel department) {
         this.department = department;
     }
 
-    public String getDunsNumber() {
+    public DunsNumberModel getDunsNumber() {
         return dunsNumber;
     }
 
-    public void setDunsNumber(String dunsNumber) {
+    public void setDunsNumber(DunsNumberModel dunsNumber) {
         this.dunsNumber = dunsNumber;
     }
 
-    public CreditRating getCreditRating() {
+    public CreditRatingModel getCreditRating() {
         return creditRating;
     }
 
-    public void setCreditRating(CreditRating creditRating) {
+    public void setCreditRating(CreditRatingModel creditRating) {
         this.creditRating = creditRating;
     }
 
-    public String getExternalIdentifier() {
+    public ExternalIdentifierModel getExternalIdentifier() {
         return externalIdentifier;
     }
 
-    public void setExternalIdentifier(String externalIdentifier) {
+    public void setExternalIdentifier(ExternalIdentifierModel externalIdentifier) {
         this.externalIdentifier = externalIdentifier;
     }
 
-    public String getReferenceIdentifier() {
+    public ReferenceIdentifierModel getReferenceIdentifier() {
         return referenceIdentifier;
     }
 
-    public void setReferenceIdentifier(String referenceIdentifier) {
+    public void setReferenceIdentifier(ReferenceIdentifierModel referenceIdentifier) {
         this.referenceIdentifier = referenceIdentifier;
     }
 
-    public String getWebsiteUrl() {
+    public WebsiteUrlModel getWebsiteUrl() {
         return websiteUrl;
     }
 
-    public void setWebsiteUrl(String websiteUrl) {
+    public void setWebsiteUrl(WebsiteUrlModel websiteUrl) {
         this.websiteUrl = websiteUrl;
     }
 
-    public static class Options {
+    public static class NameModel {
+        @JsonProperty("Value")
+        private String value;
+
+        public String getValue() {
+            return value;
+        }
+
+        public void setValue(String value) {
+            this.value = value;
+        }
+
+        // Add getters and setters
+    }
+
+    public static class OptionsModel {
         @JsonProperty("Invoiceable")
-        private boolean invoiceable;
+        private InvoiceableModel invoiceable;
 
         @JsonProperty("AddFeesToInvoices")
-        private boolean addFeesToInvoices;
+        private AddFeesToInvoicesModel addFeesToInvoices;
 
-        public boolean isInvoiceable() {
+        public InvoiceableModel getInvoiceable() {
             return invoiceable;
         }
 
-        public void setInvoiceable(boolean invoiceable) {
+        public void setInvoiceable(InvoiceableModel invoiceable) {
             this.invoiceable = invoiceable;
         }
 
-        public boolean isAddFeesToInvoices() {
+        public AddFeesToInvoicesModel getAddFeesToInvoices() {
             return addFeesToInvoices;
         }
 
-        public void setAddFeesToInvoices(boolean addFeesToInvoices) {
+        public void setAddFeesToInvoices(AddFeesToInvoicesModel addFeesToInvoices) {
             this.addFeesToInvoices = addFeesToInvoices;
         }
     }
 
-    public static class CreditRating {
-        @JsonProperty("Basic")
-        private String basic;
+    public static class InvoiceableModel {
+        @JsonProperty("Value")
+        private boolean value;
 
-        public String getBasic() {
+        public boolean isValue() {
+            return value;
+        }
+
+        public void setValue(boolean value) {
+            this.value = value;
+        }
+    }
+
+    public static class AddFeesToInvoicesModel {
+        @JsonProperty("Value")
+        private boolean value;
+
+        public boolean isValue() {
+            return value;
+        }
+
+        public void setValue(boolean value) {
+            this.value = value;
+        }
+    }
+
+    public static class MotherCompanyIdModel {
+        @JsonProperty("Value")
+        private String value;
+
+        public String getValue() {
+            return value;
+        }
+
+        public void setValue(String value) {
+            this.value = value;
+        }
+    }
+
+    public static class InvoiceDueIntervalModel {
+        @JsonProperty("Value")
+        private String value;
+
+        public String getValue() {
+            return value;
+        }
+
+        public void setValue(String value) {
+            this.value = value;
+        }
+    }
+
+    public static class ContactPersonModel {
+        @JsonProperty("Value")
+        private String value;
+
+        public String getValue() {
+            return value;
+        }
+
+        public void setValue(String value) {
+            this.value = value;
+        }
+    }
+
+    public static class ContactModel {
+        @JsonProperty("Value")
+        private String value;
+
+        public String getValue() {
+            return value;
+        }
+
+        public void setValue(String value) {
+            this.value = value;
+        }
+    }
+
+    public static class NotesModel {
+        @JsonProperty("Value")
+        private String value;
+
+        public String getValue() {
+            return value;
+        }
+
+        public void setValue(String value) {
+            this.value = value;
+        }
+    }
+
+    public static class IataModel {
+        @JsonProperty("Value")
+        private String value;
+
+        public String getValue() {
+            return value;
+        }
+
+        public void setValue(String value) {
+            this.value = value;
+        }
+    }
+
+    public static class DepartmentModel {
+        @JsonProperty("Value")
+        private String value;
+
+        public String getValue() {
+            return value;
+        }
+
+        public void setValue(String value) {
+            this.value = value;
+        }
+    }
+
+    public static class DunsNumberModel {
+        @JsonProperty("Value")
+        private String value;
+
+        public String getValue() {
+            return value;
+        }
+
+        public void setValue(String value) {
+            this.value = value;
+        }
+    }
+
+    public static class CreditRatingModel {
+        @JsonProperty("Basic")
+        private BasicModel basic;
+
+        public BasicModel getBasic() {
             return basic;
         }
 
-        public void setBasic(String basic) {
+        public void setBasic(BasicModel basic) {
             this.basic = basic;
+        }
+    }
+
+    public static class BasicModel {
+        @JsonProperty("Value")
+        private String value;
+
+        public String getValue() {
+            return value;
+        }
+
+        public void setValue(String value) {
+            this.value = value;
+        }
+    }
+
+    public static class ExternalIdentifierModel {
+        @JsonProperty("Value")
+        private String value;
+
+        public String getValue() {
+            return value;
+        }
+
+        public void setValue(String value) {
+            this.value = value;
+        }
+    }
+
+    public static class ReferenceIdentifierModel {
+        @JsonProperty("Value")
+        private String value;
+
+        public String getValue() {
+            return value;
+        }
+
+        public void setValue(String value) {
+            this.value = value;
+        }
+    }
+
+    public static class WebsiteUrlModel {
+        @JsonProperty("Value")
+        private String value;
+
+        public String getValue() {
+            return value;
+        }
+
+        public void setValue(String value) {
+            this.value = value;
         }
     }
 }
