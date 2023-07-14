@@ -251,13 +251,71 @@ public class MewsController {
         return request;
     }
 
-    public MewsUpdateCompanyRequest createUpdateCompanyPayload(SalesforceAccountResponse account) throws JsonProcessingException {
+    public MewsUpdateCompanyRequest createUpdateCompanyPayload(SalesforceAccountResponse account,SalesforceBookingResponse book,SalesforceContactResponse contact, MewsGetCompanyResponse companies  ) throws JsonProcessingException {
+        String identifier = companies.getCompanies()[0].getIdentifier();
+        String accountIdentifier = account.getThn__Identifier__c();
+        String taxIdentifier = companies.getCompanies()[0].getTaxIdentifier();
+        String accountTaxIdentifier = account.getThn__TaxIdentifier__c();
+        String additionalTaxIdentifier = companies.getCompanies()[0].getAdditionalTaxIdentifier();
+        String accountAdditionalTaxIdentifier = account.getThn__Additional_Tax_Identifier__c();
+        String billingCode = companies.getCompanies()[0].getBillingCode();
+        String accountBillingCode = account.getThn__BillingCode__c();
+        String accountingCode = companies.getCompanies()[0].getAccountingCode();
+        String accountAccountingCode = account.getThn__Accounting_Code__c();
+        String iata = companies.getCompanies()[0].getIata();
+        String accountIata = account.getThn__IATA__c();
+        String websiteUrl = companies.getCompanies()[0].getWebsiteUrl();
+        String accountWebsiteUrl = account.getWebsite();
+        String department = companies.getCompanies()[0].getDepartment();
+        String contactDepartment = contact.getDepartment();
+        String notes = companies.getCompanies()[0].getNotes();
+        String quoteNotes = book.getQuote_Notes__c();
 
         MewsUpdateCompanyRequest request = new MewsUpdateCompanyRequest();
         request.setClient(applicationConfiguration.getMewsClientName());
         request.setAccessToken(applicationConfiguration.getMewsAccessToken());
         request.setClientToken(applicationConfiguration.getMewsClientToken());
         request.setCompanyId(account.getThn__Mews_Id__c());
+
+
+        request.setName(account.getName().equals(companies.getCompanies()[0].getName()) ?
+                companies.getCompanies()[0].getName() : account.getName());
+
+        request.setIdentifier(accountIdentifier != null && identifier != null ?
+                (accountIdentifier.equals(identifier) ? identifier : accountIdentifier) :
+                (identifier != null ? identifier : accountIdentifier));
+
+        request.setTaxIdentifier(accountTaxIdentifier != null && taxIdentifier != null ?
+                (accountTaxIdentifier.equals(taxIdentifier) ? taxIdentifier : accountTaxIdentifier) :
+                (taxIdentifier != null ? taxIdentifier : accountTaxIdentifier));
+
+        request.setAdditionalTaxIdentifier(accountAdditionalTaxIdentifier != null && additionalTaxIdentifier != null ?
+                (accountAdditionalTaxIdentifier.equals(additionalTaxIdentifier) ? additionalTaxIdentifier : accountAdditionalTaxIdentifier) :
+                (additionalTaxIdentifier != null ? additionalTaxIdentifier : accountAdditionalTaxIdentifier));
+
+        request.setBillingCode(accountBillingCode != null && billingCode != null ?
+                (accountBillingCode.equals(billingCode) ? billingCode : accountBillingCode) :
+                (billingCode != null ? billingCode : accountBillingCode));
+
+        request.setAccountingCode(accountAccountingCode != null && accountingCode != null ?
+                (accountAccountingCode.equals(accountingCode) ? accountingCode : accountAccountingCode) :
+                (accountingCode != null ? accountingCode : accountAccountingCode));
+
+        request.setIata(accountIata != null && iata != null ?
+                (accountIata.equals(iata) ? iata : accountIata) :
+                (iata != null ? iata : accountIata));
+
+        request.setWebsiteUrl(accountWebsiteUrl != null && websiteUrl != null ?
+                (accountWebsiteUrl.equals(websiteUrl) ? websiteUrl : accountWebsiteUrl) :
+                (websiteUrl != null ? websiteUrl : accountWebsiteUrl));
+
+        request.setDepartment(contactDepartment != null && department != null ?
+                (contactDepartment.equals(department) ? department : contactDepartment) :
+                (department != null ? department : contactDepartment));
+
+        request.setNotes(quoteNotes != null && notes != null ?
+                (quoteNotes.equals(notes) ? notes : quoteNotes) :
+                (notes != null ? notes : quoteNotes));
 
         return request;
     }
