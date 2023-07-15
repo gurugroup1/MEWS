@@ -105,7 +105,7 @@ public class MewsController {
         String firstName = getbooker.getCustomers()[0].getFirstName();
         String lastName = getbooker.getCustomers()[0].getLastName();
         String secondLastName = getbooker.getCustomers()[0].getSecondLastName();
-        String Title = getbooker.getCustomers()[0].getTitle();
+//        String Title = getbooker.getCustomers()[0].getTitle();
         String nationalityCode = getbooker.getCustomers()[0].getNationalityCode();
         String birthDate = getbooker.getCustomers()[0].getBirthDate();
         String birthPlace = getbooker.getCustomers()[0].getBirthPlace();
@@ -116,7 +116,7 @@ public class MewsController {
         String contactFirstName = contact.getFirstName();
         String contactLastName = contact.getLastName();
         String contactSecondLastName = contact.getName();
-        String contactTile = contact.getTitle();
+//        String contactTile = contact.getTitle();
         String contactNationalityCode = contact.getThn__Nationality__c();
         String contactBirthDate = contact.getBirthdate();
         String bookBirthPlace = book.getOrigin__c();
@@ -144,9 +144,9 @@ public class MewsController {
                 (contactSecondLastName.equals(secondLastName) ? secondLastName : contactSecondLastName) :
                 (secondLastName != null ? secondLastName : contactSecondLastName));
 
-        request.setTitle(contactTile != null && Title != null ?
-                (contactTile.equals(Title) ? Title : contactTile) :
-                (Title != null ? Title : contactTile));
+//        request.setTitle(contactTile != null && Title != null ?
+//                (contactTile.equals(Title) ? Title : contactTile) :
+//                (Title != null ? Title : contactTile));
 
         request.setNationalityCode(contactNationalityCode != null && nationalityCode != null ?
                 (contactNationalityCode.equals(nationalityCode) ? nationalityCode : contactNationalityCode) :
@@ -317,7 +317,7 @@ public class MewsController {
         request.setNames(emails);
 
         MewsGetCompanyRequest.Limitation limitation = new MewsGetCompanyRequest.Limitation();
-        limitation.setCount(10);
+        limitation.setCount(1);
         request.setLimitation(limitation);
 
         return request;
