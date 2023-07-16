@@ -233,7 +233,7 @@ public class MewsController {
         return request;
     }
 
-    public MewsAvailabilityBlockRequest createAvailabilityBlockPayload(SalesforceBookingResponse book,SalesforceRateResponse rate, SalesforcePropertyResponse property,MewsBookerResponse booker) throws JsonProcessingException {
+    public MewsAvailabilityBlockRequest createAvailabilityBlockPayload(SalesforceBookingResponse book,SalesforceRateResponse rate, SalesforcePropertyResponse property,String bookerId) throws JsonProcessingException {
 
         MewsAvailabilityBlockRequest mewsAvailabilityBlockRequest = new MewsAvailabilityBlockRequest();
         mewsAvailabilityBlockRequest.setClient(applicationConfiguration.getMewsClientName());
@@ -241,7 +241,7 @@ public class MewsController {
         mewsAvailabilityBlockRequest.setClientToken(applicationConfiguration.getMewsClientToken());
         MewsAvailabilityBlockRequest.AvailabilityBlock availabilityBlock = new MewsAvailabilityBlockRequest.AvailabilityBlock();
         MewsAvailabilityBlockRequest.AvailabilityBlock.Budget budget = new MewsAvailabilityBlockRequest.AvailabilityBlock.Budget();
-        availabilityBlock.setBookerId(booker.getId());
+        availabilityBlock.setBookerId(bookerId);
         availabilityBlock.setRateId(rate.getThn__Mews_Id__c());
         availabilityBlock.setName("1234567");
         availabilityBlock.setServiceId(property.getThn__Mews_Reservation_Service_Id__c());
@@ -287,7 +287,7 @@ public class MewsController {
         return request;
     }
 
-    public MewsUpdateRateRequest createUpdateRatePayload(SalesforceBookingResponse book,SalesforceRateResponse rate, SalesforcePropertyResponse property,MewsBookerResponse booker) throws JsonProcessingException {
+    public MewsUpdateRateRequest createUpdateRatePayload(SalesforceBookingResponse book,SalesforceRateResponse rate, SalesforcePropertyResponse property) throws JsonProcessingException {
 
         MewsUpdateRateRequest request = new MewsUpdateRateRequest();
         request.setClient(applicationConfiguration.getMewsClientName());

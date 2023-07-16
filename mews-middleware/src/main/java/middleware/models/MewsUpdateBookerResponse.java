@@ -1,9 +1,10 @@
 package middleware.models;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import java.time.LocalDateTime;
+import java.util.List;
 
 public class MewsUpdateBookerResponse {
+
     @JsonProperty("Id")
     private String id;
 
@@ -14,13 +15,13 @@ public class MewsUpdateBookerResponse {
     private String number;
 
     @JsonProperty("Title")
-    private String title;
+    private Object title;
 
     @JsonProperty("Sex")
-    private String sex;
+    private Object sex;
 
     @JsonProperty("Gender")
-    private String gender;
+    private Object gender;
 
     @JsonProperty("FirstName")
     private String firstName;
@@ -32,28 +33,28 @@ public class MewsUpdateBookerResponse {
     private String secondLastName;
 
     @JsonProperty("NationalityCode")
-    private String nationalityCode;
+    private Object nationalityCode;
 
     @JsonProperty("LanguageCode")
-    private String languageCode;
+    private Object languageCode;
 
     @JsonProperty("BirthDate")
-    private LocalDateTime birthDate;
+    private String birthDate;
 
     @JsonProperty("BirthPlace")
     private String birthPlace;
 
     @JsonProperty("CitizenNumber")
-    private String citizenNumber;
+    private Object citizenNumber;
 
     @JsonProperty("MotherName")
-    private String motherName;
+    private Object motherName;
 
     @JsonProperty("FatherName")
-    private String fatherName;
+    private Object fatherName;
 
     @JsonProperty("Occupation")
-    private String occupation;
+    private Object occupation;
 
     @JsonProperty("Email")
     private String email;
@@ -62,40 +63,40 @@ public class MewsUpdateBookerResponse {
     private String phone;
 
     @JsonProperty("TaxIdentificationNumber")
-    private String taxIdentificationNumber;
+    private Object taxIdentificationNumber;
 
     @JsonProperty("LoyaltyCode")
     private String loyaltyCode;
 
     @JsonProperty("AccountingCode")
-    private String accountingCode;
+    private Object accountingCode;
 
     @JsonProperty("BillingCode")
-    private String billingCode;
+    private Object billingCode;
 
     @JsonProperty("Notes")
-    private String notes;
+    private Object notes;
 
     @JsonProperty("CarRegistrationNumber")
-    private String carRegistrationNumber;
+    private Object carRegistrationNumber;
 
     @JsonProperty("CreatedUtc")
-    private LocalDateTime createdUtc;
+    private String createdUtc;
 
     @JsonProperty("UpdatedUtc")
-    private LocalDateTime updatedUtc;
+    private String updatedUtc;
 
     @JsonProperty("Passport")
-    private String passport;
+    private Object passport;
 
     @JsonProperty("IdentityCard")
-    private String identityCard;
+    private Object identityCard;
 
     @JsonProperty("Visa")
-    private String visa;
+    private Object visa;
 
     @JsonProperty("DriversLicense")
-    private String driversLicense;
+    private Object driversLicense;
 
     @JsonProperty("Address")
     private Address address;
@@ -104,138 +105,31 @@ public class MewsUpdateBookerResponse {
     private String addressId;
 
     @JsonProperty("Classifications")
-    private String[] classifications;
+    private List<Object> classifications;
 
     @JsonProperty("Options")
-    private String[] options;
+    private List<String> options;
 
     @JsonProperty("CategoryId")
-    private String categoryId;
+    private Object categoryId;
 
     @JsonProperty("BirthDateUtc")
-    private LocalDateTime birthDateUtc;
+    private String birthDateUtc;
 
     @JsonProperty("ItalianDestinationCode")
-    private String italianDestinationCode;
+    private Object italianDestinationCode;
 
     @JsonProperty("ItalianFiscalCode")
-    private String italianFiscalCode;
+    private Object italianFiscalCode;
 
     @JsonProperty("CompanyId")
-    private String companyId;
+    private Object companyId;
 
     @JsonProperty("MergeTargetId")
-    private String mergeTargetId;
+    private Object mergeTargetId;
 
     @JsonProperty("ActivityState")
     private String activityState;
-
-
-
-    public static class Address {
-        @JsonProperty("Id")
-        private String id;
-
-        @JsonProperty("Line1")
-        private String line1;
-
-        @JsonProperty("Line2")
-        private String line2;
-
-        @JsonProperty("City")
-        private String city;
-
-        @JsonProperty("PostalCode")
-        private String postalCode;
-
-        @JsonProperty("CountryCode")
-        private String countryCode;
-
-        @JsonProperty("CountrySubdivisionCode")
-        private String countrySubdivisionCode;
-
-        @JsonProperty("Latitude")
-        private Double latitude;
-
-        @JsonProperty("Longitude")
-        private Double longitude;
-
-        // Getters and setters for Address fields
-
-        public String getId() {
-            return id;
-        }
-
-        public void setId(String id) {
-            this.id = id;
-        }
-
-        public String getLine1() {
-            return line1;
-        }
-
-        public void setLine1(String line1) {
-            this.line1 = line1;
-        }
-
-        public String getLine2() {
-            return line2;
-        }
-
-        public void setLine2(String line2) {
-            this.line2 = line2;
-        }
-
-        public String getCity() {
-            return city;
-        }
-
-        public void setCity(String city) {
-            this.city = city;
-        }
-
-        public String getPostalCode() {
-            return postalCode;
-        }
-
-        public void setPostalCode(String postalCode) {
-            this.postalCode = postalCode;
-        }
-
-        public String getCountryCode() {
-            return countryCode;
-        }
-
-        public void setCountryCode(String countryCode) {
-            this.countryCode = countryCode;
-        }
-
-        public String getCountrySubdivisionCode() {
-            return countrySubdivisionCode;
-        }
-
-        public void setCountrySubdivisionCode(String countrySubdivisionCode) {
-            this.countrySubdivisionCode = countrySubdivisionCode;
-        }
-
-        public Double getLatitude() {
-            return latitude;
-        }
-
-        public void setLatitude(Double latitude) {
-            this.latitude = latitude;
-        }
-
-        public Double getLongitude() {
-            return longitude;
-        }
-
-        public void setLongitude(Double longitude) {
-            this.longitude = longitude;
-        }
-    }
-
-    // Getters and setters for the fields
 
     public String getId() {
         return id;
@@ -261,27 +155,27 @@ public class MewsUpdateBookerResponse {
         this.number = number;
     }
 
-    public String getTitle() {
+    public Object getTitle() {
         return title;
     }
 
-    public void setTitle(String title) {
+    public void setTitle(Object title) {
         this.title = title;
     }
 
-    public String getSex() {
+    public Object getSex() {
         return sex;
     }
 
-    public void setSex(String sex) {
+    public void setSex(Object sex) {
         this.sex = sex;
     }
 
-    public String getGender() {
+    public Object getGender() {
         return gender;
     }
 
-    public void setGender(String gender) {
+    public void setGender(Object gender) {
         this.gender = gender;
     }
 
@@ -309,27 +203,27 @@ public class MewsUpdateBookerResponse {
         this.secondLastName = secondLastName;
     }
 
-    public String getNationalityCode() {
+    public Object getNationalityCode() {
         return nationalityCode;
     }
 
-    public void setNationalityCode(String nationalityCode) {
+    public void setNationalityCode(Object nationalityCode) {
         this.nationalityCode = nationalityCode;
     }
 
-    public String getLanguageCode() {
+    public Object getLanguageCode() {
         return languageCode;
     }
 
-    public void setLanguageCode(String languageCode) {
+    public void setLanguageCode(Object languageCode) {
         this.languageCode = languageCode;
     }
 
-    public LocalDateTime getBirthDate() {
+    public String getBirthDate() {
         return birthDate;
     }
 
-    public void setBirthDate(LocalDateTime birthDate) {
+    public void setBirthDate(String birthDate) {
         this.birthDate = birthDate;
     }
 
@@ -341,35 +235,35 @@ public class MewsUpdateBookerResponse {
         this.birthPlace = birthPlace;
     }
 
-    public String getCitizenNumber() {
+    public Object getCitizenNumber() {
         return citizenNumber;
     }
 
-    public void setCitizenNumber(String citizenNumber) {
+    public void setCitizenNumber(Object citizenNumber) {
         this.citizenNumber = citizenNumber;
     }
 
-    public String getMotherName() {
+    public Object getMotherName() {
         return motherName;
     }
 
-    public void setMotherName(String motherName) {
+    public void setMotherName(Object motherName) {
         this.motherName = motherName;
     }
 
-    public String getFatherName() {
+    public Object getFatherName() {
         return fatherName;
     }
 
-    public void setFatherName(String fatherName) {
+    public void setFatherName(Object fatherName) {
         this.fatherName = fatherName;
     }
 
-    public String getOccupation() {
+    public Object getOccupation() {
         return occupation;
     }
 
-    public void setOccupation(String occupation) {
+    public void setOccupation(Object occupation) {
         this.occupation = occupation;
     }
 
@@ -389,11 +283,11 @@ public class MewsUpdateBookerResponse {
         this.phone = phone;
     }
 
-    public String getTaxIdentificationNumber() {
+    public Object getTaxIdentificationNumber() {
         return taxIdentificationNumber;
     }
 
-    public void setTaxIdentificationNumber(String taxIdentificationNumber) {
+    public void setTaxIdentificationNumber(Object taxIdentificationNumber) {
         this.taxIdentificationNumber = taxIdentificationNumber;
     }
 
@@ -405,83 +299,83 @@ public class MewsUpdateBookerResponse {
         this.loyaltyCode = loyaltyCode;
     }
 
-    public String getAccountingCode() {
+    public Object getAccountingCode() {
         return accountingCode;
     }
 
-    public void setAccountingCode(String accountingCode) {
+    public void setAccountingCode(Object accountingCode) {
         this.accountingCode = accountingCode;
     }
 
-    public String getBillingCode() {
+    public Object getBillingCode() {
         return billingCode;
     }
 
-    public void setBillingCode(String billingCode) {
+    public void setBillingCode(Object billingCode) {
         this.billingCode = billingCode;
     }
 
-    public String getNotes() {
+    public Object getNotes() {
         return notes;
     }
 
-    public void setNotes(String notes) {
+    public void setNotes(Object notes) {
         this.notes = notes;
     }
 
-    public String getCarRegistrationNumber() {
+    public Object getCarRegistrationNumber() {
         return carRegistrationNumber;
     }
 
-    public void setCarRegistrationNumber(String carRegistrationNumber) {
+    public void setCarRegistrationNumber(Object carRegistrationNumber) {
         this.carRegistrationNumber = carRegistrationNumber;
     }
 
-    public LocalDateTime getCreatedUtc() {
+    public String getCreatedUtc() {
         return createdUtc;
     }
 
-    public void setCreatedUtc(LocalDateTime createdUtc) {
+    public void setCreatedUtc(String createdUtc) {
         this.createdUtc = createdUtc;
     }
 
-    public LocalDateTime getUpdatedUtc() {
+    public String getUpdatedUtc() {
         return updatedUtc;
     }
 
-    public void setUpdatedUtc(LocalDateTime updatedUtc) {
+    public void setUpdatedUtc(String updatedUtc) {
         this.updatedUtc = updatedUtc;
     }
 
-    public String getPassport() {
+    public Object getPassport() {
         return passport;
     }
 
-    public void setPassport(String passport) {
+    public void setPassport(Object passport) {
         this.passport = passport;
     }
 
-    public String getIdentityCard() {
+    public Object getIdentityCard() {
         return identityCard;
     }
 
-    public void setIdentityCard(String identityCard) {
+    public void setIdentityCard(Object identityCard) {
         this.identityCard = identityCard;
     }
 
-    public String getVisa() {
+    public Object getVisa() {
         return visa;
     }
 
-    public void setVisa(String visa) {
+    public void setVisa(Object visa) {
         this.visa = visa;
     }
 
-    public String getDriversLicense() {
+    public Object getDriversLicense() {
         return driversLicense;
     }
 
-    public void setDriversLicense(String driversLicense) {
+    public void setDriversLicense(Object driversLicense) {
         this.driversLicense = driversLicense;
     }
 
@@ -501,67 +395,67 @@ public class MewsUpdateBookerResponse {
         this.addressId = addressId;
     }
 
-    public String[] getClassifications() {
+    public List<Object> getClassifications() {
         return classifications;
     }
 
-    public void setClassifications(String[] classifications) {
+    public void setClassifications(List<Object> classifications) {
         this.classifications = classifications;
     }
 
-    public String[] getOptions() {
+    public List<String> getOptions() {
         return options;
     }
 
-    public void setOptions(String[] options) {
+    public void setOptions(List<String> options) {
         this.options = options;
     }
 
-    public String getCategoryId() {
+    public Object getCategoryId() {
         return categoryId;
     }
 
-    public void setCategoryId(String categoryId) {
+    public void setCategoryId(Object categoryId) {
         this.categoryId = categoryId;
     }
 
-    public LocalDateTime getBirthDateUtc() {
+    public String getBirthDateUtc() {
         return birthDateUtc;
     }
 
-    public void setBirthDateUtc(LocalDateTime birthDateUtc) {
+    public void setBirthDateUtc(String birthDateUtc) {
         this.birthDateUtc = birthDateUtc;
     }
 
-    public String getItalianDestinationCode() {
+    public Object getItalianDestinationCode() {
         return italianDestinationCode;
     }
 
-    public void setItalianDestinationCode(String italianDestinationCode) {
+    public void setItalianDestinationCode(Object italianDestinationCode) {
         this.italianDestinationCode = italianDestinationCode;
     }
 
-    public String getItalianFiscalCode() {
+    public Object getItalianFiscalCode() {
         return italianFiscalCode;
     }
 
-    public void setItalianFiscalCode(String italianFiscalCode) {
+    public void setItalianFiscalCode(Object italianFiscalCode) {
         this.italianFiscalCode = italianFiscalCode;
     }
 
-    public String getCompanyId() {
+    public Object getCompanyId() {
         return companyId;
     }
 
-    public void setCompanyId(String companyId) {
+    public void setCompanyId(Object companyId) {
         this.companyId = companyId;
     }
 
-    public String getMergeTargetId() {
+    public Object getMergeTargetId() {
         return mergeTargetId;
     }
 
-    public void setMergeTargetId(String mergeTargetId) {
+    public void setMergeTargetId(Object mergeTargetId) {
         this.mergeTargetId = mergeTargetId;
     }
 
@@ -572,4 +466,111 @@ public class MewsUpdateBookerResponse {
     public void setActivityState(String activityState) {
         this.activityState = activityState;
     }
+
+    //Getters and Setters
+    //...
+}
+
+class Address {
+    @JsonProperty("Id")
+    private String id;
+
+    @JsonProperty("Line1")
+    private Object line1;
+
+    @JsonProperty("Line2")
+    private Object line2;
+
+    @JsonProperty("City")
+    private Object city;
+
+    @JsonProperty("PostalCode")
+    private Object postalCode;
+
+    @JsonProperty("CountryCode")
+    private Object countryCode;
+
+    @JsonProperty("CountrySubdivisionCode")
+    private Object countrySubdivisionCode;
+
+    @JsonProperty("Latitude")
+    private Object latitude;
+
+    @JsonProperty("Longitude")
+    private Object longitude;
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public Object getLine1() {
+        return line1;
+    }
+
+    public void setLine1(Object line1) {
+        this.line1 = line1;
+    }
+
+    public Object getLine2() {
+        return line2;
+    }
+
+    public void setLine2(Object line2) {
+        this.line2 = line2;
+    }
+
+    public Object getCity() {
+        return city;
+    }
+
+    public void setCity(Object city) {
+        this.city = city;
+    }
+
+    public Object getPostalCode() {
+        return postalCode;
+    }
+
+    public void setPostalCode(Object postalCode) {
+        this.postalCode = postalCode;
+    }
+
+    public Object getCountryCode() {
+        return countryCode;
+    }
+
+    public void setCountryCode(Object countryCode) {
+        this.countryCode = countryCode;
+    }
+
+    public Object getCountrySubdivisionCode() {
+        return countrySubdivisionCode;
+    }
+
+    public void setCountrySubdivisionCode(Object countrySubdivisionCode) {
+        this.countrySubdivisionCode = countrySubdivisionCode;
+    }
+
+    public Object getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(Object latitude) {
+        this.latitude = latitude;
+    }
+
+    public Object getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(Object longitude) {
+        this.longitude = longitude;
+    }
+
+    //Getters and Setters
+    //...
 }
