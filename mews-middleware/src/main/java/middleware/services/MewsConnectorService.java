@@ -40,14 +40,12 @@ public class MewsConnectorService {
                 .addHeader("Content-Type", "application/json")
                 .addHeader("Authorization", "Bearer " + applicationConfiguration.getMewsAccessToken())
                 .build();
-        System.out.println("Request Body " + object + " : " + jsonStr);
         try (Response calloutResponse = httpClient.newCall(request).execute()) {
             if (!calloutResponse.isSuccessful()) {
                 String errorMessage = "Error in " + object + " call: " + calloutResponse.code() + " - " + calloutResponse.message();
                 throw new IOException(errorMessage);
             }
             String responseBody = calloutResponse.body().string();
-            System.out.println("Success Body " + object + " : " + responseBody);
             return responseBody;
         }
     }
@@ -65,14 +63,12 @@ public class MewsConnectorService {
                 .addHeader("Content-Type", "application/json")
                 .addHeader("Authorization", "Bearer " + applicationConfiguration.getMewsAccessToken())
                 .build();
-        System.out.println("Request Body " + object + " : " + jsonStr);
         try (Response calloutResponse = httpClient.newCall(request).execute()) {
             if (!calloutResponse.isSuccessful()) {
                 String errorMessage = "Error in " + object + " call: " + calloutResponse.code() + " - " + calloutResponse.message();
                 throw new IOException(errorMessage);
             }
             String responseBody = calloutResponse.body().string();
-            System.out.println("Success Body " + object + " : " + responseBody);
             return responseBody;
         }
     }
@@ -91,7 +87,6 @@ public class MewsConnectorService {
                 .addHeader("Content-Type", "application/json")
                 .addHeader("Authorization", "Bearer " + applicationConfiguration.getMewsAccessToken())
                 .build();
-        System.out.println("Request Body " + object + " : " + jsonStr);
 
         try (Response calloutResponse = httpClient.newCall(request).execute()) {
             if (!calloutResponse.isSuccessful()) {
@@ -100,18 +95,13 @@ public class MewsConnectorService {
             }
 
             String responseBody = calloutResponse.body().string();
-            System.out.println("Success Body " + object + " : " + responseBody);
 
             if (responseBody == null || responseBody.trim().isEmpty()) {
-                // Handle empty response body here
-                System.out.println("Empty response body received");
-                return null; // Or return any specific value that indicates empty response
+                return null;
             }
 
             if (responseBody.equals("{}")) {
-                // Handle success with empty response body here
-                System.out.println("Success with empty response body");
-                return responseBody; // Or return any specific value for success with empty response
+                return responseBody;
             }
 
             return responseBody;

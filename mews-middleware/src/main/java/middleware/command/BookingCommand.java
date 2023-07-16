@@ -75,7 +75,7 @@ public class BookingCommand implements Command {
                                     apiResponse.setStatus(ResponseStatus.SUCCESS);
                                     MewsGetCompanyRequest mewsGetCompanyRequest = mewsController.createGetCompanyPayload(account.get());
                                     Optional<MewsGetCompanyResponse> getCompany = this.getCompanyFromMews(mewsGetCompanyRequest);
-                                    System.out.println("mewsCompanyResponse" + getCompany.get().getCompanies());
+
                                     Optional<MewsUpdateCompanyResponse> mewsUpdateCompanyResponse = null;
                                     Optional<MewsCompanyResponse> mewsCompanyResponse = null;
                                     if (getCompany.get().getCompanies().length > 0) {
@@ -92,12 +92,12 @@ public class BookingCommand implements Command {
                                         apiResponse.setStatus(ResponseStatus.SUCCESS);
                                         MewsGetBookerRequest mewsGetBookerRequest = mewsController.createGetBookerPayload(account.get(), contact.get());
                                         Optional<MewsGetBookerResponse> getBooker = this.getBookerFromMews(mewsGetBookerRequest);
-                                        System.out.println("mewsBookerResponse" + getBooker.get().getCustomers());
+
                                         Optional<MewsUpdateBookerResponse>  mewsUpdateBookerResponse = null;
                                         Optional<MewsBookerResponse> bookerResponse = null;
                                         if (getBooker.get().getCustomers().length > 0) {
                                             MewsUpdateBookerRequest mewsBookerRequest = mewsController.createUpdateBookerPayload(booking.get(), account.get(), contact.get(), getBooker.get());
-                                            System.out.println("mewsBookerRequest" + mewsBookerRequest);
+
                                             mewsUpdateBookerResponse = this.updateBookerInMews(mewsBookerRequest);
                                             bookerId = mewsUpdateBookerResponse.get().getId();
                                         } else {
@@ -113,7 +113,7 @@ public class BookingCommand implements Command {
                                             apiResponse.setStatus(ResponseStatus.SUCCESS);
                                             MewsGetAvailabilityBlockRequest mewsGetAvailabilityBlockRequest = mewsController.createGetAvailabilityBlockPayload(account.get(), contact.get());
                                             Optional<MewsGetAvailabilityBlockResponse> getMewsAvailabilityBlock = this.getAvailabilityBlockFromMews(mewsGetAvailabilityBlockRequest);
-                                            System.out.println("mewsGetAvailabilityBlockResponse" + getMewsAvailabilityBlock.get().getAvailabilityBlocks());
+
                                             Optional<MewsAvailabilityBlockResponse> availabilityBlockResponse = null;
                                             String mewsUpdateAvailabilityBlockResponse = null;
                                             if (getMewsAvailabilityBlock.get().getAvailabilityBlocks().length > 0) {
@@ -123,8 +123,8 @@ public class BookingCommand implements Command {
                                                 MewsAvailabilityBlockRequest mewsAvailabilityBlockRequest = this.mewsController.createAvailabilityBlockPayload(booking.get(), rate.get(), property.get(), bookerId);
                                                 availabilityBlockResponse = this.addAvailabilityBlockInMews(mewsAvailabilityBlockRequest);
                                             }
-                                            System.out.println(mewsUpdateAvailabilityBlockResponse);
-                                            System.out.println(availabilityBlockResponse);
+
+
                                             if ((availabilityBlockResponse != null && availabilityBlockResponse.isPresent()) || (mewsUpdateAvailabilityBlockResponse != null && mewsUpdateAvailabilityBlockResponse.equals("{}"))) {
                                                 if (availabilityBlockResponse != null) {
                                                     responseData.put("mewsAvailabilityBlockResponse", availabilityBlockResponse.get());
@@ -291,8 +291,6 @@ public class BookingCommand implements Command {
                     salesforceToken.getAccess_token(),
                     parameter
             );
-
-//            System.out.println(responseClass.getSimpleName() + " response: " + response);
 
             if (response == null || response.isEmpty()) {
                 logger.error("Empty Salesforce " + responseClass.getSimpleName() + " response.");
