@@ -365,7 +365,7 @@ public class BookingCommand implements Command {
         String response = mewsController.updateCompany(payload);
 
         if (response == null || response.isEmpty()) {
-            throw new Exception("update company response from Mews.");
+            throw new Exception(" empty update company response from Mews.");
         }
 
 
@@ -376,9 +376,8 @@ public class BookingCommand implements Command {
         String response = mewsController.updateBooker(payload);
 
         if (response == null || response.isEmpty()) {
-            throw new Exception("Empty Availability Block response from Mews.");
+            throw new Exception("Empty update booker response from Mews.");
         }
-
 
         return Optional.ofNullable(parseResponse(response, MewsUpdateBookerResponse.class, "Update Booker Response"));
     }
