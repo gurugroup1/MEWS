@@ -20,9 +20,7 @@ import java.util.Map;
 import java.util.Optional;
 
 public class BookingCommand implements Command {
-
     private static final Logger logger = LoggerFactory.getLogger(BookingCommand.class);
-
     private final ApplicationConfiguration applicationConfiguration;
     private final SalesforceConnectorService salesforceConnectorService;
     private final MewsConnectorService mewsConnectorService;
@@ -174,7 +172,7 @@ public class BookingCommand implements Command {
                                                                         if (salesforcePMSBlockRateResponse != null && !salesforcePMSBlockRateResponse.isEmpty()) {
                                                                             responseData.put("salesforceCreatePMSBlockRatesResponse", salesforcePMSBlockRateResponse);
                                                                             apiResponse.setStatus(ResponseStatus.SUCCESS);
-                                                                            SalesforceBookingRequest salesforceBookingRequest = this.salesforceController.createBookingPayload();
+                                                                            SalesforceBookingRequest salesforceBookingRequest = this.salesforceController.createBookingPayload(booking.get().getName());
                                                                             String salesforceBookingRequestString = objectMapper.writeValueAsString(salesforceBookingRequest);
                                                                             String salesforceBookingResponse = this.salesforceController.updateRecordInSalesforce(applicationConfiguration.getSalesforceBookingObject(), salesforceToken.getAccess_token(), salesforceBookingRequestString, bookingId);
                                                                             if (salesforceBookingResponse.isEmpty()) {

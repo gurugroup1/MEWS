@@ -27,9 +27,9 @@ public class SalesforceController {
         this.salesforceConnectorService = Objects.requireNonNull(salesforceConnectorService, "Salesforce connector service must not be null");
     }
 
-    public SalesforceBookingRequest createBookingPayload() throws JsonProcessingException {
+    public SalesforceBookingRequest createBookingPayload(String name) throws JsonProcessingException {
         SalesforceBookingRequest payload = new SalesforceBookingRequest();
-        payload.setName("Booking Testing Name");
+        payload.setName(name);
         return payload;
     }
 
