@@ -1,5 +1,6 @@
 package middleware.services;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import middleware.configurations.ApplicationConfiguration;
 import middleware.models.SecretKeyAWS;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -8,6 +9,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.IOException;
+
+import static org.hibernate.tool.schema.SchemaToolingLogging.LOGGER;
 
 @Service
 public class SalesforceConnectorService {
@@ -43,10 +46,12 @@ public class SalesforceConnectorService {
                 .build();
 
         try (Response calloutResponse = httpClient.newCall(request).execute()) {
+            String responseBody = calloutResponse.body().string();
             if (!calloutResponse.isSuccessful()) {
-                throw new IOException("Unexpected code " + calloutResponse);
+                String errorMessage = parseErrorMessage(responseBody);
+                throw new IOException(errorMessage);
             }
-            return calloutResponse.body().string();
+            return responseBody;
         }
     }
 
@@ -62,10 +67,12 @@ public class SalesforceConnectorService {
                 .build();
 
         try (Response response = httpClient.newCall(request).execute()) {
+            String responseBody = response.body().string();
             if (!response.isSuccessful()) {
-                throw new IOException("Unexpected code " + response);
+                String errorMessage = parseErrorMessage(responseBody);
+                throw new IOException(errorMessage);
             }
-            return response.body().string();
+            return responseBody;
         }
     }
 
@@ -80,10 +87,24 @@ public class SalesforceConnectorService {
                 .build();
 
         try (Response response = httpClient.newCall(request).execute()) {
+            String responseBody = response.body().string();
             if (!response.isSuccessful()) {
-                throw new IOException("Unexpected code " + response);
+                String errorMessage = parseErrorMessage(responseBody);
+                throw new IOException(errorMessage);
             }
-            return response.body().string();
+            return responseBody;
+        }
+    }
+
+    private String parseErrorMessage(String responseBody) {
+        try {
+            ObjectMapper objectMapper = new ObjectMapper();
+            JsonNode jsonNode = objectMapper.readTree(responseBody);
+            String message = jsonNode.path("Message").asText();
+            return message;
+        } catch (IOException e) {
+            LOGGER.error("Error parsing error message: " + e.getMessage());
+            return "An error occurred while processing the request.";
         }
     }
 
