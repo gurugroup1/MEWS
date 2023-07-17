@@ -1,5 +1,6 @@
 package middleware.services;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import middleware.models.*;
@@ -64,15 +65,25 @@ public class MewsConnectorService {
                 .addHeader("Authorization", "Bearer " + applicationConfiguration.getMewsAccessToken())
                 .build();
         try (Response calloutResponse = httpClient.newCall(request).execute()) {
+            String responseBody = calloutResponse.body().string();
             if (!calloutResponse.isSuccessful()) {
-                String errorMessage = "Error in " + object + " call: " + calloutResponse.code() + " - " + calloutResponse.message();
+                String errorMessage = "Error in " + object + " call: " + calloutResponse.code() + " - " + parseErrorMessage(responseBody);
                 throw new IOException(errorMessage);
             }
-            String responseBody = calloutResponse.body().string();
             return responseBody;
         }
     }
-
+    private String parseErrorMessage(String responseBody) {
+        try {
+            ObjectMapper objectMapper = new ObjectMapper();
+            JsonNode jsonNode = objectMapper.readTree(responseBody);
+            String message = jsonNode.path("Message").asText();
+            return message;
+        } catch (IOException e) {
+            LOGGER.error("Error parsing error message: " + e.getMessage());
+            return "An error occurred while processing the request.";
+        }
+    }
     public String updateToMews(Object request, String object) throws IOException {
         ObjectWriter ow = objectMapper.writer().withDefaultPrettyPrinter();
         String jsonStr = ow.writeValueAsString(request);
@@ -87,15 +98,15 @@ public class MewsConnectorService {
                 .addHeader("Content-Type", "application/json")
                 .addHeader("Authorization", "Bearer " + applicationConfiguration.getMewsAccessToken())
                 .build();
+        System.out.println("jsonStr"+jsonStr);
 
         try (Response calloutResponse = httpClient.newCall(request).execute()) {
+            String responseBody = calloutResponse.body().string();
             if (!calloutResponse.isSuccessful()) {
-                String errorMessage = "Error in " + object + " call: " + calloutResponse.code() + " - " + calloutResponse.message();
+                String errorMessage = "Error in " + object + " call: " + calloutResponse.code() + " - " + parseErrorMessage(responseBody);
                 throw new IOException(errorMessage);
             }
-
-            String responseBody = calloutResponse.body().string();
-
+                System.out.println("responseBody"+responseBody);
             if (responseBody == null || responseBody.trim().isEmpty()) {
                 return null;
             }
