@@ -153,13 +153,14 @@ public class MewsController {
 
         MewsUpdateAvailabilityBlockRequest.AvailabilityBlock block = new MewsUpdateAvailabilityBlockRequest.AvailabilityBlock();
         block.setAvailabilityBlockId(availabilityBlock.getId());
+        System.out.println(availabilityBlock.getId());
 
         MewsUpdateAvailabilityBlockRequest.AvailabilityBlock.Name updatedName = new MewsUpdateAvailabilityBlockRequest.AvailabilityBlock.Name();
         updatedName.setValue(getUpdatedValue(contact.getName(), availabilityBlock.getName()));
         block.setName(updatedName);
 
         MewsUpdateAvailabilityBlockRequest.AvailabilityBlock.ReleasedUtc updatedReleasedUtc = new MewsUpdateAvailabilityBlockRequest.AvailabilityBlock.ReleasedUtc();
-        updatedReleasedUtc.setValue(getUpdatedValue(book.getThn__Release_Date__c(), availabilityBlock.getReleasedUtc()));
+        updatedReleasedUtc.setValue(getUpdatedValue(availabilityBlock.getReleasedUtc(), availabilityBlock.getReleasedUtc()));
         block.setReleasedUtc(updatedReleasedUtc);
 
         List<MewsUpdateAvailabilityBlockRequest.AvailabilityBlock> availabilityBlocks = new ArrayList<>();
