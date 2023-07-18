@@ -46,12 +46,10 @@ public class SalesforceConnectorService {
                 .build();
 
         try (Response calloutResponse = httpClient.newCall(request).execute()) {
-            String responseBody = calloutResponse.body().string();
             if (!calloutResponse.isSuccessful()) {
-                String errorMessage = parseErrorMessage(responseBody);
-                throw new IOException(errorMessage);
+                throw new IOException("Unexpected code " + calloutResponse);
             }
-            return responseBody;
+            return calloutResponse.body().string();
         }
     }
 
@@ -67,12 +65,10 @@ public class SalesforceConnectorService {
                 .build();
 
         try (Response response = httpClient.newCall(request).execute()) {
-            String responseBody = response.body().string();
             if (!response.isSuccessful()) {
-                String errorMessage = parseErrorMessage(responseBody);
-                throw new IOException(errorMessage);
+                throw new IOException("Unexpected code " + response);
             }
-            return responseBody;
+            return response.body().string();
         }
     }
 
@@ -87,12 +83,10 @@ public class SalesforceConnectorService {
                 .build();
 
         try (Response response = httpClient.newCall(request).execute()) {
-            String responseBody = response.body().string();
             if (!response.isSuccessful()) {
-                String errorMessage = parseErrorMessage(responseBody);
-                throw new IOException(errorMessage);
+                throw new IOException("Unexpected code " + response);
             }
-            return responseBody;
+            return response.body().string();
         }
     }
 
