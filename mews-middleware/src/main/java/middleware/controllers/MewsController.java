@@ -256,14 +256,19 @@ public class MewsController {
         request.setAccessToken(applicationConfiguration.getMewsAccessToken());
         request.setClientToken(applicationConfiguration.getMewsClientToken());
 
-        request.setRateId("bd870c5b-25c6-44c6-9959-acc200fbbd7c");
-
+        request.setRateId(rate.getThn__Mews_Id__c());
+        System.out.println(rate.getThn__Mews_Id__c());
         MewsUpdateRateRequest.PriceUpdate priceUpdate = new MewsUpdateRateRequest.PriceUpdate();
 //        priceUpdate.setCategoryId("e3aa3117-dff0-46b7-b49a-2c0391e70ff9");
-        priceUpdate.setFirstTimeUnitStartUtc("2024-01-04T23:00:00.000Z");
-        priceUpdate.setLastTimeUnitStartUtc("2024-01-05T23:00:00.000Z");
-        priceUpdate.setValue(222);
+//        priceUpdate.setFirstTimeUnitStartUtc("2024-01-04T23:00:00.000Z");
+//        priceUpdate.setLastTimeUnitStartUtc("2024-01-05T23:00:00.000Z");
+        priceUpdate.setFirstTimeUnitStartUtc(book.getThn__Arrival_Date__c()+"T23:00:00.000Z");
+        System.out.println(book.getThn__Arrival_Date__c()+"T23:00:00.000Z");
 
+        priceUpdate.setLastTimeUnitStartUtc(book.getThn__Departure_Date__c()+"T23:00:00.000Z");
+        System.out.println(book.getThn__Arrival_Date__c()+"T23:00:00.000Z");
+        priceUpdate.setValue(book.getThn__Hotel_Rooms_Amount__c());
+        System.out.println(book.getThn__Hotel_Rooms_Amount__c());
         request.getPriceUpdates().add(priceUpdate);
 
         return request;

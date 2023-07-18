@@ -98,6 +98,7 @@ public class MewsConnectorService {
                 .addHeader("Content-Type", "application/json")
                 .addHeader("Authorization", "Bearer " + applicationConfiguration.getMewsAccessToken())
                 .build();
+                System.out.println(jsonStr);
 
         try (Response calloutResponse = httpClient.newCall(request).execute()) {
             String responseBody = calloutResponse.body().string();
@@ -110,9 +111,10 @@ public class MewsConnectorService {
             }
 
             if (responseBody.equals("{}")) {
+                System.out.println(responseBody);
                 return responseBody;
             }
-
+            System.out.println(responseBody);
             return responseBody;
         }
     }
