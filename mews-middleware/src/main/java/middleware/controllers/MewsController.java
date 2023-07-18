@@ -307,7 +307,7 @@ public class MewsController {
         request.setClient(applicationConfiguration.getMewsClientName());
         request.setAccessToken(applicationConfiguration.getMewsAccessToken());
         request.setClientToken(applicationConfiguration.getMewsClientToken());
-        request.setCompanyId(account.getThn__Mews_Id__c());
+        request.setCompanyId(companies.getCompanies()[0].getId());
 
         MewsUpdateCompanyRequest.NameModel updatedName = new MewsUpdateCompanyRequest.NameModel();
         updatedName.setValue(getUpdatedValue(account.getName(), companyName));
