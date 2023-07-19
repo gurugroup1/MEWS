@@ -188,10 +188,10 @@ public class MewsController {
         request.setAccessToken(applicationConfiguration.getMewsAccessToken());
         request.setClientToken(applicationConfiguration.getMewsClientToken());
 
-        MewsGetAvailabilityBlockRequest.CreatedUtc createdUtc = new MewsGetAvailabilityBlockRequest.CreatedUtc();
-        createdUtc.setStartUtc("2023-07-11T00:00:00Z");
-        createdUtc.setEndUtc("2023-07-12T00:00:00Z");
-        request.setCreatedUtc(createdUtc);
+        List<String> externalIdentifiers = new ArrayList<>();
+        externalIdentifiers.add("Block-"+contact.getName());
+        System.out.println(externalIdentifiers);
+        request.setExternalIdentifiers(externalIdentifiers);
 
         MewsGetAvailabilityBlockRequest.Extent extent = new MewsGetAvailabilityBlockRequest.Extent();
         extent.setAdjustments(true);
@@ -224,14 +224,13 @@ public class MewsController {
         availabilityBlock.setReleasedUtc(book.getThn__Release_Date__c());
         System.out.println(book.getThn__Release_Date__c());
         availabilityBlock.setNotes(book.getQuote_Notes__c());
-//      availabilityBlock.setState(book.getStatus__c());
         availabilityBlock.setState("Confirmed");
-
+        availabilityBlock.setExternalIdentifier("Block-"+contact.getName());
+        System.out.println("Block-"+contact.getName());
         budget.setValue((int) book.getThn__Total_Amount_incl_Tax__c());
         budget.setCurrency(rate.getCurrencyIsoCode());
         availabilityBlock.setBudget(budget);
 
-        // Set the availabilityBlock in the list
         List<MewsAvailabilityBlockRequest.AvailabilityBlock> availabilityBlocks = new ArrayList<>();
         availabilityBlocks.add(availabilityBlock);
         System.out.println(availabilityBlock);

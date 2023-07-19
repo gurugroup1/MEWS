@@ -50,6 +50,7 @@ public class BookingCommand implements Command {
             if (bookingId != null) {
                 logger.info("****Mews Middleware Started****");
                 logger.info("Booking Id: " + bookingId);
+                apiResponse.setBookingId(bookingId);
                 SalesforceTokenResponse salesforceToken = retrieveSalesforceToken();
                 Optional<SalesforceBookingResponse> booking = retrieveAndParseResponse(bookingId, SalesforceBookingResponse.class, applicationConfiguration.getSalesforceBookingObject());
                 if (booking.isPresent()) {
@@ -121,7 +122,7 @@ public class BookingCommand implements Command {
                                                 MewsUpdateAvailabilityBlockRequest mewsUpdateAvailabilityBlockRequest = mewsController.createUpdateAvailabilityBlockPayload(account.get(),booking.get(), contact.get(), property.get(), getMewsAvailabilityBlock.get());
                                                 mewsUpdateAvailabilityBlockResponse = mewsController.updateAvailabilityBlock(mewsUpdateAvailabilityBlockRequest);
                                             } else {
-                                                MewsAvailabilityBlockRequest mewsAvailabilityBlockRequest = this.mewsController.createAvailabilityBlockPayload(booking.get(), rate.get(),contact.get(), property.get() ,bookerId);
+                                                MewsAvailabilityBlockRequest mewsAvailabilityBlockRequest = this.mewsController.createAvailabilityBlockPayload(booking.get(), rate.get(),contact.get(), property.get(), bookerId);
                                                 availabilityBlockResponse = this.addAvailabilityBlockInMews(mewsAvailabilityBlockRequest);
                                             }
 

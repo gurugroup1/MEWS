@@ -2,6 +2,8 @@ package middleware.models;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import java.util.List;
+
 public class MewsGetAvailabilityBlockRequest {
     @JsonProperty("client")
     private String client;
@@ -11,6 +13,8 @@ public class MewsGetAvailabilityBlockRequest {
 
     @JsonProperty("clientToken")
     private String clientToken;
+    @JsonProperty("AvailabilityBlockIds")
+    private List<String> availabilityBlockIds;
 
     @JsonProperty("CreatedUtc")
     private CreatedUtc createdUtc;
@@ -20,6 +24,14 @@ public class MewsGetAvailabilityBlockRequest {
 
     @JsonProperty("Limitation")
     private Limitation limitation;
+
+    public List<String> getAvailabilityBlockIds() {
+        return availabilityBlockIds;
+    }
+
+    public void setAvailabilityBlockIds(List<String> availabilityBlockIds) {
+        this.availabilityBlockIds = availabilityBlockIds;
+    }
 
     public static class CreatedUtc {
         @JsonProperty("StartUtc")
@@ -45,6 +57,16 @@ public class MewsGetAvailabilityBlockRequest {
         public void setEndUtc(String endUtc) {
             this.endUtc = endUtc;
         }
+    }
+    @JsonProperty("ExternalIdentifiers")
+    private List<String> externalIdentifiers;
+
+    public List<String> getExternalIdentifiers() {
+        return externalIdentifiers;
+    }
+
+    public void setExternalIdentifiers(List<String> externalIdentifiers) {
+        this.externalIdentifiers = externalIdentifiers;
     }
 
     public static class Extent {
