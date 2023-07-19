@@ -160,15 +160,15 @@ public class MewsController {
         updatedName.setValue(getUpdatedValue(contact.getName(), availabilityBlock.getName()));
         block.setName(updatedName);
 
-//        MewsUpdateAvailabilityBlockRequest.AvailabilityBlock.FirstTimeUnitStartUtc startFirstTime = new MewsUpdateAvailabilityBlockRequest.AvailabilityBlock.FirstTimeUnitStartUtc();
-//        startFirstTime.setValue(getUpdatedValue(book.getThn__Arrival_Date__c()+"T23:00:00.000Z",availabilityBlock.getFirstTimeUnitStartUtc()));
-//        block.setFirstTimeUnitStartUtc(startFirstTime);
-//        System.out.println(startFirstTime);
-//
-//        MewsUpdateAvailabilityBlockRequest.AvailabilityBlock.LastTimeUnitStartUtc startLastTime = new MewsUpdateAvailabilityBlockRequest.AvailabilityBlock.LastTimeUnitStartUtc();
-//        startLastTime.setValue(getUpdatedValue(book.getThn__Departure_Date__c()+"T23:00:00.000Z",availabilityBlock.getLastTimeUnitStartUtc()));
-//        block.setLastTimeUnitStartUtc(startLastTime);
-//        System.out.println(startLastTime);
+        MewsUpdateAvailabilityBlockRequest.AvailabilityBlock.FirstTimeUnitStartUtc startFirstTime = new MewsUpdateAvailabilityBlockRequest.AvailabilityBlock.FirstTimeUnitStartUtc();
+        startFirstTime.setValue(getUpdatedValue(book.getThn__Arrival_Date__c()+"T23:00:00.000Z",availabilityBlock.getFirstTimeUnitStartUtc()));
+        block.setFirstTimeUnitStartUtc(startFirstTime);
+        System.out.println(startFirstTime);
+
+        MewsUpdateAvailabilityBlockRequest.AvailabilityBlock.LastTimeUnitStartUtc startLastTime = new MewsUpdateAvailabilityBlockRequest.AvailabilityBlock.LastTimeUnitStartUtc();
+        startLastTime.setValue(getUpdatedValue(book.getThn__Departure_Date__c()+"T23:00:00.000Z",availabilityBlock.getLastTimeUnitStartUtc()));
+        block.setLastTimeUnitStartUtc(startLastTime);
+        System.out.println(startLastTime);
 
         MewsUpdateAvailabilityBlockRequest.AvailabilityBlock.ReleasedUtc updatedReleasedUtc = new MewsUpdateAvailabilityBlockRequest.AvailabilityBlock.ReleasedUtc();
         updatedReleasedUtc.setValue(getUpdatedValue(availabilityBlock.getReleasedUtc(), availabilityBlock.getReleasedUtc()));
@@ -238,7 +238,7 @@ public class MewsController {
         return mewsAvailabilityBlockRequest;
     }
 
-    public MewsUpdateAvailabilityRequest createUpdateAvailabilityPayload(SalesforceBookingResponse book,SalesforceRateResponse rate, SalesforcePropertyResponse property,MewsBookerResponse booker,MewsGetAvailabilityBlockResponse availabilityBlockId) throws JsonProcessingException {
+    public MewsUpdateAvailabilityRequest createUpdateAvailabilityPayload(SalesforceBookingResponse book,SalesforceRateResponse rate, SalesforcePropertyResponse property,MewsGetAvailabilityBlockResponse availabilityBlockId) throws JsonProcessingException {
 
         MewsUpdateAvailabilityRequest request = new MewsUpdateAvailabilityRequest();
         request.setClient(applicationConfiguration.getMewsClientName());
@@ -250,12 +250,12 @@ public class MewsController {
         availabilityUpdate.setFirstTimeUnitStartUtc(book.getThn__Arrival_Date__c()+"T23:00:00.000Z");
         availabilityUpdate.setLastTimeUnitStartUtc(book.getThn__Departure_Date__c()+"T23:00:00.000Z");
         availabilityUpdate.setAvailabilityBlockId(availabilityBlockId.getAvailabilityBlocks()[0].getId());
-        availabilityUpdate.setResourceCategoryId(availabilityBlockId.getAdjustments()[0].getResourceCategoryId());
+        availabilityUpdate.setResourceCategoryId("11950924-ce98-40cb-80c2-abd100d7ede4");
 
 
 
         MewsUpdateAvailabilityRequest.UnitCountAdjustment unitCountAdjustment = new MewsUpdateAvailabilityRequest.UnitCountAdjustment();
-        unitCountAdjustment.setValue(availabilityBlockId.getAdjustments()[0].getUnitCount());
+        unitCountAdjustment.setValue(-10);
         availabilityUpdate.setUnitCountAdjustment(unitCountAdjustment);
 
         request.getAvailabilityUpdates().add(availabilityUpdate);

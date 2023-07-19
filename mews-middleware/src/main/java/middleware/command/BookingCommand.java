@@ -135,8 +135,8 @@ public class BookingCommand implements Command {
 
                                                 apiResponse.setStatus(ResponseStatus.SUCCESS);
 
-//                                                                                                MewsUpdateAvailabilityRequest mewsUpdateAvailabilityRequest = this.mewsController.createUpdateAvailabilityPayload(booking.get(),rate.get(),property.get(),bookerResponse.get(),getMewsAvailabilityBlock.get());
-                                                String mewsUpdateAvailabilityResponse = "{}";//this.mewsController.updateAvailability(mewsUpdateAvailabilityRequest);
+                                              MewsUpdateAvailabilityRequest mewsUpdateAvailabilityRequest = this.mewsController.createUpdateAvailabilityPayload(booking.get(),rate.get(),property.get(),getMewsAvailabilityBlock.get());
+                                                String mewsUpdateAvailabilityResponse = this.mewsController.updateAvailability(mewsUpdateAvailabilityRequest);
                                                 if (mewsUpdateAvailabilityResponse.equals("{}")) {
 //                                                    responseData.put("mewsUpdateAvailabilityResponse", bookerResponse.get());
 //                                                    apiResponse.setStatus(ResponseStatus.SUCCESS);
