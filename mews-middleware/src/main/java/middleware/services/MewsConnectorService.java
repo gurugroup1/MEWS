@@ -1,5 +1,6 @@
 package middleware.services;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import middleware.models.*;
@@ -26,6 +27,53 @@ public class MewsConnectorService {
         this.objectMapper = new ObjectMapper();
     }
 
+    public String getRecordFromMews(Object request, String object) throws IOException {
+        ObjectWriter ow = objectMapper.writer().withDefaultPrettyPrinter();
+        String jsonStr = ow.writeValueAsString(request);
+        return executeGetRequest(jsonStr, object);
+    }
+
+    public String deleteRecordFromMews(Object request) throws IOException {
+        ObjectWriter ow = objectMapper.writer().withDefaultPrettyPrinter();
+        String jsonStr = ow.writeValueAsString(request);
+        return executeDeleteRequest(jsonStr);
+    }
+
+    public String executeDeleteRequest(String jsonStr) throws IOException {
+        MediaType mediaType = MediaType.parse("application/json");
+        Request request = new Request.Builder()
+                .url(applicationConfiguration.getMewsApiUrl() + "/" + "availabilityBlocks" + "/delete")
+                .method("POST", RequestBody.create(mediaType, jsonStr))
+                .addHeader("Content-Type", "application/json")
+                .addHeader("Authorization", "Bearer " + applicationConfiguration.getMewsAccessToken())
+                .build();
+        try (Response calloutResponse = httpClient.newCall(request).execute()) {
+            String responseBody = calloutResponse.body().string();
+            if (!calloutResponse.isSuccessful()) {
+                String errorMessage = "Error in  call: " + calloutResponse.code() + " - " + parseErrorMessage(responseBody);
+                throw new IOException(errorMessage);
+            }
+            return responseBody;
+        }
+    }
+
+    public String executeGetRequest(String jsonStr, String object) throws IOException {
+        MediaType mediaType = MediaType.parse("application/json");
+        Request request = new Request.Builder()
+                .url(applicationConfiguration.getMewsApiUrl() + "/" + object + "/getAll")
+                .method("POST", RequestBody.create(mediaType, jsonStr))
+                .addHeader("Content-Type", "application/json")
+                .addHeader("Authorization", "Bearer " + applicationConfiguration.getMewsAccessToken())
+                .build();
+        try (Response calloutResponse = httpClient.newCall(request).execute()) {
+            if (!calloutResponse.isSuccessful()) {
+                String errorMessage = "Error in " + object + " call: " + calloutResponse.code() + " - " + calloutResponse.message();
+                throw new IOException(errorMessage);
+            }
+            String responseBody = calloutResponse.body().string();
+            return responseBody;
+        }
+    }
     public String pushToMews(Object request, String object) throws IOException {
         ObjectWriter ow = objectMapper.writer().withDefaultPrettyPrinter();
         String jsonStr = ow.writeValueAsString(request);
@@ -40,18 +88,26 @@ public class MewsConnectorService {
                 .addHeader("Content-Type", "application/json")
                 .addHeader("Authorization", "Bearer " + applicationConfiguration.getMewsAccessToken())
                 .build();
-        System.out.println("Request Body " + object + " : " + jsonStr);
         try (Response calloutResponse = httpClient.newCall(request).execute()) {
+            String responseBody = calloutResponse.body().string();
             if (!calloutResponse.isSuccessful()) {
-                String errorMessage = "Error in " + object + " call: " + calloutResponse.code() + " - " + calloutResponse.message();
+                String errorMessage = "Error in " + object + " call: " + calloutResponse.code() + " - " + parseErrorMessage(responseBody);
                 throw new IOException(errorMessage);
             }
-            String responseBody = calloutResponse.body().string();
-            System.out.println("Success Body " + object + " : " + responseBody);
             return responseBody;
         }
     }
-
+    private String parseErrorMessage(String responseBody) {
+        try {
+            ObjectMapper objectMapper = new ObjectMapper();
+            JsonNode jsonNode = objectMapper.readTree(responseBody);
+            String message = jsonNode.path("Message").asText();
+            return message;
+        } catch (IOException e) {
+            LOGGER.error("Error parsing error message: " + e.getMessage());
+            return "An error occurred while processing the request.";
+        }
+    }
     public String updateToMews(Object request, String object) throws IOException {
         ObjectWriter ow = objectMapper.writer().withDefaultPrettyPrinter();
         String jsonStr = ow.writeValueAsString(request);
@@ -66,31 +122,26 @@ public class MewsConnectorService {
                 .addHeader("Content-Type", "application/json")
                 .addHeader("Authorization", "Bearer " + applicationConfiguration.getMewsAccessToken())
                 .build();
-        System.out.println("Request Body " + object + " : " + jsonStr);
+                System.out.println(jsonStr);
 
         try (Response calloutResponse = httpClient.newCall(request).execute()) {
+            String responseBody = calloutResponse.body().string();
             if (!calloutResponse.isSuccessful()) {
-                String errorMessage = "Error in " + object + " call: " + calloutResponse.code() + " - " + calloutResponse.message();
+                String errorMessage = "Error in " + object + " call: " + calloutResponse.code() + " - " + parseErrorMessage(responseBody);
                 throw new IOException(errorMessage);
             }
-
-            String responseBody = calloutResponse.body().string();
-            System.out.println("Success Body " + object + " : " + responseBody);
-
             if (responseBody == null || responseBody.trim().isEmpty()) {
-                // Handle empty response body here
-                System.out.println("Empty response body received");
-                return null; // Or return any specific value that indicates empty response
+                return null;
             }
 
             if (responseBody.equals("{}")) {
-                // Handle success with empty response body here
-                System.out.println("Success with empty response body");
-                return responseBody; // Or return any specific value for success with empty response
+                System.out.println(responseBody);
+                return responseBody;
             }
-
             return responseBody;
         }
     }
+
+
 
 }

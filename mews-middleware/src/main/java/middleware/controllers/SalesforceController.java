@@ -27,9 +27,9 @@ public class SalesforceController {
         this.salesforceConnectorService = Objects.requireNonNull(salesforceConnectorService, "Salesforce connector service must not be null");
     }
 
-    public SalesforceBookingRequest createBookingPayload() throws JsonProcessingException {
+    public SalesforceBookingRequest createBookingPayload(String name) throws JsonProcessingException {
         SalesforceBookingRequest payload = new SalesforceBookingRequest();
-        payload.setName("Booking Testing Name");
+        payload.setName(name);
         return payload;
     }
 
@@ -66,6 +66,13 @@ public class SalesforceController {
     public String getRecordFromSalesforce(String object, String sfAccessToken, String bookingId) throws IOException {
         return salesforceConnectorService.getDataFromSalesforce(
                 Objects.requireNonNull(object, "Salesforce Object must not be null"),
+                Objects.requireNonNull(sfAccessToken, "Salesforce access token must not be null"),
+                Objects.requireNonNull(bookingId, "Reference Id must not be null")
+        );
+    }
+
+    public String getQueryDataFromSalesforce(String sfAccessToken, String bookingId) throws IOException {
+        return salesforceConnectorService.getQueryDataFromSalesforce(
                 Objects.requireNonNull(sfAccessToken, "Salesforce access token must not be null"),
                 Objects.requireNonNull(bookingId, "Reference Id must not be null")
         );

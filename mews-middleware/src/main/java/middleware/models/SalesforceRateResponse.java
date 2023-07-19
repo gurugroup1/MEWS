@@ -45,10 +45,20 @@ public class SalesforceRateResponse {
     private String hotel;
 
     @JsonProperty("thn__BaseRate__c")
-    private String baseRate;
+    private int baseRate;
 
     @JsonProperty("thn__GroupRate__c")
     private String groupRate;
+    @JsonProperty("thn__getPrices__c")
+    private String getPrice;
+
+    public String getGetPrice() {
+        return getPrice;
+    }
+
+    public void setGetPrice(String getPrice) {
+        this.getPrice = getPrice;
+    }
 
     public String getThn__Mews_Id__c() {
         return thn__Mews_Id__c;
@@ -165,11 +175,11 @@ public class SalesforceRateResponse {
         this.hotel = hotel;
     }
 
-    public String getBaseRate() {
+    public int getBaseRate() {
         return baseRate;
     }
 
-    public void setBaseRate(String baseRate) {
+    public void setBaseRate(int baseRate) {
         this.baseRate = baseRate;
     }
 
