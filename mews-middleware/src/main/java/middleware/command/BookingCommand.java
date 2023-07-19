@@ -121,7 +121,7 @@ public class BookingCommand implements Command {
                                                 MewsUpdateAvailabilityBlockRequest mewsUpdateAvailabilityBlockRequest = mewsController.createUpdateAvailabilityBlockPayload(account.get(),booking.get(), contact.get(), property.get(), getMewsAvailabilityBlock.get());
                                                 mewsUpdateAvailabilityBlockResponse = mewsController.updateAvailabilityBlock(mewsUpdateAvailabilityBlockRequest);
                                             } else {
-                                                MewsAvailabilityBlockRequest mewsAvailabilityBlockRequest = this.mewsController.createAvailabilityBlockPayload(booking.get(), rate.get(), property.get(), bookerId);
+                                                MewsAvailabilityBlockRequest mewsAvailabilityBlockRequest = this.mewsController.createAvailabilityBlockPayload(booking.get(), rate.get(),contact.get(), property.get() ,bookerId);
                                                 availabilityBlockResponse = this.addAvailabilityBlockInMews(mewsAvailabilityBlockRequest);
                                             }
 
@@ -134,12 +134,12 @@ public class BookingCommand implements Command {
 
                                                 apiResponse.setStatus(ResponseStatus.SUCCESS);
 
-                                                //                                                MewsUpdateAvailabilityRequest mewsUpdateAvailabilityRequest = this.mewsController.createUpdateAvailabilityPayload(booking.get(),rate.get(),property.get(),bookerResponse.get());
+//                                                                                                MewsUpdateAvailabilityRequest mewsUpdateAvailabilityRequest = this.mewsController.createUpdateAvailabilityPayload(booking.get(),rate.get(),property.get(),bookerResponse.get(),getMewsAvailabilityBlock.get());
                                                 String mewsUpdateAvailabilityResponse = "{}";//this.mewsController.updateAvailability(mewsUpdateAvailabilityRequest);
                                                 if (mewsUpdateAvailabilityResponse.equals("{}")) {
 //                                                    responseData.put("mewsUpdateAvailabilityResponse", bookerResponse.get());
 //                                                    apiResponse.setStatus(ResponseStatus.SUCCESS);
-                                                    MewsUpdateRateRequest mewsUpdateRateRequest = this.mewsController.createUpdateRatePayload(booking.get(), rate.get(), property.get());
+                                                    MewsUpdateRateRequest mewsUpdateRateRequest = this.mewsController.createUpdateRatePayload(booking.get() ,account.get(), rate.get(), property.get());
                                                     String mewsUpdateRateResponse = this.mewsController.updateRate(mewsUpdateRateRequest);
                                                     if (mewsUpdateRateResponse.equals("{}")) {
                                                         responseData.put("Mews_Update_Rate_Price", mewsUpdateRateResponse);
