@@ -1,5 +1,6 @@
 package middleware.controllers;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import middleware.configurations.ApplicationConfiguration;
 import middleware.models.*;
 import middleware.services.*;
@@ -238,7 +239,7 @@ public class MewsController {
         return mewsAvailabilityBlockRequest;
     }
 
-    public MewsUpdateAvailabilityRequest createUpdateAvailabilityPayload(SalesforceBookingResponse book,SalesforceRateResponse rate, SalesforcePropertyResponse property,MewsGetAvailabilityBlockResponse availabilityBlockId, SalesforceQueryResponse guestRoom) throws JsonProcessingException {
+    public MewsUpdateAvailabilityRequest createUpdateAvailabilityPayload(SalesforceBookingResponse book, SalesforceRateResponse rate, SalesforcePropertyResponse property, MewsGetAvailabilityBlockResponse availabilityBlockId, SalesforceQueryResponse guestRoom) throws JsonProcessingException {
 
         MewsUpdateAvailabilityRequest request = new MewsUpdateAvailabilityRequest();
         request.setClient(applicationConfiguration.getMewsClientName());
@@ -246,23 +247,38 @@ public class MewsController {
         request.setClientToken(applicationConfiguration.getMewsClientToken());
         request.setServiceId(property.getThn__Mews_Reservation_Service_Id__c());
 
+        List<SalesforceQueryResponse.QuoteHotelRoom> records = guestRoom.getRecords();
 
-        MewsUpdateAvailabilityRequest.AvailabilityUpdate availabilityUpdate = new MewsUpdateAvailabilityRequest.AvailabilityUpdate();
-        availabilityUpdate.setFirstTimeUnitStartUtc(book.getThn__Arrival_Date__c()+"T23:00:00.000Z");
-        availabilityUpdate.setLastTimeUnitStartUtc(book.getThn__Departure_Date__c()+"T23:00:00.000Z");
-        availabilityUpdate.setAvailabilityBlockId(availabilityBlockId.getAvailabilityBlocks()[0].getId());
-        availabilityUpdate.setResourceCategoryId("11950924-ce98-40cb-80c2-abd100d7ede4");
+        for (SalesforceQueryResponse.QuoteHotelRoom record : records) {
+            String id = record.getId();
+            String spaceArea = record.getSpaceArea();
+            double roomsAmount = record.getRoomsAmount();
+            SalesforceQueryResponse.SpaceArea spaceAreaDetails = record.getSpaceAreaDetails();
+            String mewsId = null;
+            if (spaceAreaDetails != null) {
+                mewsId = spaceAreaDetails.getMewsId();
+            }
+            System.out.println("Record ID: " + id);
+            System.out.println("Space Area: " + spaceArea);
+            System.out.println("Rooms Amount: " + roomsAmount);
+            System.out.println("mewsId: " + mewsId);
 
+            MewsUpdateAvailabilityRequest.AvailabilityUpdate availabilityUpdate = new MewsUpdateAvailabilityRequest.AvailabilityUpdate();
+            availabilityUpdate.setFirstTimeUnitStartUtc(book.getThn__Arrival_Date__c() + "T23:00:00.000Z");
+            availabilityUpdate.setLastTimeUnitStartUtc(book.getThn__Departure_Date__c() + "T23:00:00.000Z");
+            availabilityUpdate.setAvailabilityBlockId(availabilityBlockId.getAvailabilityBlocks()[0].getId());
+            availabilityUpdate.setResourceCategoryId(mewsId);
+            MewsUpdateAvailabilityRequest.UnitCountAdjustment unitCountAdjustment = new MewsUpdateAvailabilityRequest.UnitCountAdjustment();
+//            unitCountAdjustment.setValue((int) roomsAmount);
+            unitCountAdjustment.setValue((int) (-1 * roomsAmount));
+            availabilityUpdate.setUnitCountAdjustment(unitCountAdjustment);
 
-
-        MewsUpdateAvailabilityRequest.UnitCountAdjustment unitCountAdjustment = new MewsUpdateAvailabilityRequest.UnitCountAdjustment();
-        unitCountAdjustment.setValue(-10);
-        availabilityUpdate.setUnitCountAdjustment(unitCountAdjustment);
-
-        request.getAvailabilityUpdates().add(availabilityUpdate);
+            request.getAvailabilityUpdates().add(availabilityUpdate);
+        }
 
         return request;
     }
+
 
     public MewsUpdateRateRequest createUpdateRatePayload(SalesforceBookingResponse book,SalesforceAccountResponse account,SalesforceRateResponse rate, SalesforcePropertyResponse property) throws JsonProcessingException {
 
