@@ -239,7 +239,7 @@ public class MewsController {
         return mewsAvailabilityBlockRequest;
     }
 
-    public MewsUpdateAvailabilityRequest createUpdateAvailabilityPayload(SalesforceBookingResponse book, SalesforceRateResponse rate, SalesforcePropertyResponse property, MewsGetAvailabilityBlockResponse availabilityBlockId, SalesforceQueryResponse guestRoom) throws JsonProcessingException {
+    public MewsUpdateAvailabilityRequest createUpdateAvailabilityPayload(SalesforceBookingResponse book, SalesforceRateResponse rate, SalesforcePropertyResponse property, MewsAvailabilityBlockResponse availabilityBlockId, SalesforceQueryResponse guestRoom) throws JsonProcessingException {
 
         MewsUpdateAvailabilityRequest request = new MewsUpdateAvailabilityRequest();
         request.setClient(applicationConfiguration.getMewsClientName());
@@ -248,15 +248,15 @@ public class MewsController {
         request.setServiceId(property.getThn__Mews_Reservation_Service_Id__c());
 
         List<SalesforceQueryResponse.QuoteHotelRoom> records = guestRoom.getRecords();
-
+        String blockId = "";
         for (SalesforceQueryResponse.QuoteHotelRoom record : records) {
             String id = record.getId();
             String spaceArea = record.getSpaceArea();
             double roomsAmount = record.getRoomsAmount();
             SalesforceQueryResponse.SpaceArea spaceAreaDetails = record.getSpaceAreaDetails();
-            String mewsId = null;
+            String mewsId = "";
             if (spaceAreaDetails != null) {
-                mewsId = spaceAreaDetails.getMewsId();
+                 mewsId = spaceAreaDetails.getMewsId();
             }
             System.out.println("Record ID: " + id);
             System.out.println("Space Area: " + spaceArea);
@@ -266,10 +266,15 @@ public class MewsController {
             MewsUpdateAvailabilityRequest.AvailabilityUpdate availabilityUpdate = new MewsUpdateAvailabilityRequest.AvailabilityUpdate();
             availabilityUpdate.setFirstTimeUnitStartUtc(book.getThn__Arrival_Date__c() + "T23:00:00.000Z");
             availabilityUpdate.setLastTimeUnitStartUtc(book.getThn__Departure_Date__c() + "T23:00:00.000Z");
-            availabilityUpdate.setAvailabilityBlockId(availabilityBlockId.getAvailabilityBlocks()[0].getId());
             availabilityUpdate.setResourceCategoryId(mewsId);
+            List<MewsAvailabilityBlockResponse.AvailabilityBlock> availabilityBlocks = availabilityBlockId.getAvailabilityBlocks();
+
+            for (MewsAvailabilityBlockResponse.AvailabilityBlock block : availabilityBlocks) {
+                blockId = block.getId();
+            }
+            availabilityUpdate.setAvailabilityBlockId(blockId);
+
             MewsUpdateAvailabilityRequest.UnitCountAdjustment unitCountAdjustment = new MewsUpdateAvailabilityRequest.UnitCountAdjustment();
-//            unitCountAdjustment.setValue((int) roomsAmount);
             unitCountAdjustment.setValue((int) (-1 * roomsAmount));
             availabilityUpdate.setUnitCountAdjustment(unitCountAdjustment);
 
@@ -280,22 +285,22 @@ public class MewsController {
     }
 
 
-    public MewsUpdateRateRequest createUpdateRatePayload(SalesforceBookingResponse book,SalesforceAccountResponse account,SalesforceRateResponse rate, SalesforcePropertyResponse property, MewsGetAvailabilityBlockResponse rateId) throws JsonProcessingException {
-
+    public MewsUpdateRateRequest createUpdateRatePayload(SalesforceBookingResponse book,SalesforceAccountResponse account,SalesforceRateResponse rate, SalesforcePropertyResponse property, MewsAvailabilityBlockResponse rateId) throws JsonProcessingException {
+        String blockId = "";
         MewsUpdateRateRequest request = new MewsUpdateRateRequest();
         request.setClient(applicationConfiguration.getMewsClientName());
         request.setAccessToken(applicationConfiguration.getMewsAccessToken());
         request.setClientToken(applicationConfiguration.getMewsClientToken());
+        List<MewsAvailabilityBlockResponse.AvailabilityBlock> availabilityBlocks = rateId.getAvailabilityBlocks();
 
-        request.setRateId(rateId.getAvailabilityBlocks()[0].getRateId());
-        System.out.println(rateId.getAvailabilityBlocks()[0].getRateId());
+        for (MewsAvailabilityBlockResponse.AvailabilityBlock block : availabilityBlocks) {
+            blockId = block.getRateId();
+        }
+        request.setRateId(blockId);
         MewsUpdateRateRequest.PriceUpdate priceUpdate = new MewsUpdateRateRequest.PriceUpdate();
         priceUpdate.setFirstTimeUnitStartUtc(book.getThn__Arrival_Date__c()+"T23:00:00.000Z");
-        System.out.println(book.getThn__Arrival_Date__c()+"T23:00:00.000Z");
         priceUpdate.setLastTimeUnitStartUtc(book.getThn__Departure_Date__c()+"T23:00:00.000Z");
-        System.out.println(book.getThn__Arrival_Date__c()+"T23:00:00.000Z");
         priceUpdate.setValue(book.getThn__Hotel_Rooms_Amount__c());
-        System.out.println(book.getThn__Hotel_Rooms_Amount__c());
         request.getPriceUpdates().add(priceUpdate);
 
         return request;
@@ -372,6 +377,17 @@ public class MewsController {
         return request;
     }
 
+    public MewsDeleteAvailabilityBlockRequest createDeleteAvailabilityBlockPayload(MewsGetAvailabilityBlockResponse block) throws JsonProcessingException {
+        MewsDeleteAvailabilityBlockRequest request = new MewsDeleteAvailabilityBlockRequest();
+        request.setClient(applicationConfiguration.getMewsClientName());
+        request.setAccessToken(applicationConfiguration.getMewsAccessToken());
+        request.setClientToken(applicationConfiguration.getMewsClientToken());
+        List<String> availabilityBlockIds = List.of(block.getAvailabilityBlocks()[0].getId());
+        request.setAvailabilityBlockIds(availabilityBlockIds);
+        return request;
+    }
+
+
     private <ValueType> ValueType getUpdatedValue(ValueType salesforceValue, ValueType mewsValue) {
         return salesforceValue != null && mewsValue != null ? (salesforceValue.equals(mewsValue) ? mewsValue : salesforceValue) : (mewsValue != null ? mewsValue : salesforceValue);
     }
@@ -411,5 +427,9 @@ public class MewsController {
     public String updateCompany(MewsUpdateCompanyRequest request) throws IOException {
         return mewsConnectorService.updateToMews(request,"companies/update");
     }
+    public String deleteAvailabilityBlock(MewsDeleteAvailabilityBlockRequest request) throws IOException {
+        return mewsConnectorService.deleteRecordFromMews(request);
+    }
+
 
 }

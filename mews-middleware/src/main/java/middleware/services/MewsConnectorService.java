@@ -33,6 +33,30 @@ public class MewsConnectorService {
         return executeGetRequest(jsonStr, object);
     }
 
+    public String deleteRecordFromMews(Object request) throws IOException {
+        ObjectWriter ow = objectMapper.writer().withDefaultPrettyPrinter();
+        String jsonStr = ow.writeValueAsString(request);
+        return executeDeleteRequest(jsonStr);
+    }
+
+    public String executeDeleteRequest(String jsonStr) throws IOException {
+        MediaType mediaType = MediaType.parse("application/json");
+        Request request = new Request.Builder()
+                .url(applicationConfiguration.getMewsApiUrl() + "/" + "availabilityBlocks" + "/delete")
+                .method("POST", RequestBody.create(mediaType, jsonStr))
+                .addHeader("Content-Type", "application/json")
+                .addHeader("Authorization", "Bearer " + applicationConfiguration.getMewsAccessToken())
+                .build();
+        try (Response calloutResponse = httpClient.newCall(request).execute()) {
+            String responseBody = calloutResponse.body().string();
+            if (!calloutResponse.isSuccessful()) {
+                String errorMessage = "Error in  call: " + calloutResponse.code() + " - " + parseErrorMessage(responseBody);
+                throw new IOException(errorMessage);
+            }
+            return responseBody;
+        }
+    }
+
     public String executeGetRequest(String jsonStr, String object) throws IOException {
         MediaType mediaType = MediaType.parse("application/json");
         Request request = new Request.Builder()
@@ -114,7 +138,6 @@ public class MewsConnectorService {
                 System.out.println(responseBody);
                 return responseBody;
             }
-            System.out.println(responseBody);
             return responseBody;
         }
     }

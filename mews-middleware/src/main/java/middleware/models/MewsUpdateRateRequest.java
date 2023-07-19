@@ -67,8 +67,6 @@ public class MewsUpdateRateRequest {
     }
 
     public static class PriceUpdate {
-        @JsonProperty("CategoryId")
-        private String categoryId;
 
         @JsonProperty("FirstTimeUnitStartUtc")
         private String firstTimeUnitStartUtc;
@@ -78,15 +76,6 @@ public class MewsUpdateRateRequest {
 
         @JsonProperty("Value")
         private int value;
-
-        // Getters and setters for PriceUpdate
-        public String getCategoryId() {
-            return categoryId;
-        }
-
-        public void setCategoryId(String categoryId) {
-            this.categoryId = categoryId;
-        }
 
         public String getFirstTimeUnitStartUtc() {
             return firstTimeUnitStartUtc;
