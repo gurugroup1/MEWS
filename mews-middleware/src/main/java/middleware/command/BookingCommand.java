@@ -127,7 +127,6 @@ public class BookingCommand implements Command {
                                                     MewsAvailabilityBlockRequest mewsAvailabilityBlockRequest = this.mewsController.createAvailabilityBlockPayload(booking.get(), rate.get(),contact.get(), property.get(), bookerId);
                                                     availabilityBlockResponse = this.addAvailabilityBlockInMews(mewsAvailabilityBlockRequest);
                                                 }
-
                                                 if ((availabilityBlockResponse != null && availabilityBlockResponse.isPresent()) || (mewsUpdateAvailabilityBlockResponse != null && mewsUpdateAvailabilityBlockResponse.equals("{}"))) {
                                                     if (availabilityBlockResponse != null) {
                                                         responseData.put("mewsAvailabilityBlockResponse", availabilityBlockResponse.get());
@@ -142,7 +141,7 @@ public class BookingCommand implements Command {
                                                     if (mewsUpdateAvailabilityResponse.equals("{}")) {
 //                                                    responseData.put("mewsUpdateAvailabilityResponse", bookerResponse.get());
 //                                                    apiResponse.setStatus(ResponseStatus.SUCCESS);
-                                                        MewsUpdateRateRequest mewsUpdateRateRequest = this.mewsController.createUpdateRatePayload(booking.get(), account.get() ,rate.get(), property.get());
+                                                        MewsUpdateRateRequest mewsUpdateRateRequest = this.mewsController.createUpdateRatePayload(booking.get(), account.get() ,rate.get(), property.get(), getMewsAvailabilityBlock.get());
                                                         String mewsUpdateRateResponse = this.mewsController.updateRate(mewsUpdateRateRequest);
                                                         if (mewsUpdateRateResponse.equals("{}")) {
                                                             responseData.put("Mews_Update_Rate_Price", mewsUpdateRateResponse);

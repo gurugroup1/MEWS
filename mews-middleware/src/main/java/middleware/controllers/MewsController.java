@@ -280,15 +280,15 @@ public class MewsController {
     }
 
 
-    public MewsUpdateRateRequest createUpdateRatePayload(SalesforceBookingResponse book,SalesforceAccountResponse account,SalesforceRateResponse rate, SalesforcePropertyResponse property) throws JsonProcessingException {
+    public MewsUpdateRateRequest createUpdateRatePayload(SalesforceBookingResponse book,SalesforceAccountResponse account,SalesforceRateResponse rate, SalesforcePropertyResponse property, MewsGetAvailabilityBlockResponse rateId) throws JsonProcessingException {
 
         MewsUpdateRateRequest request = new MewsUpdateRateRequest();
         request.setClient(applicationConfiguration.getMewsClientName());
         request.setAccessToken(applicationConfiguration.getMewsAccessToken());
         request.setClientToken(applicationConfiguration.getMewsClientToken());
 
-        request.setRateId(rate.getThn__Mews_Id__c());
-        System.out.println(rate.getThn__Mews_Id__c());
+        request.setRateId(rateId.getAvailabilityBlocks()[0].getRateId());
+        System.out.println(rateId.getAvailabilityBlocks()[0].getRateId());
         MewsUpdateRateRequest.PriceUpdate priceUpdate = new MewsUpdateRateRequest.PriceUpdate();
         priceUpdate.setFirstTimeUnitStartUtc(book.getThn__Arrival_Date__c()+"T23:00:00.000Z");
         System.out.println(book.getThn__Arrival_Date__c()+"T23:00:00.000Z");
