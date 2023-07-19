@@ -50,6 +50,7 @@ public class BookingCommand implements Command {
             if (bookingId != null) {
                 logger.info("****Mews Middleware Started****");
                 logger.info("Booking Id: " + bookingId);
+                apiResponse.setBookingId(bookingId);
                 SalesforceTokenResponse salesforceToken = retrieveSalesforceToken();
                 Optional<SalesforceBookingResponse> booking = retrieveAndParseResponse(bookingId, SalesforceBookingResponse.class, applicationConfiguration.getSalesforceBookingObject());
                 if (booking.isPresent()) {
