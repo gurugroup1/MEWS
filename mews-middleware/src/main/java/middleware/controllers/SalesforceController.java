@@ -71,6 +71,13 @@ public class SalesforceController {
         );
     }
 
+    public String getQueryDataFromSalesforce(String sfAccessToken, String bookingId) throws IOException {
+        return salesforceConnectorService.getQueryDataFromSalesforce(
+                Objects.requireNonNull(sfAccessToken, "Salesforce access token must not be null"),
+                Objects.requireNonNull(bookingId, "Reference Id must not be null")
+        );
+    }
+
     public String addRecordInSalesforce(String object, String sfAccessToken,String request) throws IOException {
         return salesforceConnectorService.setDataInSalesforce(object,sfAccessToken,request);
     }
