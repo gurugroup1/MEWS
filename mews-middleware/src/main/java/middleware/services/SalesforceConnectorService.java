@@ -7,7 +7,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import okhttp3.*;
 import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Autowired;
-
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.io.IOException;
 
 import static org.hibernate.tool.schema.SchemaToolingLogging.LOGGER;
@@ -27,6 +28,32 @@ public class SalesforceConnectorService {
 
     public String getDataFromSalesforce(String object, String sfAccessToken, String bookingId) throws IOException {
         return executeGetSObject(object, sfAccessToken, bookingId);
+    }
+
+    public String getQueryDataFromSalesforce(String sfAccessToken, String bookingId) throws IOException {
+        return executeSalesforceQuery(sfAccessToken, bookingId);
+    }
+
+    public String executeSalesforceQuery(String token,String bookingId) throws IOException {
+        OkHttpClient client = new OkHttpClient().newBuilder()
+                .build();
+        MediaType mediaType = MediaType.parse("application/json");
+        String url = "https://postillion-hotels--postfull.sandbox.my.salesforce.com/services/data/v57.0/query/?q=SELECT+Id%2C+thn__Space_Area__c%2C+thn__Space_Area__r.thn__Mews_Id__c%2C+Rooms_amount__c%2C+thn__Unit_Price__c%2C+thn__Unit_Price_excl_Tax__c+FROM+thn__Quote_Hotel_Room__c+WHERE+thn__MYCE_Quote__c+%3D+%27" + bookingId + "%27";
+        Request request = new Request.Builder()
+                .url(url)
+                .method("GET", null)
+                .addHeader("Content-Type", "application/json")
+                .addHeader("Authorization", "Bearer " + token)
+                .build();
+        System.out.println(request.url());
+        try (Response calloutResponse = httpClient.newCall(request).execute()) {
+            String responseBody = calloutResponse.body().string();
+            if (!calloutResponse.isSuccessful()) {
+                String errorMessage = parseErrorMessage(responseBody);
+                throw new IOException(errorMessage);
+            }
+            return responseBody;
+        }
     }
 
     public String setDataInSalesforce(String object, String sfAccessToken, String jsonBody) throws IOException {

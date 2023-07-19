@@ -184,7 +184,7 @@ public class SalesforceBookingResponse {
     private boolean thn__ZT_Calculate_subtotals__c;
 
     @JsonProperty("thn__Hotel_Rooms_Amount__c")
-    private float thn__Hotel_Rooms_Amount__c;
+    private int thn__Hotel_Rooms_Amount__c;
 
     @JsonProperty("thn__Meeting_Rooms_Amount__c")
     private float thn__Meeting_Rooms_Amount__c;
@@ -672,8 +672,7 @@ public class SalesforceBookingResponse {
     @JsonProperty("thn__Send_Failed_Reservations__c")
     private boolean thn__Send_Failed_Reservations__c;
 
-    @JsonProperty("thn__Sync_Error_Message__c")
-    private String thn__Sync_Error_Message__c = null;
+    @JsonProperty("thn__Sync_Error_Message__c") private String thn__Sync_Error_Message__c = null;
 
     @JsonProperty("thn__Sync_with_Meeting_Package__c")
     private boolean thn__Sync_with_Meeting_Package__c;
@@ -1043,7 +1042,7 @@ public class SalesforceBookingResponse {
         return thn__ZT_Calculate_subtotals__c;
     }
 
-    public float getThn__Hotel_Rooms_Amount__c() {
+    public int getThn__Hotel_Rooms_Amount__c() {
         return thn__Hotel_Rooms_Amount__c;
     }
 
@@ -2109,7 +2108,7 @@ public class SalesforceBookingResponse {
         this.thn__ZT_Calculate_subtotals__c = thn__ZT_Calculate_subtotals__c;
     }
 
-    public void setThn__Hotel_Rooms_Amount__c( float thn__Hotel_Rooms_Amount__c ) {
+    public void setThn__Hotel_Rooms_Amount__c( int thn__Hotel_Rooms_Amount__c ) {
         this.thn__Hotel_Rooms_Amount__c = thn__Hotel_Rooms_Amount__c;
     }
 

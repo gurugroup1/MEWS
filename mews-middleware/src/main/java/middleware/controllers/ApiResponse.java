@@ -8,6 +8,16 @@ import java.util.Map;
 
 public class ApiResponse {
     private ResponseStatus status;
+
+    public String getBookingId() {
+        return BookingId;
+    }
+
+    public void setBookingId(String bookingId) {
+        BookingId = bookingId;
+    }
+
+    private String BookingId;
     private String message;
     private Map<String, Object> data;
 
