@@ -177,10 +177,10 @@ public class MewsController {
         request.setAccessToken(applicationConfiguration.getMewsAccessToken());
         request.setClientToken(applicationConfiguration.getMewsClientToken());
 
-        MewsGetAvailabilityBlockRequest.CreatedUtc createdUtc = new MewsGetAvailabilityBlockRequest.CreatedUtc();
-        createdUtc.setStartUtc("2023-07-11T00:00:00Z");
-        createdUtc.setEndUtc("2023-07-12T00:00:00Z");
-        request.setCreatedUtc(createdUtc);
+        List<String> externalIdentifiers = new ArrayList<>();
+        externalIdentifiers.add("Block-"+contact.getName());
+        System.out.println(externalIdentifiers);
+        request.setExternalIdentifiers(externalIdentifiers);
 
         MewsGetAvailabilityBlockRequest.Extent extent = new MewsGetAvailabilityBlockRequest.Extent();
         extent.setAdjustments(true);
@@ -196,7 +196,7 @@ public class MewsController {
         return request;
     }
 
-    public MewsAvailabilityBlockRequest createAvailabilityBlockPayload(SalesforceBookingResponse book,SalesforceRateResponse rate, SalesforcePropertyResponse property,String bookerId) throws JsonProcessingException {
+    public MewsAvailabilityBlockRequest createAvailabilityBlockPayload(SalesforceBookingResponse book,SalesforceRateResponse rate,SalesforceContactResponse contact, SalesforcePropertyResponse property,String bookerId) throws JsonProcessingException {
 
         MewsAvailabilityBlockRequest mewsAvailabilityBlockRequest = new MewsAvailabilityBlockRequest();
         mewsAvailabilityBlockRequest.setClient(applicationConfiguration.getMewsClientName());
@@ -206,27 +206,26 @@ public class MewsController {
         MewsAvailabilityBlockRequest.AvailabilityBlock.Budget budget = new MewsAvailabilityBlockRequest.AvailabilityBlock.Budget();
         availabilityBlock.setBookerId(bookerId);
         availabilityBlock.setRateId(rate.getThn__Mews_Id__c());
-        availabilityBlock.setName("1234567");
+        availabilityBlock.setName(contact.getName());
         availabilityBlock.setServiceId(property.getThn__Mews_Reservation_Service_Id__c());
-        availabilityBlock.setFirstTimeUnitStartUtc("2023-07-20T00:00:00+2");
-        availabilityBlock.setLastTimeUnitStartUtc("2023-07-20T00:00:00+2");
-        availabilityBlock.setReleasedUtc("2023-07-20T00:00:00+2");
+        availabilityBlock.setFirstTimeUnitStartUtc(book.getThn__Arrival_Date__c()+"T23:00:00.000Z");
+        availabilityBlock.setLastTimeUnitStartUtc(book.getThn__Departure_Date__c()+"T23:00:00.000Z");
+        availabilityBlock.setReleasedUtc(book.getThn__Release_Date__c());
+        System.out.println(book.getThn__Release_Date__c());
         availabilityBlock.setNotes(book.getQuote_Notes__c());
-//      availabilityBlock.setState(book.getStatus__c());
         availabilityBlock.setState("Confirmed");
-
-        budget.setValue((int) book.getThn__Package_Amount__c());
+        availabilityBlock.setExternalIdentifier("Block-"+contact.getName());
+        System.out.println("Block-"+contact.getName());
+        budget.setValue((int) book.getThn__Total_Amount_incl_Tax__c());
         budget.setCurrency(rate.getCurrencyIsoCode());
         availabilityBlock.setBudget(budget);
 
-        // Set the availabilityBlock in the list
         List<MewsAvailabilityBlockRequest.AvailabilityBlock> availabilityBlocks = new ArrayList<>();
         availabilityBlocks.add(availabilityBlock);
-
+        System.out.println(availabilityBlock);
         mewsAvailabilityBlockRequest.setAvailabilityBlocks(availabilityBlocks);
         return mewsAvailabilityBlockRequest;
     }
-
     public MewsUpdateAvailabilityRequest createUpdateAvailabilityPayload(SalesforceBookingResponse book,SalesforceRateResponse rate, SalesforcePropertyResponse property,MewsBookerResponse booker) throws JsonProcessingException {
 
         MewsUpdateAvailabilityRequest request = new MewsUpdateAvailabilityRequest();
