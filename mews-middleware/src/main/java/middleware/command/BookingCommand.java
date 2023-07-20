@@ -1,7 +1,6 @@
 package middleware.command;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonNode;
 import middleware.configurations.ApplicationConfiguration;
 import middleware.controllers.*;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -10,11 +9,11 @@ import middleware.models.*;
 import middleware.services.MewsConnectorService;
 import middleware.services.SalesforceConnectorService;
 import middleware.util.JsonUtils;
+import middleware.controllers.ResponseParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -29,7 +28,11 @@ public class BookingCommand implements Command {
     private final AuthController authController;
     private final ObjectMapper objectMapper;
 
-    public BookingCommand(Logger logger, ApplicationConfiguration applicationConfiguration, SalesforceConnectorService salesforceConnectorService, MewsConnectorService mewsConnectorService, MewsController mewsController, SecretKeyManagerController secretKeyManagerController, SalesforceController salesforceController, AuthController authController, ObjectMapper objectMapper) {
+    @Autowired
+
+    private final ResponseParser responseParser;
+
+    public BookingCommand(Logger logger, ApplicationConfiguration applicationConfiguration, SalesforceConnectorService salesforceConnectorService, MewsConnectorService mewsConnectorService, MewsController mewsController, SecretKeyManagerController secretKeyManagerController, SalesforceController salesforceController, AuthController authController, ObjectMapper objectMapper,ResponseParser responseParser) {
         this.applicationConfiguration = applicationConfiguration;
         this.salesforceConnectorService = salesforceConnectorService;
         this.mewsConnectorService = mewsConnectorService;
@@ -37,6 +40,7 @@ public class BookingCommand implements Command {
         this.salesforceController = salesforceController;
         this.authController = authController;
         this.objectMapper = objectMapper;
+        this.responseParser = responseParser;
     }
 
     @Override
@@ -51,41 +55,41 @@ public class BookingCommand implements Command {
                 logger.info("****Mews Middleware Started****");
                 logger.info("Booking Id: " + bookingId);
                 apiResponse.setBookingId(bookingId);
-                SalesforceTokenResponse salesforceToken = retrieveSalesforceToken();
-                Optional<SalesforceBookingResponse> booking = retrieveAndParseResponse(bookingId, SalesforceBookingResponse.class, applicationConfiguration.getSalesforceBookingObject());
+                SalesforceTokenResponse salesforceToken = this.responseParser.retrieveSalesforceToken();
+                Optional<SalesforceBookingResponse> booking = this.responseParser.retrieveAndParseResponse(salesforceToken,bookingId, SalesforceBookingResponse.class, applicationConfiguration.getSalesforceBookingObject());
                 if (booking.isPresent()) {
                     responseData.put("Salesforce_Get_Booking", booking.get());
-                    Optional<SalesforceQueryResponse> guestRooms = retrieveAndParseQueryResponse(bookingId, SalesforceQueryResponse.class);
+                    Optional<SalesforceQueryResponse> guestRooms = this.responseParser.retrieveAndParseQueryResponse(salesforceToken,bookingId, SalesforceQueryResponse.class);
                     responseData.put("Salesforce_Get_Guest_Rooms", guestRooms.get());
                     if(guestRooms.isPresent()){
-                        Optional<SalesforceAccountResponse> account = retrieveAndParseResponse(booking.get().getThn__Company__c(), SalesforceAccountResponse.class, applicationConfiguration.getSalesforceAccountObject());
+                        Optional<SalesforceAccountResponse> account = this.responseParser.retrieveAndParseResponse(salesforceToken,booking.get().getThn__Company__c(), SalesforceAccountResponse.class, applicationConfiguration.getSalesforceAccountObject());
                         if (account.isPresent()) {
                             responseData.put("Salesforce_Get_Account", account.get());
 
-                            Optional<SalesforceContactResponse> contact = retrieveAndParseResponse(booking.get().getThn__Company_Contact__c(), SalesforceContactResponse.class, applicationConfiguration.getSalesforceCompanyContactObject());
+                            Optional<SalesforceContactResponse> contact = this.responseParser.retrieveAndParseResponse(salesforceToken,booking.get().getThn__Company_Contact__c(), SalesforceContactResponse.class, applicationConfiguration.getSalesforceCompanyContactObject());
                             if (contact.isPresent()) {
                                 responseData.put("Salesforce_Get_Contact", contact.get());
                                 apiResponse.setStatus(ResponseStatus.SUCCESS);
-                                Optional<SalesforceRateResponse> rate = retrieveAndParseResponse(booking.get().getThn__Block_Rate__c(), SalesforceRateResponse.class, applicationConfiguration.getSalesforceRateObject());
+                                Optional<SalesforceRateResponse> rate = this.responseParser.retrieveAndParseResponse(salesforceToken,booking.get().getThn__Block_Rate__c(), SalesforceRateResponse.class, applicationConfiguration.getSalesforceRateObject());
                                 if (rate.isPresent()) {
                                     responseData.put("Salesforce_Get_Rate", rate.get());
                                     apiResponse.setStatus(ResponseStatus.SUCCESS);
-                                    Optional<SalesforcePropertyResponse> property = retrieveAndParseResponse(rate.get().getHotel(), SalesforcePropertyResponse.class, applicationConfiguration.getSalesforcePropertyObject());
+                                    Optional<SalesforcePropertyResponse> property = this.responseParser.retrieveAndParseResponse(salesforceToken,rate.get().getHotel(), SalesforcePropertyResponse.class, applicationConfiguration.getSalesforcePropertyObject());
                                     if (property.isPresent()) {
                                         responseData.put("Salesforce_Get_Property", property.get());
                                         apiResponse.setStatus(ResponseStatus.SUCCESS);
                                         MewsGetCompanyRequest mewsGetCompanyRequest = mewsController.createGetCompanyPayload(account.get());
-                                        Optional<MewsGetCompanyResponse> getCompany = this.getCompanyFromMews(mewsGetCompanyRequest);
+                                        Optional<MewsGetCompanyResponse> getCompany = this.responseParser.getCompanyFromMews(mewsGetCompanyRequest);
 //                                    responseData.put("Mews_Get_Company", getCompany.get());
                                         Optional<MewsUpdateCompanyResponse> mewsUpdateCompanyResponse = null;
                                         Optional<MewsCompanyResponse> mewsCompanyResponse = null;
                                         if (getCompany.get().getCompanies().length > 0) {
                                             MewsUpdateCompanyRequest mewsCompanyRequest = mewsController.createUpdateCompanyPayload(account.get(), booking.get(), contact.get(), getCompany.get() );
-                                            mewsUpdateCompanyResponse = updateCompanyInMews(mewsCompanyRequest);
+                                            mewsUpdateCompanyResponse = this.responseParser.updateCompanyInMews(mewsCompanyRequest);
                                             responseData.put("Mews_Update_Company", mewsUpdateCompanyResponse.get());
                                         } else {
                                             MewsCompanyRequest mewsCompanyRequest = mewsController.createCompanyPayload(booking.get(), account.get(), contact.get());
-                                            mewsCompanyResponse = addCompanyInMews(mewsCompanyRequest);
+                                            mewsCompanyResponse = this.responseParser.addCompanyInMews(mewsCompanyRequest);
                                             responseData.put("Mews_Create_Company", mewsCompanyResponse.get());
                                         }
                                         if ((mewsCompanyResponse != null && mewsCompanyResponse.isPresent()) || (mewsUpdateCompanyResponse != null && mewsUpdateCompanyResponse.isPresent())) {
@@ -94,18 +98,18 @@ public class BookingCommand implements Command {
                                             }
                                             apiResponse.setStatus(ResponseStatus.SUCCESS);
                                             MewsGetBookerRequest mewsGetBookerRequest = mewsController.createGetBookerPayload(account.get(), contact.get());
-                                            Optional<MewsGetBookerResponse> getBooker = this.getBookerFromMews(mewsGetBookerRequest);
+                                            Optional<MewsGetBookerResponse> getBooker = this.responseParser.getBookerFromMews(mewsGetBookerRequest);
 
                                             Optional<MewsUpdateBookerResponse>  mewsUpdateBookerResponse = null;
                                             Optional<MewsBookerResponse> bookerResponse = null;
                                             if (getBooker.get().getCustomers().length > 0) {
                                                 MewsUpdateBookerRequest mewsBookerRequest = mewsController.createUpdateBookerPayload(booking.get(), account.get(), contact.get(), getBooker.get());
-                                                mewsUpdateBookerResponse = this.updateBookerInMews(mewsBookerRequest);
+                                                mewsUpdateBookerResponse = this.responseParser.updateBookerInMews(mewsBookerRequest);
                                                 bookerId = mewsUpdateBookerResponse.get().getId();
                                                 responseData.put("Mews_Update_Customer", mewsUpdateBookerResponse.get());
                                             } else {
                                                 MewsBookerRequest mewsBookerRequest = this.mewsController.createBookerPayload(booking.get(), account.get(), contact.get());
-                                                bookerResponse = this.addBookerInMews(mewsBookerRequest);
+                                                bookerResponse = this.responseParser.addBookerInMews(mewsBookerRequest);
                                                 bookerId = bookerResponse.get().getId();
                                                 responseData.put("Mews_Create_Customer", bookerResponse.get());
                                             }
@@ -116,7 +120,7 @@ public class BookingCommand implements Command {
                                                 }
                                                 apiResponse.setStatus(ResponseStatus.SUCCESS);
                                                 MewsGetAvailabilityBlockRequest mewsGetAvailabilityBlockRequest = mewsController.createGetAvailabilityBlockPayload(account.get(), contact.get());
-                                                Optional<MewsGetAvailabilityBlockResponse> getMewsAvailabilityBlock = this.getAvailabilityBlockFromMews(mewsGetAvailabilityBlockRequest);
+                                                Optional<MewsGetAvailabilityBlockResponse> getMewsAvailabilityBlock = this.responseParser.getAvailabilityBlockFromMews(mewsGetAvailabilityBlockRequest);
 
                                                 Optional<MewsAvailabilityBlockResponse> availabilityBlockResponse = null;
                                                 String mewsUpdateAvailabilityBlockResponse = null;
@@ -130,11 +134,11 @@ public class BookingCommand implements Command {
 
                                                     if(deleteResponse != null && deleteResponse.equals("{}")){
                                                         MewsAvailabilityBlockRequest mewsAvailabilityBlockRequest = this.mewsController.createAvailabilityBlockPayload(booking.get(), rate.get(),contact.get(), property.get(), bookerId);
-                                                        availabilityBlockResponse = this.addAvailabilityBlockInMews(mewsAvailabilityBlockRequest);
+                                                        availabilityBlockResponse = this.responseParser.addAvailabilityBlockInMews(mewsAvailabilityBlockRequest);
                                                     }
                                                 } else {
                                                     MewsAvailabilityBlockRequest mewsAvailabilityBlockRequest = this.mewsController.createAvailabilityBlockPayload(booking.get(), rate.get(),contact.get(), property.get(), bookerId);
-                                                    availabilityBlockResponse = this.addAvailabilityBlockInMews(mewsAvailabilityBlockRequest);
+                                                    availabilityBlockResponse = this.responseParser.addAvailabilityBlockInMews(mewsAvailabilityBlockRequest);
                                                 }
                                                 if ((availabilityBlockResponse != null && availabilityBlockResponse.isPresent()) || (deleteResponse != null && deleteResponse.equals("{}"))) {
                                                     if (availabilityBlockResponse != null) {
@@ -300,172 +304,5 @@ public class BookingCommand implements Command {
 
         return apiResponse;
     }
-    private <T> Optional<T> retrieveAndParseResponse(String parameter, Class<T> responseClass, String object) {
-        try {
-            SalesforceTokenResponse salesforceToken = retrieveSalesforceToken();
 
-            String response = salesforceController.getRecordFromSalesforce(
-                    object,
-                    salesforceToken.getAccess_token(),
-                    parameter
-            );
-
-            if (response == null || response.isEmpty()) {
-                logger.error("Empty Salesforce " + responseClass.getSimpleName() + " response.");
-                return Optional.empty();
-            }
-
-            // Check for API errors
-            JsonNode jsonResponse = objectMapper.readTree(response);
-            if (jsonResponse.has("error")) {
-                String errorMessage = jsonResponse.get("error").asText();
-                String message = jsonResponse.get("message").asText();
-                logger.error("Salesforce API error: " + errorMessage + " - " + message);
-                return Optional.empty();
-            }
-
-            // Parse the response
-            T parsedResponse = objectMapper.readValue(response, responseClass);
-            return Optional.ofNullable(parsedResponse);
-        } catch (Exception e) {
-            logger.error("Error retrieving and parsing response", e);
-            return Optional.empty();
-        }
-    }
-
-    private <T> Optional<T> retrieveAndParseQueryResponse(String parameter, Class<T> responseClass) {
-        try {
-            SalesforceTokenResponse salesforceToken = retrieveSalesforceToken();
-
-            String response = salesforceController.getQueryDataFromSalesforce(
-                    salesforceToken.getAccess_token(),
-                    parameter
-            );
-            System.out.println(response);
-            System.out.println(response.isEmpty());
-            if (response == null || response.isEmpty()) {
-                logger.error("Empty Salesforce " + responseClass.getSimpleName() + " response.");
-                return Optional.empty();
-            }
-
-            // Check for API errors
-            JsonNode jsonResponse = objectMapper.readTree(response);
-            if (jsonResponse.has("error")) {
-                String errorMessage = jsonResponse.get("error").asText();
-                String message = jsonResponse.get("message").asText();
-                logger.error("Salesforce API error: " + errorMessage + " - " + message);
-                return Optional.empty();
-            }
-
-            // Parse the response
-            T parsedResponse = objectMapper.readValue(response, responseClass);
-            return Optional.ofNullable(parsedResponse);
-        } catch (Exception e) {
-            logger.error("Error retrieving and parsing response", e);
-            return Optional.empty();
-        }
-    }
-    private <T> T parseResponse(String response, Class<T> responseType, String object) throws Exception {
-        try {
-            JsonNode responseJson = objectMapper.readTree(response);
-
-            if (responseJson.has("error")) {
-                String errorMessage = responseJson.get("error").asText();
-                throw new Exception("Error in " + responseType.getSimpleName() + " response from Mews: " + errorMessage);
-            }
-
-            // Parse the response
-            T parsedResponse = objectMapper.readValue(response, responseType);
-            return parsedResponse;
-        } catch (IOException e) {
-            throw new Exception("Unable to parse " + responseType.getSimpleName() + " Response", e);
-        }
-    }
-    public Optional<MewsCompanyResponse> addCompanyInMews(MewsCompanyRequest payload) throws Exception {
-        String response = mewsController.addCompany(payload);
-
-        if (response == null || response.isEmpty()) {
-            throw new Exception("Empty company response from Mews.");
-        }
-
-        return Optional.ofNullable(parseResponse(response, MewsCompanyResponse.class, "Company Response"));
-    }
-    public Optional<MewsBookerResponse> addBookerInMews(MewsBookerRequest payload) throws Exception {
-        String response = mewsController.addBooker(payload);
-
-        if (response == null || response.isEmpty()) {
-            throw new Exception("Empty company response from Mews.");
-        }
-
-
-        return Optional.ofNullable(parseResponse(response, MewsBookerResponse.class, "Booker Response"));
-    }
-    public Optional<MewsAvailabilityBlockResponse> addAvailabilityBlockInMews(MewsAvailabilityBlockRequest payload) throws Exception {
-        String response = mewsController.addAvailabilityBlock(payload);
-
-        if (response == null || response.isEmpty()) {
-            throw new Exception("Empty Availability Block response from Mews.");
-        }
-
-
-        return Optional.ofNullable(parseResponse(response, MewsAvailabilityBlockResponse.class, "Availability Block Response"));
-    }
-    public Optional<MewsUpdateCompanyResponse> updateCompanyInMews(MewsUpdateCompanyRequest payload) throws Exception {
-        String response = mewsController.updateCompany(payload);
-
-        if (response == null || response.isEmpty()) {
-            throw new Exception(" empty update company response from Mews.");
-        }
-
-
-        return Optional.ofNullable(parseResponse(response, MewsUpdateCompanyResponse.class, "Update Company Response"));
-    }
-
-    public Optional<MewsUpdateBookerResponse> updateBookerInMews(MewsUpdateBookerRequest payload) throws Exception {
-        String response = mewsController.updateBooker(payload);
-
-        if (response == null || response.isEmpty()) {
-            throw new Exception("Empty update booker response from Mews.");
-        }
-
-        return Optional.ofNullable(parseResponse(response, MewsUpdateBookerResponse.class, "Update Booker Response"));
-    }
-    public Optional<MewsGetCompanyResponse> getCompanyFromMews(MewsGetCompanyRequest payload) throws Exception {
-        String response = mewsController.getCompany(payload);
-
-        if (response == null || response.isEmpty()) {
-            throw new Exception("Empty company response from Mews.");
-        }
-
-
-        return Optional.ofNullable(parseResponse(response, MewsGetCompanyResponse.class, "Company Response"));
-    }
-
-    public Optional<MewsGetBookerResponse> getBookerFromMews(MewsGetBookerRequest payload) throws Exception {
-        String response = mewsController.getBooker(payload);
-
-        if (response == null || response.isEmpty()) {
-            throw new Exception("Empty company response from Mews.");
-        }
-
-
-        return Optional.ofNullable(parseResponse(response, MewsGetBookerResponse.class, "Get Booker Response"));
-    }
-    public Optional<MewsGetAvailabilityBlockResponse> getAvailabilityBlockFromMews(MewsGetAvailabilityBlockRequest payload) throws Exception {
-        String response = mewsController.getMewsAvailabilityBlock(payload);
-
-        if (response == null || response.isEmpty()) {
-            throw new Exception("Empty company response from Mews.");
-        }
-
-
-        return Optional.ofNullable(parseResponse(response, MewsGetAvailabilityBlockResponse.class, "Get Availability Block Response"));
-    }
-    private SalesforceTokenResponse retrieveSalesforceToken() throws Exception {
-        SalesforceTokenResponse salesforceToken = authController.retrieveSalesforceTokenFromAWS();
-        if (salesforceToken == null || salesforceToken.getAccess_token() == null) {
-            throw new Exception("Salesforce token is not available.");
-        }
-        return salesforceToken;
-    }
 }
