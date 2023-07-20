@@ -332,7 +332,7 @@ public class MewsController {
         String accountingCode = company.getAccountingCode();
         String iata = company.getIata();
         String websiteUrl = company.getWebsiteUrl();
-        String department = company.getDepartment();
+        String department = contact.getDepartment();
         String notes = company.getNotes();
         String companyName = company.getName();
 
