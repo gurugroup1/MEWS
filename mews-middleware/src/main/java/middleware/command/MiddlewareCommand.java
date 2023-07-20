@@ -55,22 +55,22 @@ public class MiddlewareCommand implements Command {
                 apiResponse.setBookingId(bookingId);
                 SalesforceTokenResponse salesforceToken = this.responseParser.retrieveSalesforceToken();
                 SalesforceBookingResponse booking = getBookingDetails(salesforceToken, bookingId, apiResponse, responseData);
-                if(booking != null){
+                if (booking != null) {
                     SalesforceQueryResponse guestRoom = getGuestDetails(salesforceToken, bookingId, apiResponse, responseData);
-                    if(guestRoom != null){
+                    if (guestRoom != null) {
                         SalesforceAccountResponse account = getAccountDetails(salesforceToken, booking, apiResponse, responseData);
-                        if(account != null){
+                        if (account != null) {
                             SalesforceContactResponse contact = getContactDetails(salesforceToken, booking, apiResponse, responseData);
-                            if(contact != null){
+                            if (contact != null) {
                                 SalesforceRateResponse rate = getRateDetails(salesforceToken, booking, apiResponse, responseData);
-                                if(rate != null){
+                                if (rate != null) {
                                     SalesforcePropertyResponse property = getPropertyDetails(salesforceToken, rate, apiResponse, responseData);
-                                    if(property != null){
+                                    if (property != null) {
                                         SalesforceGetPMSBlockResponse pmsBlock = getPSMBlockDetails(salesforceToken, bookingId, apiResponse, responseData);
-                                        if(pmsBlock != null){
+                                        if (pmsBlock != null) {
                                             SalesforceGetPMSAccountResponse pmsAccount = getPSMAccountDetails(salesforceToken, bookingId, apiResponse, responseData);
-                                            if(pmsAccount != null){
-                                                isCompanyExistInMews(booking,account,contact,apiResponse, responseData);
+                                            if (pmsAccount != null) {
+                                                isCompanyExistInMews(booking, account, contact, pmsAccount, apiResponse, responseData);
                                             }
                                         }
                                     }
@@ -106,8 +106,9 @@ public class MiddlewareCommand implements Command {
             return null;
         }
     }
+
     private SalesforceQueryResponse getGuestDetails(SalesforceTokenResponse salesforceToken, String bookingId, ApiResponse apiResponse, Map<String, Object> responseData) {
-        Optional<SalesforceQueryResponse> response = this.responseParser.retrieveAndParseQueryResponse(salesforceToken, bookingId, SalesforceQueryResponse.class,"Guest");
+        Optional<SalesforceQueryResponse> response = this.responseParser.retrieveAndParseQueryResponse(salesforceToken, bookingId, SalesforceQueryResponse.class, "Guest");
         if (response.isPresent()) {
             responseData.put("Salesforce_Get_Guest_Rooms", response.get());
             SalesforceQueryResponse result = response.get();
@@ -117,8 +118,9 @@ public class MiddlewareCommand implements Command {
             return null;
         }
     }
+
     private SalesforceAccountResponse getAccountDetails(SalesforceTokenResponse salesforceToken, SalesforceBookingResponse booking, ApiResponse apiResponse, Map<String, Object> responseData) {
-        Optional<SalesforceAccountResponse> response = this.responseParser.retrieveAndParseResponse(salesforceToken,booking.getThn__Company__c(), SalesforceAccountResponse.class, applicationConfiguration.getSalesforceAccountObject());
+        Optional<SalesforceAccountResponse> response = this.responseParser.retrieveAndParseResponse(salesforceToken, booking.getThn__Company__c(), SalesforceAccountResponse.class, applicationConfiguration.getSalesforceAccountObject());
         if (response.isPresent()) {
             responseData.put("Salesforce_Get_Account", response.get());
             SalesforceAccountResponse result = response.get();
@@ -128,8 +130,9 @@ public class MiddlewareCommand implements Command {
             return null;
         }
     }
+
     private SalesforceContactResponse getContactDetails(SalesforceTokenResponse salesforceToken, SalesforceBookingResponse booking, ApiResponse apiResponse, Map<String, Object> responseData) {
-        Optional<SalesforceContactResponse> response = this.responseParser.retrieveAndParseResponse(salesforceToken,booking.getThn__Company_Contact__c(), SalesforceContactResponse.class, applicationConfiguration.getSalesforceCompanyContactObject());
+        Optional<SalesforceContactResponse> response = this.responseParser.retrieveAndParseResponse(salesforceToken, booking.getThn__Company_Contact__c(), SalesforceContactResponse.class, applicationConfiguration.getSalesforceCompanyContactObject());
         if (response.isPresent()) {
             responseData.put("Salesforce_Get_Contact", response.get());
             SalesforceContactResponse result = response.get();
@@ -139,8 +142,9 @@ public class MiddlewareCommand implements Command {
             return null;
         }
     }
+
     private SalesforceRateResponse getRateDetails(SalesforceTokenResponse salesforceToken, SalesforceBookingResponse booking, ApiResponse apiResponse, Map<String, Object> responseData) {
-        Optional<SalesforceRateResponse> response = this.responseParser.retrieveAndParseResponse(salesforceToken,booking.getThn__Block_Rate__c(), SalesforceRateResponse.class, applicationConfiguration.getSalesforceRateObject());
+        Optional<SalesforceRateResponse> response = this.responseParser.retrieveAndParseResponse(salesforceToken, booking.getThn__Block_Rate__c(), SalesforceRateResponse.class, applicationConfiguration.getSalesforceRateObject());
         if (response.isPresent()) {
             responseData.put("Salesforce_Get_Rate", response.get());
             SalesforceRateResponse result = response.get();
@@ -150,8 +154,9 @@ public class MiddlewareCommand implements Command {
             return null;
         }
     }
+
     private SalesforcePropertyResponse getPropertyDetails(SalesforceTokenResponse salesforceToken, SalesforceRateResponse rate, ApiResponse apiResponse, Map<String, Object> responseData) {
-        Optional<SalesforcePropertyResponse> response = this.responseParser.retrieveAndParseResponse(salesforceToken,rate.getHotel(), SalesforcePropertyResponse.class, applicationConfiguration.getSalesforcePropertyObject());
+        Optional<SalesforcePropertyResponse> response = this.responseParser.retrieveAndParseResponse(salesforceToken, rate.getHotel(), SalesforcePropertyResponse.class, applicationConfiguration.getSalesforcePropertyObject());
         if (response.isPresent()) {
             responseData.put("Salesforce_Get_Property", response.get());
             SalesforcePropertyResponse result = response.get();
@@ -161,8 +166,9 @@ public class MiddlewareCommand implements Command {
             return null;
         }
     }
+
     private SalesforceGetPMSAccountResponse getPSMAccountDetails(SalesforceTokenResponse salesforceToken, String bookingId, ApiResponse apiResponse, Map<String, Object> responseData) {
-        Optional<SalesforceGetPMSAccountResponse> response = this.responseParser.retrieveAndParseQueryResponse(salesforceToken, bookingId, SalesforceGetPMSAccountResponse.class,"PSM_Account");
+        Optional<SalesforceGetPMSAccountResponse> response = this.responseParser.retrieveAndParseQueryResponse(salesforceToken, bookingId, SalesforceGetPMSAccountResponse.class, "PSM_Account");
         if (response.isPresent()) {
             responseData.put("Salesforce_Get_PMS_Account", response.get());
             SalesforceGetPMSAccountResponse result = response.get();
@@ -172,8 +178,9 @@ public class MiddlewareCommand implements Command {
             return null;
         }
     }
+
     private SalesforceGetPMSBlockResponse getPSMBlockDetails(SalesforceTokenResponse salesforceToken, String bookingId, ApiResponse apiResponse, Map<String, Object> responseData) {
-        Optional<SalesforceGetPMSBlockResponse> response = this.responseParser.retrieveAndParseQueryResponse(salesforceToken, bookingId, SalesforceGetPMSBlockResponse.class,"PSM_Block");
+        Optional<SalesforceGetPMSBlockResponse> response = this.responseParser.retrieveAndParseQueryResponse(salesforceToken, bookingId, SalesforceGetPMSBlockResponse.class, "PSM_Block");
         if (response.isPresent()) {
             responseData.put("Salesforce_Get_PMS_Block", response.get());
             SalesforceGetPMSBlockResponse result = response.get();
@@ -183,27 +190,29 @@ public class MiddlewareCommand implements Command {
             return null;
         }
     }
-    private void isCompanyExistInMews(SalesforceBookingResponse booking, SalesforceAccountResponse account, SalesforceContactResponse contact, ApiResponse apiResponse, Map<String, Object> responseData) throws Exception {
-        MewsGetCompanyRequest request = mewsController.createGetCompanyPayload(account);
-        Optional<MewsGetCompanyResponse> response = this.responseParser.getCompanyFromMews(request);
-        Optional<MewsUpdateCompanyResponse> updateCompany = null;
-        Optional<MewsCompanyResponse> createCompany = null;
 
-        if (response.isPresent()) {
-            MewsGetCompanyResponse result = response.get();
-            responseData.put("Mews_Get_Company", response.get());
-            List<MewsGetCompanyResponse.Company> companies = result.getCompanies();
+    private void isCompanyExistInMews(SalesforceBookingResponse booking, SalesforceAccountResponse account, SalesforceContactResponse contact, SalesforceGetPMSAccountResponse pmsAccount, ApiResponse apiResponse, Map<String, Object> responseData) throws Exception {
 
-            if (!companies.isEmpty()) {
-                MewsUpdateCompanyRequest mewsCompanyRequest = mewsController.createUpdateCompanyPayload(account, booking, contact, response.get());
-                updateCompany = this.responseParser.updateCompanyInMews(mewsCompanyRequest);
-            } else {
-                MewsCompanyRequest mewsCompanyRequest = mewsController.createCompanyPayload(booking, account, contact);
-                createCompany = this.responseParser.addCompanyInMews(mewsCompanyRequest);
+        Optional<MewsUpdateCompanyResponse> updateCompany = Optional.empty();
+        Optional<MewsCompanyResponse> createCompany = Optional.empty();
+
+        if (pmsAccount.getTotalSize() > 0) {
+            MewsGetCompanyRequest request = mewsController.createGetCompanyPayload(account);
+            Optional<MewsGetCompanyResponse> response = this.responseParser.getCompanyFromMews(request);
+            if (response.isPresent()) {
+                MewsGetCompanyResponse result = response.get();
+                responseData.put("Mews_Get_Company", response.get());
+                List<MewsGetCompanyResponse.Company> companies = result.getCompanies();
+                if (!companies.isEmpty()) {
+                    MewsUpdateCompanyRequest mewsCompanyRequest = mewsController.createUpdateCompanyPayload(account, booking, contact, response.get());
+                    updateCompany = this.responseParser.updateCompanyInMews(mewsCompanyRequest);
+                }
             }
         } else {
-            setFailedStatus(apiResponse, "Company does not exist in MEWS.");
+            MewsCompanyRequest mewsCompanyRequest = mewsController.createCompanyPayload(booking, account, contact);
+            createCompany = this.responseParser.addCompanyInMews(mewsCompanyRequest);
         }
+
         if (updateCompany.isPresent()) {
             responseData.put("Mews_Update_Company", updateCompany.get());
         }
@@ -212,14 +221,17 @@ public class MiddlewareCommand implements Command {
         }
     }
 
+
     private void setSuccessStatus(ApiResponse apiResponse, String message) {
         apiResponse.setStatus(ResponseStatus.FAILED);
         apiResponse.setMessage(message);
     }
+
     private void setFailedStatus(ApiResponse apiResponse, String message) {
         apiResponse.setStatus(ResponseStatus.FAILED);
         apiResponse.setMessage(message);
     }
+
     private void generateLog(String text) {
         logger.info(text);
     }
