@@ -60,9 +60,18 @@ public class MiddlewareCommand implements Command {
                         SalesforceAccountResponse account = getAccountDetails(salesforceToken, booking, apiResponse, responseData);
                         if(account != null){
                             SalesforceContactResponse contact = getContactDetails(salesforceToken, booking, apiResponse, responseData);
-//                            if(contact != null){
-//                                SalesforceContactResponse contact = getContactDetails(salesforceToken, booking, apiResponse, responseData);
-//                            }
+                            if(contact != null){
+                                SalesforceRateResponse rate = getRateDetails(salesforceToken, booking, apiResponse, responseData);
+                                if(rate != null){
+                                    SalesforcePropertyResponse property = getPropertyDetails(salesforceToken, rate, apiResponse, responseData);
+                                    if(property != null){
+                                        SalesforceGetPMSBlockResponse pmsBlock = getPSMBlockDetails(salesforceToken, bookingId, apiResponse, responseData);
+                                        if(pmsBlock != null){
+                                            SalesforceGetPMSAccountResponse pmsAccount = getPSMAccountDetails(salesforceToken, bookingId, apiResponse, responseData);
+                                        }
+                                    }
+                                }
+                            }
                         }
                     }
                 }
@@ -94,7 +103,7 @@ public class MiddlewareCommand implements Command {
         }
     }
     private SalesforceQueryResponse getGuestDetails(SalesforceTokenResponse salesforceToken, String bookingId, ApiResponse apiResponse, Map<String, Object> responseData) {
-        Optional<SalesforceQueryResponse> response = this.responseParser.retrieveAndParseQueryResponse(salesforceToken, bookingId, SalesforceQueryResponse.class);
+        Optional<SalesforceQueryResponse> response = this.responseParser.retrieveAndParseQueryResponse(salesforceToken, bookingId, SalesforceQueryResponse.class,"Guest");
         if (response.isPresent()) {
             responseData.put("Salesforce_Get_Guest_Rooms", response.get());
             SalesforceQueryResponse result = response.get();
@@ -126,6 +135,51 @@ public class MiddlewareCommand implements Command {
             return null;
         }
     }
+    private SalesforceRateResponse getRateDetails(SalesforceTokenResponse salesforceToken, SalesforceBookingResponse booking, ApiResponse apiResponse, Map<String, Object> responseData) {
+        Optional<SalesforceRateResponse> response = this.responseParser.retrieveAndParseResponse(salesforceToken,booking.getThn__Block_Rate__c(), SalesforceRateResponse.class, applicationConfiguration.getSalesforceRateObject());
+        if (response.isPresent()) {
+            responseData.put("Salesforce_Get_Rate", response.get());
+            SalesforceRateResponse result = response.get();
+            return result;
+        } else {
+            setFailedStatus(apiResponse, "Request body does not contain rate Id");
+            return null;
+        }
+    }
+    private SalesforcePropertyResponse getPropertyDetails(SalesforceTokenResponse salesforceToken, SalesforceRateResponse rate, ApiResponse apiResponse, Map<String, Object> responseData) {
+        Optional<SalesforcePropertyResponse> response = this.responseParser.retrieveAndParseResponse(salesforceToken,rate.getHotel(), SalesforcePropertyResponse.class, applicationConfiguration.getSalesforcePropertyObject());
+        if (response.isPresent()) {
+            responseData.put("Salesforce_Get_Property", response.get());
+            SalesforcePropertyResponse result = response.get();
+            return result;
+        } else {
+            setFailedStatus(apiResponse, "Request body does not contain Property Id");
+            return null;
+        }
+    }
+    private SalesforceGetPMSAccountResponse getPSMAccountDetails(SalesforceTokenResponse salesforceToken, String bookingId, ApiResponse apiResponse, Map<String, Object> responseData) {
+        Optional<SalesforceGetPMSAccountResponse> response = this.responseParser.retrieveAndParseQueryResponse(salesforceToken, bookingId, SalesforceGetPMSAccountResponse.class,"PSM_Account");
+        if (response.isPresent()) {
+            responseData.put("Salesforce_Get_PMS_Account", response.get());
+            SalesforceGetPMSAccountResponse result = response.get();
+            return result;
+        } else {
+            setFailedStatus(apiResponse, "Request body does not contain PMS Account Id");
+            return null;
+        }
+    }
+    private SalesforceGetPMSBlockResponse getPSMBlockDetails(SalesforceTokenResponse salesforceToken, String bookingId, ApiResponse apiResponse, Map<String, Object> responseData) {
+        Optional<SalesforceGetPMSBlockResponse> response = this.responseParser.retrieveAndParseQueryResponse(salesforceToken, bookingId, SalesforceGetPMSBlockResponse.class,"PSM_Block");
+        if (response.isPresent()) {
+            responseData.put("Salesforce_Get_PMS_Block", response.get());
+            SalesforceGetPMSBlockResponse result = response.get();
+            return result;
+        } else {
+            setFailedStatus(apiResponse, "Request body does not contain PMS Block Id");
+            return null;
+        }
+    }
+
 
     private void setSuccessStatus(ApiResponse apiResponse, String message) {
         apiResponse.setStatus(ResponseStatus.FAILED);
@@ -135,7 +189,6 @@ public class MiddlewareCommand implements Command {
         apiResponse.setStatus(ResponseStatus.FAILED);
         apiResponse.setMessage(message);
     }
-
     private void generateLog(String text) {
         logger.info(text);
     }

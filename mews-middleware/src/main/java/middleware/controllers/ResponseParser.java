@@ -51,14 +51,12 @@ public class ResponseParser {
         }
     }
 
-    public <T> Optional<T> retrieveAndParseQueryResponse(SalesforceTokenResponse salesforceToken,String parameter, Class<T> responseClass) {
+    public <T> Optional<T> retrieveAndParseQueryResponse(SalesforceTokenResponse salesforceToken,String parameter, Class<T> responseClass, String object) {
         try {
             String response = salesforceController.getQueryDataFromSalesforce(
                     salesforceToken.getAccess_token(),
-                    parameter
+                    parameter,object
             );
-            System.out.println(response);
-            System.out.println(response.isEmpty());
             if (response == null || response.isEmpty()) {
                 return Optional.empty();
             }
@@ -78,6 +76,7 @@ public class ResponseParser {
             return Optional.empty();
         }
     }
+
     public <T> T parseResponse(String response, Class<T> responseType, String object) throws Exception {
         try {
             JsonNode responseJson = objectMapper.readTree(response);
