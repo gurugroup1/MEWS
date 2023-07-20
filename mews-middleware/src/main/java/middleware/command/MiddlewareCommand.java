@@ -66,8 +66,10 @@ public class MiddlewareCommand implements Command {
                                     SalesforcePropertyResponse property = getPropertyDetails(salesforceToken, rate, apiResponse, responseData);
                                     if(property != null){
                                         SalesforceGetPMSBlockResponse pmsBlock = getPSMBlockDetails(salesforceToken, bookingId, apiResponse, responseData);
+                                        System.out.println("PMS Block Total Record : " + pmsBlock.getTotalSize());
                                         if(pmsBlock != null){
                                             SalesforceGetPMSAccountResponse pmsAccount = getPSMAccountDetails(salesforceToken, bookingId, apiResponse, responseData);
+                                            System.out.println("PMS Account Total Record : " + pmsAccount.getTotalSize());
                                         }
                                     }
                                 }
