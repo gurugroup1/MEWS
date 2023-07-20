@@ -1,20 +1,21 @@
 package middleware.models;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import java.time.LocalDateTime;
+
+import java.util.List;
 
 public class MewsGetCompanyResponse {
     @JsonProperty("Companies")
-    private Company[] companies;
+    private List<Company> companies;
 
     @JsonProperty("Cursor")
     private String cursor;
 
-    public Company[] getCompanies() {
+    public List<Company> getCompanies() {
         return companies;
     }
 
-    public void setCompanies(Company[] companies) {
+    public void setCompanies(List<Company> companies) {
         this.companies = companies;
     }
 
@@ -26,574 +27,563 @@ public class MewsGetCompanyResponse {
         this.cursor = cursor;
     }
 
-    public static class Company {
-        @JsonProperty("Id")
-        private String id;
+    // Getters and Setters
 
-        @JsonProperty("ChainId")
-        private String chainId;
 
-        @JsonProperty("Name")
-        private String name;
+public static class Company {
+    @JsonProperty("Id")
+    private String id;
 
-        @JsonProperty("MotherCompanyId")
-        private String motherCompanyId;
+    @JsonProperty("ChainId")
+    private String chainId;
 
-        @JsonProperty("InvoicingEmail")
-        private String invoicingEmail;
+    @JsonProperty("Name")
+    private String name;
 
-        @JsonProperty("WebsiteUrl")
-        private String websiteUrl;
+    @JsonProperty("MotherCompanyId")
+    private String motherCompanyId;
 
-        @JsonProperty("InvoiceDueInterval")
-        private Integer invoiceDueInterval;
+    @JsonProperty("InvoicingEmail")
+    private String invoicingEmail;
 
-        @JsonProperty("NchClassifications")
-        private NchClassifications nchClassifications;
+    @JsonProperty("WebsiteUrl")
+    private String websiteUrl;
 
-        @JsonProperty("Options")
-        private Options options;
+    @JsonProperty("InvoiceDueInterval")
+    private Integer invoiceDueInterval;
 
-        @JsonProperty("CreditRating")
-        private CreditRating creditRating;
+    @JsonProperty("NchClassifications")
+    private NchClassifications nchClassifications;
 
-        @JsonProperty("Department")
-        private String department;
+    @JsonProperty("Options")
+    private Options options;
 
-        @JsonProperty("DunsNumber")
-        private String dunsNumber;
+    @JsonProperty("CreditRating")
+    private CreditRating creditRating;
 
-        @JsonProperty("ReferenceIdentifier")
-        private String referenceIdentifier;
+    @JsonProperty("Department")
+    private String department;
 
-        @JsonProperty("AccountingCode")
-        private String accountingCode;
+    @JsonProperty("DunsNumber")
+    private String dunsNumber;
 
-        @JsonProperty("AdditionalTaxIdentifier")
-        private String additionalTaxIdentifier;
+    @JsonProperty("ReferenceIdentifier")
+    private String referenceIdentifier;
 
-        @JsonProperty("BillingCode")
-        private String billingCode;
+    @JsonProperty("AccountingCode")
+    private String accountingCode;
 
-        @JsonProperty("Contact")
-        private String contact;
+    @JsonProperty("AdditionalTaxIdentifier")
+    private String additionalTaxIdentifier;
 
-        @JsonProperty("ContactPerson")
-        private String contactPerson;
+    @JsonProperty("BillingCode")
+    private String billingCode;
 
-        @JsonProperty("ElectronicInvoiceIdentifier")
-        private String electronicInvoiceIdentifier;
+    @JsonProperty("Contact")
+    private String contact;
 
-        @JsonProperty("Identifier")
-        private String identifier;
+    @JsonProperty("ContactPerson")
+    private String contactPerson;
 
-        @JsonProperty("Iata")
-        private String iata;
+    @JsonProperty("ElectronicInvoiceIdentifier")
+    private String electronicInvoiceIdentifier;
 
-        @JsonProperty("IsActive")
-        private boolean isActive;
+    @JsonProperty("Identifier")
+    private String identifier;
 
-        @JsonProperty("Notes")
-        private String notes;
+    @JsonProperty("Iata")
+    private String iata;
 
-        @JsonProperty("Number")
-        private Integer number;
+    @JsonProperty("IsActive")
+    private Boolean isActive;
 
-        @JsonProperty("TaxIdentifier")
-        private String taxIdentifier;
+    @JsonProperty("Notes")
+    private String notes;
 
-        @JsonProperty("Telephone")
-        private String telephone;
+    @JsonProperty("Number")
+    private Integer number;
 
-        @JsonProperty("CreatedUtc")
-        private LocalDateTime createdUtc;
+    @JsonProperty("TaxIdentifier")
+    private String taxIdentifier;
 
-        @JsonProperty("UpdatedUtc")
-        private LocalDateTime updatedUtc;
+    @JsonProperty("Telephone")
+    private String telephone;
 
-        @JsonProperty("Address")
-        private Address address;
+    @JsonProperty("CreatedUtc")
+    private String createdUtc;
 
-        @JsonProperty("AddressId")
-        private String addressId;
+    @JsonProperty("UpdatedUtc")
+    private String updatedUtc;
 
-        @JsonProperty("TaxIdentificationNumber")
-        private String taxIdentificationNumber;
+    @JsonProperty("Address")
+    private Address address;
 
-        @JsonProperty("ExternalIdentifier")
-        private String externalIdentifier;
+    @JsonProperty("AddressId")
+    private String addressId;
 
-        public String getId() {
-            return id;
-        }
-
-        public void setId(String id) {
-            this.id = id;
-        }
-
-        public String getChainId() {
-            return chainId;
-        }
-
-        public void setChainId(String chainId) {
-            this.chainId = chainId;
-        }
-
-        public String getName() {
-            return name;
-        }
-
-        public void setName(String name) {
-            this.name = name;
-        }
-
-        public String getMotherCompanyId() {
-            return motherCompanyId;
-        }
-
-        public void setMotherCompanyId(String motherCompanyId) {
-            this.motherCompanyId = motherCompanyId;
-        }
-
-        public String getInvoicingEmail() {
-            return invoicingEmail;
-        }
-
-        public void setInvoicingEmail(String invoicingEmail) {
-            this.invoicingEmail = invoicingEmail;
-        }
-
-        public String getWebsiteUrl() {
-            return websiteUrl;
-        }
+    @JsonProperty("TaxIdentificationNumber")
+    private String taxIdentificationNumber;
 
-        public void setWebsiteUrl(String websiteUrl) {
-            this.websiteUrl = websiteUrl;
-        }
-
-        public Integer getInvoiceDueInterval() {
-            return invoiceDueInterval;
-        }
-
-        public void setInvoiceDueInterval(Integer invoiceDueInterval) {
-            this.invoiceDueInterval = invoiceDueInterval;
-        }
-
-        public NchClassifications getNchClassifications() {
-            return nchClassifications;
-        }
-
-        public void setNchClassifications(NchClassifications nchClassifications) {
-            this.nchClassifications = nchClassifications;
-        }
-
-        public Options getOptions() {
-            return options;
-        }
+    @JsonProperty("ExternalIdentifier")
+    private String externalIdentifier;
 
-        public void setOptions(Options options) {
-            this.options = options;
-        }
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getChainId() {
+        return chainId;
+    }
+
+    public void setChainId(String chainId) {
+        this.chainId = chainId;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getMotherCompanyId() {
+        return motherCompanyId;
+    }
+
+    public void setMotherCompanyId(String motherCompanyId) {
+        this.motherCompanyId = motherCompanyId;
+    }
+
+    public String getInvoicingEmail() {
+        return invoicingEmail;
+    }
+
+    public void setInvoicingEmail(String invoicingEmail) {
+        this.invoicingEmail = invoicingEmail;
+    }
+
+    public String getWebsiteUrl() {
+        return websiteUrl;
+    }
+
+    public void setWebsiteUrl(String websiteUrl) {
+        this.websiteUrl = websiteUrl;
+    }
+
+    public Integer getInvoiceDueInterval() {
+        return invoiceDueInterval;
+    }
+
+    public void setInvoiceDueInterval(Integer invoiceDueInterval) {
+        this.invoiceDueInterval = invoiceDueInterval;
+    }
+
+    public NchClassifications getNchClassifications() {
+        return nchClassifications;
+    }
+
+    public void setNchClassifications(NchClassifications nchClassifications) {
+        this.nchClassifications = nchClassifications;
+    }
+
+    public Options getOptions() {
+        return options;
+    }
+
+    public void setOptions(Options options) {
+        this.options = options;
+    }
+
+    public CreditRating getCreditRating() {
+        return creditRating;
+    }
+
+    public void setCreditRating(CreditRating creditRating) {
+        this.creditRating = creditRating;
+    }
+
+    public String getDepartment() {
+        return department;
+    }
+
+    public void setDepartment(String department) {
+        this.department = department;
+    }
+
+    public String getDunsNumber() {
+        return dunsNumber;
+    }
+
+    public void setDunsNumber(String dunsNumber) {
+        this.dunsNumber = dunsNumber;
+    }
+
+    public String getReferenceIdentifier() {
+        return referenceIdentifier;
+    }
+
+    public void setReferenceIdentifier(String referenceIdentifier) {
+        this.referenceIdentifier = referenceIdentifier;
+    }
+
+    public String getAccountingCode() {
+        return accountingCode;
+    }
+
+    public void setAccountingCode(String accountingCode) {
+        this.accountingCode = accountingCode;
+    }
+
+    public String getAdditionalTaxIdentifier() {
+        return additionalTaxIdentifier;
+    }
+
+    public void setAdditionalTaxIdentifier(String additionalTaxIdentifier) {
+        this.additionalTaxIdentifier = additionalTaxIdentifier;
+    }
+
+    public String getBillingCode() {
+        return billingCode;
+    }
+
+    public void setBillingCode(String billingCode) {
+        this.billingCode = billingCode;
+    }
+
+    public String getContact() {
+        return contact;
+    }
+
+    public void setContact(String contact) {
+        this.contact = contact;
+    }
+
+    public String getContactPerson() {
+        return contactPerson;
+    }
+
+    public void setContactPerson(String contactPerson) {
+        this.contactPerson = contactPerson;
+    }
+
+    public String getElectronicInvoiceIdentifier() {
+        return electronicInvoiceIdentifier;
+    }
+
+    public void setElectronicInvoiceIdentifier(String electronicInvoiceIdentifier) {
+        this.electronicInvoiceIdentifier = electronicInvoiceIdentifier;
+    }
+
+    public String getIdentifier() {
+        return identifier;
+    }
+
+    public void setIdentifier(String identifier) {
+        this.identifier = identifier;
+    }
 
-        public CreditRating getCreditRating() {
-            return creditRating;
-        }
+    public String getIata() {
+        return iata;
+    }
 
-        public void setCreditRating(CreditRating creditRating) {
-            this.creditRating = creditRating;
-        }
+    public void setIata(String iata) {
+        this.iata = iata;
+    }
 
-        public String getDepartment() {
-            return department;
-        }
+    public Boolean getActive() {
+        return isActive;
+    }
 
-        public void setDepartment(String department) {
-            this.department = department;
-        }
+    public void setActive(Boolean active) {
+        isActive = active;
+    }
 
-        public String getDunsNumber() {
-            return dunsNumber;
-        }
+    public String getNotes() {
+        return notes;
+    }
 
-        public void setDunsNumber(String dunsNumber) {
-            this.dunsNumber = dunsNumber;
-        }
+    public void setNotes(String notes) {
+        this.notes = notes;
+    }
 
-        public String getReferenceIdentifier() {
-            return referenceIdentifier;
-        }
+    public Integer getNumber() {
+        return number;
+    }
 
-        public void setReferenceIdentifier(String referenceIdentifier) {
-            this.referenceIdentifier = referenceIdentifier;
-        }
+    public void setNumber(Integer number) {
+        this.number = number;
+    }
 
-        public String getAccountingCode() {
-            return accountingCode;
-        }
+    public String getTaxIdentifier() {
+        return taxIdentifier;
+    }
 
-        public void setAccountingCode(String accountingCode) {
-            this.accountingCode = accountingCode;
-        }
+    public void setTaxIdentifier(String taxIdentifier) {
+        this.taxIdentifier = taxIdentifier;
+    }
 
-        public String getAdditionalTaxIdentifier() {
-            return additionalTaxIdentifier;
-        }
+    public String getTelephone() {
+        return telephone;
+    }
 
-        public void setAdditionalTaxIdentifier(String additionalTaxIdentifier) {
-            this.additionalTaxIdentifier = additionalTaxIdentifier;
-        }
+    public void setTelephone(String telephone) {
+        this.telephone = telephone;
+    }
 
-        public String getBillingCode() {
-            return billingCode;
-        }
+    public String getCreatedUtc() {
+        return createdUtc;
+    }
 
-        public void setBillingCode(String billingCode) {
-            this.billingCode = billingCode;
-        }
+    public void setCreatedUtc(String createdUtc) {
+        this.createdUtc = createdUtc;
+    }
 
-        public String getContact() {
-            return contact;
-        }
+    public String getUpdatedUtc() {
+        return updatedUtc;
+    }
 
-        public void setContact(String contact) {
-            this.contact = contact;
-        }
+    public void setUpdatedUtc(String updatedUtc) {
+        this.updatedUtc = updatedUtc;
+    }
 
-        public String getContactPerson() {
-            return contactPerson;
-        }
+    public Address getAddress() {
+        return address;
+    }
 
-        public void setContactPerson(String contactPerson) {
-            this.contactPerson = contactPerson;
-        }
+    public void setAddress(Address address) {
+        this.address = address;
+    }
 
-        public String getElectronicInvoiceIdentifier() {
-            return electronicInvoiceIdentifier;
-        }
+    public String getAddressId() {
+        return addressId;
+    }
 
-        public void setElectronicInvoiceIdentifier(String electronicInvoiceIdentifier) {
-            this.electronicInvoiceIdentifier = electronicInvoiceIdentifier;
-        }
+    public void setAddressId(String addressId) {
+        this.addressId = addressId;
+    }
 
-        public String getIdentifier() {
-            return identifier;
-        }
+    public String getTaxIdentificationNumber() {
+        return taxIdentificationNumber;
+    }
 
-        public void setIdentifier(String identifier) {
-            this.identifier = identifier;
-        }
+    public void setTaxIdentificationNumber(String taxIdentificationNumber) {
+        this.taxIdentificationNumber = taxIdentificationNumber;
+    }
 
-        public String getIata() {
-            return iata;
-        }
+    public String getExternalIdentifier() {
+        return externalIdentifier;
+    }
 
-        public void setIata(String iata) {
-            this.iata = iata;
-        }
+    public void setExternalIdentifier(String externalIdentifier) {
+        this.externalIdentifier = externalIdentifier;
+    }
 
-        public boolean isActive() {
-            return isActive;
-        }
+    // Getters and Setters
+}
 
-        public void setActive(boolean active) {
-            isActive = active;
-        }
+    public static class  NchClassifications {
+    @JsonProperty("Corporate")
+    private Boolean corporate;
 
-        public String getNotes() {
-            return notes;
-        }
+    @JsonProperty("Internal")
+    private Boolean internal;
 
-        public void setNotes(String notes) {
-            this.notes = notes;
-        }
+    @JsonProperty("Private")
+    private Boolean privateClassification;
 
-        public Integer getNumber() {
-            return number;
-        }
+    @JsonProperty("OnlineTravelAgency")
+    private Boolean onlineTravelAgency;
 
-        public void setNumber(Integer number) {
-            this.number = number;
-        }
+    @JsonProperty("GlobalDistributionSystem")
+    private Boolean globalDistributionSystem;
 
-        public String getTaxIdentifier() {
-            return taxIdentifier;
-        }
+    @JsonProperty("Marketing")
+    private Boolean marketing;
 
-        public void setTaxIdentifier(String taxIdentifier) {
-            this.taxIdentifier = taxIdentifier;
-        }
+    @JsonProperty("Inactive")
+    private Boolean inactive;
 
-        public String getTelephone() {
-            return telephone;
+        public Boolean getCorporate() {
+            return corporate;
         }
 
-        public void setTelephone(String telephone) {
-            this.telephone = telephone;
+        public void setCorporate(Boolean corporate) {
+            this.corporate = corporate;
         }
 
-        public LocalDateTime getCreatedUtc() {
-            return createdUtc;
+        public Boolean getInternal() {
+            return internal;
         }
 
-        public void setCreatedUtc(LocalDateTime createdUtc) {
-            this.createdUtc = createdUtc;
+        public void setInternal(Boolean internal) {
+            this.internal = internal;
         }
 
-        public LocalDateTime getUpdatedUtc() {
-            return updatedUtc;
+        public Boolean getPrivateClassification() {
+            return privateClassification;
         }
 
-        public void setUpdatedUtc(LocalDateTime updatedUtc) {
-            this.updatedUtc = updatedUtc;
+        public void setPrivateClassification(Boolean privateClassification) {
+            this.privateClassification = privateClassification;
         }
 
-        public Address getAddress() {
-            return address;
+        public Boolean getOnlineTravelAgency() {
+            return onlineTravelAgency;
         }
 
-        public void setAddress(Address address) {
-            this.address = address;
+        public void setOnlineTravelAgency(Boolean onlineTravelAgency) {
+            this.onlineTravelAgency = onlineTravelAgency;
         }
 
-        public String getAddressId() {
-            return addressId;
+        public Boolean getGlobalDistributionSystem() {
+            return globalDistributionSystem;
         }
 
-        public void setAddressId(String addressId) {
-            this.addressId = addressId;
+        public void setGlobalDistributionSystem(Boolean globalDistributionSystem) {
+            this.globalDistributionSystem = globalDistributionSystem;
         }
 
-        public String getTaxIdentificationNumber() {
-            return taxIdentificationNumber;
+        public Boolean getMarketing() {
+            return marketing;
         }
 
-        public void setTaxIdentificationNumber(String taxIdentificationNumber) {
-            this.taxIdentificationNumber = taxIdentificationNumber;
+        public void setMarketing(Boolean marketing) {
+            this.marketing = marketing;
         }
 
-        public String getExternalIdentifier() {
-            return externalIdentifier;
+        public Boolean getInactive() {
+            return inactive;
         }
 
-        public void setExternalIdentifier(String externalIdentifier) {
-            this.externalIdentifier = externalIdentifier;
+        public void setInactive(Boolean inactive) {
+            this.inactive = inactive;
         }
-
-        public static class NchClassifications {
-            @JsonProperty("Corporate")
-            private boolean corporate;
-
-            @JsonProperty("Internal")
-            private boolean internal;
-
-            @JsonProperty("Private")
-            private boolean privateCompany;
-
-            @JsonProperty("OnlineTravelAgency")
-            private boolean onlineTravelAgency;
-
-            @JsonProperty("GlobalDistributionSystem")
-            private boolean globalDistributionSystem;
-
-            @JsonProperty("Marketing")
-            private boolean marketing;
-
-            @JsonProperty("Inactive")
-            private boolean inactive;
-
-            public boolean isCorporate() {
-                return corporate;
-            }
-
-            public void setCorporate(boolean corporate) {
-                this.corporate = corporate;
-            }
-
-            public boolean isInternal() {
-                return internal;
-            }
 
-            public void setInternal(boolean internal) {
-                this.internal = internal;
-            }
-
-            public boolean isPrivateCompany() {
-                return privateCompany;
-            }
-
-            public void setPrivateCompany(boolean privateCompany) {
-                this.privateCompany = privateCompany;
-            }
-
-            public boolean isOnlineTravelAgency() {
-                return onlineTravelAgency;
-            }
-
-            public void setOnlineTravelAgency(boolean onlineTravelAgency) {
-                this.onlineTravelAgency = onlineTravelAgency;
-            }
-
-            public boolean isGlobalDistributionSystem() {
-                return globalDistributionSystem;
-            }
-
-            public void setGlobalDistributionSystem(boolean globalDistributionSystem) {
-                this.globalDistributionSystem = globalDistributionSystem;
-            }
-
-            public boolean isMarketing() {
-                return marketing;
-            }
-
-            public void setMarketing(boolean marketing) {
-                this.marketing = marketing;
-            }
-
-            public boolean isInactive() {
-                return inactive;
-            }
-
-            public void setInactive(boolean inactive) {
-                this.inactive = inactive;
-            }
-        }
+        // Getters and Setters
+}
 
         public static class Options {
-            @JsonProperty("Invoiceable")
-            private boolean invoiceable;
+    @JsonProperty("Invoiceable")
+    private Boolean invoiceable;
 
-            @JsonProperty("AddFeesToInvoices")
-            private boolean addFeesToInvoices;
+    @JsonProperty("AddFeesToInvoices")
+    private Boolean addFeesToInvoices;
 
-            public boolean isInvoiceable() {
-                return invoiceable;
-            }
+    // Getters and Setters
+}
 
-            public void setInvoiceable(boolean invoiceable) {
-                this.invoiceable = invoiceable;
-            }
+            public static class CreditRating {
+    @JsonProperty("Basic")
+    private String basic;
 
-            public boolean isAddFeesToInvoices() {
-                return addFeesToInvoices;
-            }
+    // Getters and Setters
+}
 
-            public void setAddFeesToInvoices(boolean addFeesToInvoices) {
-                this.addFeesToInvoices = addFeesToInvoices;
-            }
-        }
+public static class Address {
+    @JsonProperty("Id")
+    private String id;
 
-        public static class CreditRating {
-            @JsonProperty("Basic")
-            private String basic;
+    @JsonProperty("Line1")
+    private String line1;
 
-            public String getBasic() {
-                return basic;
-            }
+    @JsonProperty("Line2")
+    private String line2;
 
-            public void setBasic(String basic) {
-                this.basic = basic;
-            }
-        }
+    @JsonProperty("City")
+    private String city;
 
-        public static class Address {
-            @JsonProperty("Id")
-            private String id;
+    @JsonProperty("PostalCode")
+    private String postalCode;
 
-            @JsonProperty("Line1")
-            private String line1;
+    @JsonProperty("CountryCode")
+    private String countryCode;
 
-            @JsonProperty("Line2")
-            private String line2;
+    @JsonProperty("CountrySubdivisionCode")
+    private String countrySubdivisionCode;
 
-            @JsonProperty("City")
-            private String city;
+    @JsonProperty("Latitude")
+    private String latitude;
 
-            @JsonProperty("PostalCode")
-            private String postalCode;
+    @JsonProperty("Longitude")
+    private String longitude;
 
-            @JsonProperty("CountryCode")
-            private String countryCode;
-
-            @JsonProperty("CountrySubdivisionCode")
-            private String countrySubdivisionCode;
-
-            @JsonProperty("Latitude")
-            private Double latitude;
-
-            @JsonProperty("Longitude")
-            private Double longitude;
-
-            public String getId() {
-                return id;
-            }
-
-            public void setId(String id) {
-                this.id = id;
-            }
-
-            public String getLine1() {
-                return line1;
-            }
-
-            public void setLine1(String line1) {
-                this.line1 = line1;
-            }
-
-            public String getLine2() {
-                return line2;
-            }
-
-            public void setLine2(String line2) {
-                this.line2 = line2;
-            }
-
-            public String getCity() {
-                return city;
-            }
-
-            public void setCity(String city) {
-                this.city = city;
-            }
-
-            public String getPostalCode() {
-                return postalCode;
-            }
-
-            public void setPostalCode(String postalCode) {
-                this.postalCode = postalCode;
-            }
-
-            public String getCountryCode() {
-                return countryCode;
-            }
-
-            public void setCountryCode(String countryCode) {
-                this.countryCode = countryCode;
-            }
-
-            public String getCountrySubdivisionCode() {
-                return countrySubdivisionCode;
-            }
-
-            public void setCountrySubdivisionCode(String countrySubdivisionCode) {
-                this.countrySubdivisionCode = countrySubdivisionCode;
-            }
-
-            public Double getLatitude() {
-                return latitude;
-            }
-
-            public void setLatitude(Double latitude) {
-                this.latitude = latitude;
-            }
-
-            public Double getLongitude() {
-                return longitude;
-            }
-
-            public void setLongitude(Double longitude) {
-                this.longitude = longitude;
-            }
-        }
+    public String getId() {
+        return id;
     }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getLine1() {
+        return line1;
+    }
+
+    public void setLine1(String line1) {
+        this.line1 = line1;
+    }
+
+    public String getLine2() {
+        return line2;
+    }
+
+    public void setLine2(String line2) {
+        this.line2 = line2;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
+    }
+
+    public String getPostalCode() {
+        return postalCode;
+    }
+
+    public void setPostalCode(String postalCode) {
+        this.postalCode = postalCode;
+    }
+
+    public String getCountryCode() {
+        return countryCode;
+    }
+
+    public void setCountryCode(String countryCode) {
+        this.countryCode = countryCode;
+    }
+
+    public String getCountrySubdivisionCode() {
+        return countrySubdivisionCode;
+    }
+
+    public void setCountrySubdivisionCode(String countrySubdivisionCode) {
+        this.countrySubdivisionCode = countrySubdivisionCode;
+    }
+
+    public String getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(String latitude) {
+        this.latitude = latitude;
+    }
+
+    public String getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(String longitude) {
+        this.longitude = longitude;
+    }
+
+    // Getters and Setters
+}
 }

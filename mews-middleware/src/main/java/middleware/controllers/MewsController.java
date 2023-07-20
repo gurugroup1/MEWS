@@ -323,23 +323,24 @@ public class MewsController {
     }
 
     public MewsUpdateCompanyRequest createUpdateCompanyPayload(SalesforceAccountResponse account, SalesforceBookingResponse book, SalesforceContactResponse contact, MewsGetCompanyResponse companies) throws JsonProcessingException {
-        String taxIdentifier = companies.getCompanies()[0].getTaxIdentifier();
-        String contactName = companies.getCompanies()[0].getContact();
-        String contactPerson = companies.getCompanies()[0].getContactPerson();
-        String additionalTaxIdentifier = companies.getCompanies()[0].getAdditionalTaxIdentifier();
-        String billingCode = companies.getCompanies()[0].getBillingCode();
-        String accountingCode = companies.getCompanies()[0].getAccountingCode();
-        String iata = companies.getCompanies()[0].getIata();
-        String websiteUrl = companies.getCompanies()[0].getWebsiteUrl();
-        String department = companies.getCompanies()[0].getDepartment();
-        String notes = companies.getCompanies()[0].getNotes();
-        String companyName = companies.getCompanies()[0].getName();
+        MewsGetCompanyResponse.Company company = companies.getCompanies().get(0);
+        String taxIdentifier = company.getTaxIdentifier();
+        String contactName = company.getContact();
+        String contactPerson = company.getContactPerson();
+        String additionalTaxIdentifier = company.getAdditionalTaxIdentifier();
+        String billingCode = company.getBillingCode();
+        String accountingCode = company.getAccountingCode();
+        String iata = company.getIata();
+        String websiteUrl = company.getWebsiteUrl();
+        String department = company.getDepartment();
+        String notes = company.getNotes();
+        String companyName = company.getName();
 
         MewsUpdateCompanyRequest request = new MewsUpdateCompanyRequest();
         request.setClient(applicationConfiguration.getMewsClientName());
         request.setAccessToken(applicationConfiguration.getMewsAccessToken());
         request.setClientToken(applicationConfiguration.getMewsClientToken());
-        request.setCompanyId(companies.getCompanies()[0].getId());
+        request.setCompanyId(company.getId());
 
         MewsUpdateCompanyRequest.NameModel updatedName = new MewsUpdateCompanyRequest.NameModel();
         updatedName.setValue(getUpdatedValue(account.getName(), companyName));

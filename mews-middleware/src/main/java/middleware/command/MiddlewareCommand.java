@@ -15,6 +15,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -66,10 +67,11 @@ public class MiddlewareCommand implements Command {
                                     SalesforcePropertyResponse property = getPropertyDetails(salesforceToken, rate, apiResponse, responseData);
                                     if(property != null){
                                         SalesforceGetPMSBlockResponse pmsBlock = getPSMBlockDetails(salesforceToken, bookingId, apiResponse, responseData);
-                                        System.out.println("PMS Block Total Record : " + pmsBlock.getTotalSize());
                                         if(pmsBlock != null){
                                             SalesforceGetPMSAccountResponse pmsAccount = getPSMAccountDetails(salesforceToken, bookingId, apiResponse, responseData);
-                                            System.out.println("PMS Account Total Record : " + pmsAccount.getTotalSize());
+                                            if(pmsAccount != null){
+                                                isCompanyExistInMews(booking,account,contact,apiResponse, responseData);
+                                            }
                                         }
                                     }
                                 }
@@ -181,7 +183,34 @@ public class MiddlewareCommand implements Command {
             return null;
         }
     }
+    private void isCompanyExistInMews(SalesforceBookingResponse booking, SalesforceAccountResponse account, SalesforceContactResponse contact, ApiResponse apiResponse, Map<String, Object> responseData) throws Exception {
+        MewsGetCompanyRequest request = mewsController.createGetCompanyPayload(account);
+        Optional<MewsGetCompanyResponse> response = this.responseParser.getCompanyFromMews(request);
+        Optional<MewsUpdateCompanyResponse> updateCompany = null;
+        Optional<MewsCompanyResponse> createCompany = null;
 
+        if (response.isPresent()) {
+            MewsGetCompanyResponse result = response.get();
+            responseData.put("Mews_Get_Company", response.get());
+            List<MewsGetCompanyResponse.Company> companies = result.getCompanies();
+
+            if (!companies.isEmpty()) {
+                MewsUpdateCompanyRequest mewsCompanyRequest = mewsController.createUpdateCompanyPayload(account, booking, contact, response.get());
+                updateCompany = this.responseParser.updateCompanyInMews(mewsCompanyRequest);
+            } else {
+                MewsCompanyRequest mewsCompanyRequest = mewsController.createCompanyPayload(booking, account, contact);
+                createCompany = this.responseParser.addCompanyInMews(mewsCompanyRequest);
+            }
+        } else {
+            setFailedStatus(apiResponse, "Company does not exist in MEWS.");
+        }
+        if (updateCompany.isPresent()) {
+            responseData.put("Mews_Update_Company", updateCompany.get());
+        }
+        if (createCompany.isPresent()) {
+            responseData.put("Mews_Create_Company", createCompany.get());
+        }
+    }
 
     private void setSuccessStatus(ApiResponse apiResponse, String message) {
         apiResponse.setStatus(ResponseStatus.FAILED);
