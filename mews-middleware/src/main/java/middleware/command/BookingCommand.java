@@ -155,19 +155,19 @@ public class BookingCommand implements Command {
                                                         if (mewsUpdateRateResponse.equals("{}")) {
                                                             responseData.put("Mews_Update_Rate_Price", mewsUpdateRateResponse);
                                                             apiResponse.setStatus(ResponseStatus.SUCCESS);
-                                                            PSMAccountRequest pmsAccountRequest = this.salesforceController.createPSMAccountPayload();
+                                                            PSMAccountRequest pmsAccountRequest = this.salesforceController.createPSMAccountPayload(booking.get(), account.get(), contact.get(), rate.get(), property.get());
                                                             String pmsAccountRequestString = objectMapper.writeValueAsString(pmsAccountRequest);
                                                             String pmsAccountResponse = this.salesforceController.addRecordInSalesforce(applicationConfiguration.getSalesforcePMSAccount(), salesforceToken.getAccess_token(), pmsAccountRequestString);
                                                             if (pmsAccountResponse != null && !pmsAccountResponse.isEmpty()) {
                                                                 responseData.put("Salesforce_Post_PMS_Account", pmsAccountResponse);
                                                                 apiResponse.setStatus(ResponseStatus.SUCCESS);
-                                                                SalesforceGuestRequest guestRequest = this.salesforceController.createGuestBookerPayload();
+                                                                SalesforceGuestRequest guestRequest = this.salesforceController.createGuestBookerPayload(booking.get(), account.get(), contact.get(), rate.get(), property.get());
                                                                 String guestRequestString = objectMapper.writeValueAsString(guestRequest);
                                                                 String guestRequestResponse = this.salesforceController.addRecordInSalesforce(applicationConfiguration.getSalesforceGuest(), salesforceToken.getAccess_token(), guestRequestString);
                                                                 if (guestRequestResponse != null && !guestRequestResponse.isEmpty()) {
                                                                     responseData.put("Salesforce_Post_Guest", guestRequestResponse);
                                                                     apiResponse.setStatus(ResponseStatus.SUCCESS);
-                                                                    SalesforcePSMBlockRequest pmsBlockRequest = this.salesforceController.createPMSBlockPayload();
+                                                                    SalesforcePSMBlockRequest pmsBlockRequest = this.salesforceController.createPMSBlockPayload(booking.get(), account.get(), contact.get(), rate.get(), property.get(), availabilityBlockResponse.get());
                                                                     String pmsBlockRequestString = objectMapper.writeValueAsString(pmsBlockRequest);
                                                                     String pmsBlockRequestResponse = this.salesforceController.addRecordInSalesforce(applicationConfiguration.getSalesforcePMSBlock(), salesforceToken.getAccess_token(), pmsBlockRequestString);
                                                                     if (pmsBlockRequestResponse != null && !pmsBlockRequestResponse.isEmpty()) {

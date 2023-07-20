@@ -24,7 +24,6 @@ public class MewsUpdateBookerRequest {
     @JsonProperty("LastName")
     private String lastName;
 
-    @JsonProperty("SecondLastName")
     private String secondLastName;
 
     @JsonProperty("Title")
@@ -121,13 +120,13 @@ public class MewsUpdateBookerRequest {
         this.lastName = lastName;
     }
 
-    public String getSecondLastName() {
-        return secondLastName;
-    }
-
-    public void setSecondLastName(String secondLastName) {
-        this.secondLastName = secondLastName;
-    }
+//    public String getSecondLastName() {
+//        return secondLastName;
+//    }
+//
+//    public void setSecondLastName(String secondLastName) {
+//        this.secondLastName = secondLastName;
+//    }
 
     public String getTitle() {
         return title;

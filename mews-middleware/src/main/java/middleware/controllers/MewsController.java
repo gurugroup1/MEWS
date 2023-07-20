@@ -105,7 +105,7 @@ public class MewsController {
     public MewsUpdateBookerRequest createUpdateBookerPayload(SalesforceBookingResponse book,SalesforceAccountResponse account,SalesforceContactResponse contact,MewsGetBookerResponse getbooker) throws JsonProcessingException {
         String firstName = getbooker.getCustomers()[0].getFirstName();
         String lastName = getbooker.getCustomers()[0].getLastName();
-        String secondLastName = getbooker.getCustomers()[0].getSecondLastName();
+        String secondLastName = "";
         String nationalityCode = getbooker.getCustomers()[0].getNationalityCode();
         String birthDate = getbooker.getCustomers()[0].getBirthDate();
         String birthPlace = getbooker.getCustomers()[0].getBirthPlace();
@@ -115,7 +115,7 @@ public class MewsController {
         String notes = getbooker.getCustomers()[0].getNotes();
         String contactFirstName = contact.getFirstName();
         String contactLastName = contact.getLastName();
-        String contactSecondLastName = contact.getName();
+        String contactSecondLastName = null;
         String contactNationalityCode = contact.getThn__Nationality__c();
         String contactBirthDate = contact.getBirthdate();
         String bookBirthPlace = book.getOrigin__c();
@@ -132,7 +132,7 @@ public class MewsController {
 
         request.setFirstName(getUpdatedValue(contactFirstName, firstName));
         request.setLastName(getUpdatedValue(contactLastName, lastName));
-        request.setSecondLastName(getUpdatedValue(contactSecondLastName, secondLastName));
+//        request.setSecondLastName(secondLastName);
         request.setNationalityCode(getUpdatedValue(contactNationalityCode, nationalityCode));
         request.setBirthDate(getUpdatedValue(contactBirthDate, birthDate));
         request.setBirthPlace(getUpdatedValue(bookBirthPlace, birthPlace));
