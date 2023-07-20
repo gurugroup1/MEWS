@@ -1,7 +1,7 @@
 package middleware.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import middleware.command.BookingCommand;
+import middleware.command.MiddlewareCommand;
 import middleware.command.Invoker;
 import middleware.configurations.ApplicationConfiguration;
 import middleware.services.*;
@@ -52,7 +52,7 @@ public class WebhookController {
     @PostMapping("/booking/")
     public ApiResponse executeProcess(@RequestBody String requestBody) {
         invoker = new Invoker();
-        invoker.setCommand(new BookingCommand(logger, applicationConfiguration, salesforceConnectorService, mewsConnectorService, mewsController, secretKeyManagerController, salesforceController, authController, objectMapper,responseParser));
+        invoker.setCommand(new MiddlewareCommand(logger, applicationConfiguration, salesforceConnectorService, mewsConnectorService, mewsController, secretKeyManagerController, salesforceController, authController, objectMapper,responseParser));
         return invoker.invoke(requestBody);
     }
 
