@@ -81,18 +81,6 @@ public class SalesforceController {
         payload.setSicDescription(account.getSicDesc());
         payload.setStatus(account.getThn__Status__c());
         payload.setTaxId(account.getThn__TaxIdentifier__c());
-        payload.setType(book.getThn__Type__c());
-        payload.setUniquePMSKey(rate.getUniquePmsKey());
-        payload.setWebsite(account.getWebsite());
-        payload.setFullName(account.getName());
-        payload.setPmsDB(property.getPmsDb());
-        payload.setBusinessPhone(book.getOnsite_Contact_Phone__c());
-        payload.setAdditionalTaxIdentifier(account.getThn__Additional_Tax_Identifier__c());
-        payload.setElectronicInvoiceIdentifier(account.getThn__Electronic_Invoice_Identifier__c());
-        payload.setMyceQuote(book.getId());
-        payload.setNotes(book.getQuote_Notes__c());
-        payload.setNumber(account.getThn__Number__c());
-        payload.setProperty(property.getId());
 //      payload.setAccountReceivableNumber("12345");
 //      payload.setCreateAccount(true);
 //      payload.setHapiId("Hapi ID");
@@ -111,6 +99,18 @@ public class SalesforceController {
 //      payload.setEmailAddressType("Email Address Type");
 //      payload.setMobilePhone(contact.getMobilePhone());
 //      payload.setVipStatus("VIP Status");
+        payload.setType(book.getThn__Type__c());
+        payload.setUniquePMSKey(rate.getUniquePmsKey());
+        payload.setWebsite(account.getWebsite());
+        payload.setFullName(account.getName());
+        payload.setPmsDB(property.getPmsDb());
+        payload.setBusinessPhone(book.getOnsite_Contact_Phone__c());
+        payload.setAdditionalTaxIdentifier(account.getThn__Additional_Tax_Identifier__c());
+        payload.setElectronicInvoiceIdentifier(account.getThn__Electronic_Invoice_Identifier__c());
+        payload.setMyceQuote(book.getId());
+        payload.setNotes(book.getQuote_Notes__c());
+        payload.setNumber(account.getThn__Number__c());
+        payload.setProperty(property.getId());
         return payload;
     }
 
@@ -212,16 +212,11 @@ public class SalesforceController {
         return payload;
     }
 
-    public SalesforcePSMBlockRequest createPMSBlockPayload(SalesforceBookingResponse book,SalesforceAccountResponse account, SalesforceContactResponse contact, SalesforceRateResponse rate, SalesforcePropertyResponse property,MewsAvailabilityBlockResponse availabilityBlockId) throws JsonProcessingException {
+    public SalesforcePSMBlockRequest createPMSBlockPayload(SalesforceBookingResponse book,SalesforceAccountResponse account, SalesforceContactResponse contact, SalesforceRateResponse rate, SalesforcePropertyResponse property,MewsAvailabilityBlockResponse availabilityBlockId,String pmsAccountId) throws JsonProcessingException {
         SalesforcePSMBlockRequest payload = new SalesforcePSMBlockRequest();
         payload.setName(contact.getName());
         payload.setCurrencyIsoCode(book.getCurrencyIsoCode());
         payload.setMyceQuote(book.getId());
-//        String blockId = "";
-//        List<MewsAvailabilityBlockResponse.AvailabilityBlock> availabilityBlocks = availabilityBlockId.getAvailabilityBlocks();
-//        for (MewsAvailabilityBlockResponse.AvailabilityBlock block : availabilityBlocks) {
-//            blockId = block.getId();
-//        }
         payload.setPmsId(availabilityBlockId.getRateId());
         payload.setPmsBlockEndTime(property.getCheckOut());
         payload.setPmsBlockStartTime(property.getCheckIn());
@@ -242,7 +237,10 @@ public class SalesforceController {
         payload.setUniquePMSKey(rate.getUniquePmsKey());
         payload.setProperty(property.getId());
         payload.setBooker(contact.getThn__Guest__c());
-
+        payload.setPmsAccountCompany(pmsAccountId);
+        payload.setPmsAccountGroup(pmsAccountId);
+        payload.setPmsAccountSource(pmsAccountId);
+        payload.setPmsAccountTravelAgent(pmsAccountId);
 
 //        payload.setPmsResponse(book.getPmsResponse());
 //        payload.setPmsResponseDateTime(book.getPmsResponseDateTime());
@@ -256,10 +254,6 @@ public class SalesforceController {
 //        payload.setCurrencyPrecision(rate.getCurrencyPrecision());
 //        payload.setGuaranteeCode(book.getGuaranteeCode());
 //        payload.setHapiId(book.getHapiId());
-//        payload.setPmsAccountCompany(account.getId());
-//        payload.setPmsAccountGroup(account.getId());
-//        payload.setPmsAccountSource(account.getId());
-//        payload.setPmsAccountTravelAgent(account.getId());
 //        payload.setPmsSystemId(book.getPmsSystemId());
 //        payload.setPmsSystemType(book.getPmsSystemType());
 //        payload.setPmsBlockStatus(book.getPmsBlockStatus());
@@ -334,7 +328,6 @@ public class SalesforceController {
 
         return payload;
     }
-
     public String getRecordFromSalesforce(String object, String sfAccessToken, String bookingId) throws IOException {
         return salesforceConnectorService.getDataFromSalesforce(
                 Objects.requireNonNull(object, "Salesforce Object must not be null"),
