@@ -803,12 +803,6 @@ public class SalesforceBookingResponse {
     @JsonProperty("thn__Locale_for_Documents__c")
     private String thn__Locale_for_Documents__c = null;
 
-    @JsonProperty("Check_in_time__c")
-    private String checkIn;
-
-    @JsonProperty("Check_out_time__c")
-    private String checkOut;
-
     public Attributes getAttributesObject() {
         return AttributesObject;
     }
@@ -817,21 +811,7 @@ public class SalesforceBookingResponse {
         AttributesObject = attributesObject;
     }
 
-    public String getCheckIn() {
-        return checkIn;
-    }
 
-    public void setCheckIn(String checkIn) {
-        this.checkIn = checkIn;
-    }
-
-    public String getCheckOut() {
-        return checkOut;
-    }
-
-    public void setCheckOut(String checkOut) {
-        this.checkOut = checkOut;
-    }
 // Getter Methods
 
     public Attributes getAttributes() {

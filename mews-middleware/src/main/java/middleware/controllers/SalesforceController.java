@@ -218,34 +218,44 @@ public class SalesforceController {
         payload.setCurrencyIsoCode(book.getCurrencyIsoCode());
         payload.setMyceQuote(book.getId());
         String blockId = "";
-        String blockRate = "";
         List<MewsAvailabilityBlockResponse.AvailabilityBlock> availabilityBlocks = availabilityBlockId.getAvailabilityBlocks();
-
         for (MewsAvailabilityBlockResponse.AvailabilityBlock block : availabilityBlocks) {
             blockId = block.getId();
         }
-        System.out.println("blockId"+blockId);
         payload.setPmsId(blockId);
-        payload.setPmsBlockEndTime(book.getCheckOut());
-        payload.setPmsBlockStartTime(book.getCheckOut());
+        payload.setPmsBlockEndTime(property.getCheckOut());
+        payload.setPmsBlockStartTime(property.getCheckIn());
         payload.setPmsReleaseDateTime(book.getThn__Release_Date__c());
+        payload.setFirstName(contact.getFirstName());
+        payload.setLastName(contact.getLastName());
+        payload.setNationality(contact.getThn__Nationality__c());
+        payload.setPhone(contact.getPhone());
+        payload.setRate(rate.getId());
+        payload.setCurrencyCode(rate.getCurrencyIsoCode());
+        payload.setEndShoulderDate(book.getThn__Shoulder_End_Date__c());
+        payload.setEnd(book.getThn__Departure_Date__c());
+        payload.setInventoryBlockType(book.getThn__InventoryBlockType__c());
+        payload.setSegmentationSource(book.getThn__Source__c());
+        payload.setSendToPms(book.getThn__SendToPMS__c());
+        payload.setStartShoulderDate(book.getThn__Shoulder_Start_Date__c());
+        payload.setStart(book.getThn__Arrival_Date__c());
+        payload.setUniquePMSKey(rate.getUniquePmsKey());
+        payload.setProperty(property.getId());
+        payload.setBooker(contact.getThn__Guest__c());
+
+
 //        payload.setPmsResponse(book.getPmsResponse());
 //        payload.setPmsResponseDateTime(book.getPmsResponseDateTime());
 //        payload.setPmsStatus(book.getPmsStatus());
-        payload.setRate(rate.getId());
 //        payload.setStatus(book.getStatus());
 //        payload.setAbsoluteCutoffDate(book.getAbsoluteCutoffDate());
 //        payload.setCancellationReasonCode(book.getCancellationReasonCode());
 //        payload.setCancellationReasonText(book.getCancellationReasonText());
 //        payload.setCode(book.getCode());
 //        payload.setCreatedDateTime(book.getCreatedDateTime());
-        payload.setCurrencyCode(rate.getCurrencyIsoCode());
 //        payload.setCurrencyPrecision(rate.getCurrencyPrecision());
-        payload.setEndShoulderDate(book.getThn__Shoulder_End_Date__c());
-//        payload.setEnd(book.getEnd());
 //        payload.setGuaranteeCode(book.getGuaranteeCode());
 //        payload.setHapiId(book.getHapiId());
-        payload.setInventoryBlockType(book.getThn__InventoryBlockType__c());
 //        payload.setPmsAccountCompany(account.getId());
 //        payload.setPmsAccountGroup(account.getId());
 //        payload.setPmsAccountSource(account.getId());
@@ -263,39 +273,65 @@ public class SalesforceController {
 //        payload.setSegmentationChannel(book.getSegmentationChannel());
 //        payload.setSegmentationMarket(book.getSegmentationMarket());
 //        payload.setSegmentationOrigin(book.getSegmentationOrigin());
-        payload.setSegmentationSource(book.getThn__Source__c());
-        payload.setSendToPms(book.getThn__SendToPMS__c());
-        payload.setStartShoulderDate(book.getThn__Shoulder_Start_Date__c());
-//        payload.setStart(book.getStart());
 //        payload.setType(book.getType());
-        payload.setUniquePMSKey(rate.getUniquePmsKey());
 //        payload.setSyncStatus(book.getSyncStatus());
-        payload.setProperty(property.getId());
 //        payload.setBlockStatus(book.getBlockStatus());
 //        payload.setGuaranteeCode2(book.getGuaranteeCode2());
 //        payload.setSendFailedPMSBlock(book.isSendFailedPMSBlock());
-        payload.setBooker(contact.getThn__Guest__c());
 //        payload.setCountry(contact.getCountry());
 //        payload.setEmail(contact.getEmail());
-        payload.setFirstName(contact.getFirstName());
-        payload.setLastName(contact.getLastName());
-        payload.setNationality(contact.getThn__Nationality__c());
-        payload.setPhone(contact.getPhone());
 //        payload.setPostingAccountId(account.getPostingAccountId());
 //        payload.setReservationTypeCode(book.getReservationTypeCode());
 //        payload.setSegmentationCode(book.getSegmentationCode());
         return payload;
     }
 
-    public SalesforcePMSBlockInventory createMewsBlockInventoryPayload() throws JsonProcessingException {
+    public SalesforcePMSBlockInventory createMewsBlockInventoryPayload(SalesforceBookingResponse book,SalesforceAccountResponse account, SalesforceContactResponse contact, SalesforceRateResponse rate, SalesforcePropertyResponse property,String pmsBlockRequestResponse,SalesforceQueryResponse query) throws JsonProcessingException {
         SalesforcePMSBlockInventory payload = new SalesforcePMSBlockInventory();
-        payload.setPmsBlock("a1kFg000000xTdtIAE");
+        payload.setPmsBlock(pmsBlockRequestResponse);
+        List<SalesforceQueryResponse.QuoteHotelRoom> records = query.getRecords();
+        String id = records.get(0).getSpaceArea();
+        payload.setThnRoomType(id);
+        payload.setThnUniquePMSKey(rate.getUniquePmsKey());
+        payload.setThnEnd(book.getThn__Departure_Date__c());
+        payload.setThnStart(book.getThn__Arrival_Date__c());
+
+//        payload.setThnOccupancy1Blocked();
+//        payload.setThnOccupancy1Pickedup();
+//        payload.setThnOccupancy2Blocked();
+//        payload.setThnOccupancy2Pickedup();
+//        payload.setThnOccupancy3Blocked();
+//        payload.setThnOccupancy4Blocked();
+//        payload.setThnOccupancy4Pickedup();
+//        payload.setThnRoomTypeCode();
+//        payload.setThnTotalBlocked();
+//        payload.setThnTotalPickedUp();
+//        payload.setThnZTInventoryChange();
+
+
+
         return payload;
     }
 
-    public SalesforcePMSBlockRate createPMSBlockRatesPayload() throws JsonProcessingException {
+    public SalesforcePMSBlockRate createPMSBlockRatesPayload(SalesforceBookingResponse book,SalesforceAccountResponse account, SalesforceContactResponse contact, SalesforceRateResponse rate, SalesforcePropertyResponse property,String pmsBlockRequestResponse,SalesforceQueryResponse query) throws JsonProcessingException {
         SalesforcePMSBlockRate payload = new SalesforcePMSBlockRate();
-        payload.setPmsBlock("a1kFg000000xTdtIAE");
+        payload.setPmsBlock(pmsBlockRequestResponse);
+        payload.setEnd(book.getThn__Departure_Date__c());
+        payload.setRate(rate.getId());
+        List<SalesforceQueryResponse.QuoteHotelRoom> records = query.getRecords();
+        String id = records.get(0).getSpaceArea();
+        payload.setRoomType(id);
+        payload.setStart(book.getThn__Arrival_Date__c());
+
+//        payload.setAdditionalAdultPrice(property.getAdditionalAdult());
+//        payload.setAdditionalGuestPrice(property.getAdditionalChild());
+//        payload.setOccupancy1Price(rate.getOccupancy1Price());
+//        payload.setOccupancy2Price(rate.getOccupancy2Price());
+//        payload.setOccupancy3Price(rate.getOccupancy3Price());
+//        payload.setOccupancy4Price(rate.getOccupancy4Price());
+//        payload.setRateCode();
+//        payload.setRoomTypeCode(property.getRoomTypeCode());
+
         return payload;
     }
 

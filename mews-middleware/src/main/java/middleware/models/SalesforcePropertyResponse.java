@@ -17,6 +17,47 @@ public class SalesforcePropertyResponse {
 
     @JsonProperty("thn__Email__c")
     private String businessEmail;
+    @JsonProperty("Check_in_time__c")
+    private String checkIn;
+    @JsonProperty("Extra_Adult__c")
+    private String additionalAdult;
+    @JsonProperty("Extra_Child__c")
+    private String additionalChild;
+
+    public String getAdditionalAdult() {
+        return additionalAdult;
+    }
+
+    public void setAdditionalAdult(String additionalAdult) {
+        this.additionalAdult = additionalAdult;
+    }
+
+    public String getAdditionalChild() {
+        return additionalChild;
+    }
+
+    public void setAdditionalChild(String additionalChild) {
+        this.additionalChild = additionalChild;
+    }
+
+    public String getCheckIn() {
+        return checkIn;
+    }
+
+    public void setCheckIn(String checkIn) {
+        this.checkIn = checkIn;
+    }
+
+    public String getCheckOut() {
+        return checkOut;
+    }
+
+    public void setCheckOut(String checkOut) {
+        this.checkOut = checkOut;
+    }
+
+    @JsonProperty("Check_out_time__c")
+    private String checkOut;
 
     public String getBusinessEmail() {
         return businessEmail;

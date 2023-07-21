@@ -170,16 +170,18 @@ public class BookingCommand implements Command {
                                                                     SalesforcePSMBlockRequest pmsBlockRequest = this.salesforceController.createPMSBlockPayload(booking.get(), account.get(), contact.get(), rate.get(), property.get(), availabilityBlockResponse.get());
                                                                     String pmsBlockRequestString = objectMapper.writeValueAsString(pmsBlockRequest);
                                                                     String pmsBlockRequestResponse = this.salesforceController.addRecordInSalesforce(applicationConfiguration.getSalesforcePMSBlock(), salesforceToken.getAccess_token(), pmsBlockRequestString);
+                                                                    JsonNode responseNode = objectMapper.readTree(pmsBlockRequestResponse);
                                                                     if (pmsBlockRequestResponse != null && !pmsBlockRequestResponse.isEmpty()) {
                                                                         responseData.put("Salesforce_Post_PMS_Block", pmsBlockRequestResponse);
+                                                                        String pmsBlockRequestResponseId = responseNode.get("id").asText();
                                                                         apiResponse.setStatus(ResponseStatus.SUCCESS);
-                                                                        SalesforcePMSBlockInventory mewsBlockInventoryRequest = this.salesforceController.createMewsBlockInventoryPayload();
+                                                                        SalesforcePMSBlockInventory mewsBlockInventoryRequest = this.salesforceController.createMewsBlockInventoryPayload(booking.get(), account.get(), contact.get(), rate.get(), property.get(),pmsBlockRequestResponseId,guestRooms.get());
                                                                         String mewsBlockInventoryRequestString = objectMapper.writeValueAsString(mewsBlockInventoryRequest);
                                                                         String mewsBlockInventoryResponse = this.salesforceController.addRecordInSalesforce(applicationConfiguration.getSalesforceMewsBlockinventory(), salesforceToken.getAccess_token(), mewsBlockInventoryRequestString);
                                                                         if (mewsBlockInventoryResponse != null && !mewsBlockInventoryResponse.isEmpty()) {
                                                                             responseData.put("Salesforce_Post_Mews_Block_inventories", mewsBlockInventoryResponse);
                                                                             apiResponse.setStatus(ResponseStatus.SUCCESS);
-                                                                            SalesforcePMSBlockRate salesforcePMSBlockRateRequest = this.salesforceController.createPMSBlockRatesPayload();
+                                                                            SalesforcePMSBlockRate salesforcePMSBlockRateRequest = this.salesforceController.createPMSBlockRatesPayload(booking.get(), account.get(), contact.get(), rate.get(), property.get(),pmsBlockRequestResponseId,guestRooms.get());
                                                                             String salesforcePMSBlockRateRequestString = objectMapper.writeValueAsString(salesforcePMSBlockRateRequest);
                                                                             String salesforcePMSBlockRateResponse = this.salesforceController.addRecordInSalesforce(applicationConfiguration.getSalesforcePMSBlockRates(), salesforceToken.getAccess_token(), salesforcePMSBlockRateRequestString);
                                                                             if (salesforcePMSBlockRateResponse != null && !salesforcePMSBlockRateResponse.isEmpty()) {

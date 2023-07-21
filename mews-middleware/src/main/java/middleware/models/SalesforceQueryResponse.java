@@ -10,6 +10,8 @@ public class SalesforceQueryResponse {
     @JsonProperty("done")
     private boolean done;
 
+
+
     @JsonProperty("records")
     private List<QuoteHotelRoom> records;
 
