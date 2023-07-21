@@ -70,11 +70,17 @@ public class MiddlewareCommand implements Command {
                                         if (pmsBlock != null) {
                                             SalesforceGetPMSAccountResponse pmsAccount = getPSMAccountDetails(salesforceToken, bookingId, apiResponse, responseData);
                                             if (pmsAccount != null) {
-                                                Optional<MewsGetCompanyResponse> companyMews = isCompanyExistInMews(booking, account, contact, pmsAccount, apiResponse, responseData);
-                                                if (!companyMews.isPresent()) {
-                                                    Optional<MewsCompanyResponse> createdCompany = createCompanyInMews(booking, account, contact, pmsAccount, apiResponse, responseData);
+                                                Optional<MewsGetCompanyResponse> companyMews = isCompanyExistInMews( account,  pmsAccount,  responseData);
+                                                if (companyMews.isPresent()) {
+                                                    Optional<MewsUpdateCompanyResponse> updatedCompany = updateCompanyInMews(booking, account, contact,companyMews.get(),  responseData);
                                                 } else {
-                                                    Optional<MewsUpdateCompanyResponse> updatedCompany = updateCompanyInMews(booking, account, contact, pmsAccount,companyMews.get(), apiResponse, responseData);
+                                                    Optional<MewsCompanyResponse> createdCompany = createCompanyInMews(booking, account, contact,  responseData);
+                                                }
+                                                Optional<MewsGetBookerResponse> BookerMews = isBookerExistInMews( account, contact, pmsAccount,  responseData);
+                                                if (BookerMews.isPresent()) {
+                                                    Optional<MewsUpdateBookerResponse> updatedBooker = updateBookerInMews(booking, account, contact, BookerMews.get(),  responseData);
+                                                } else {
+                                                    Optional<MewsBookerResponse> createdBooker = createBookerInMews(booking, account, contact,  responseData);
                                                 }
                                             }
                                         }
@@ -196,7 +202,7 @@ public class MiddlewareCommand implements Command {
         }
     }
 
-    private Optional<MewsGetCompanyResponse> isCompanyExistInMews(SalesforceBookingResponse booking, SalesforceAccountResponse account, SalesforceContactResponse contact, SalesforceGetPMSAccountResponse pmsAccount, ApiResponse apiResponse, Map<String, Object> responseData) throws Exception {
+    private Optional<MewsGetCompanyResponse> isCompanyExistInMews( SalesforceAccountResponse account, SalesforceGetPMSAccountResponse pmsAccount, Map<String, Object> responseData) throws Exception {
         Optional<MewsGetCompanyResponse> response = Optional.empty();
         if (pmsAccount.getTotalSize() > 0) {
             MewsGetCompanyRequest request = mewsController.createGetCompanyPayload(account);
@@ -211,7 +217,7 @@ public class MiddlewareCommand implements Command {
         return response;
     }
 
-    private Optional<MewsCompanyResponse> createCompanyInMews(SalesforceBookingResponse booking, SalesforceAccountResponse account, SalesforceContactResponse contact, SalesforceGetPMSAccountResponse pmsAccount, ApiResponse apiResponse, Map<String, Object> responseData) throws Exception {
+    private Optional<MewsCompanyResponse> createCompanyInMews(SalesforceBookingResponse booking, SalesforceAccountResponse account, SalesforceContactResponse contact,Map<String, Object> responseData) throws Exception {
         Optional<MewsCompanyResponse> createCompany;
         MewsCompanyRequest mewsCompanyRequest = mewsController.createCompanyPayload(booking, account, contact);
         createCompany = this.responseParser.addCompanyInMews(mewsCompanyRequest);
@@ -221,43 +227,52 @@ public class MiddlewareCommand implements Command {
         return createCompany;
     }
 
-    private Optional<MewsUpdateCompanyResponse> updateCompanyInMews(SalesforceBookingResponse booking, SalesforceAccountResponse account, SalesforceContactResponse contact, SalesforceGetPMSAccountResponse pmsAccount,MewsGetCompanyResponse companyMews ,ApiResponse apiResponse, Map<String, Object> responseData) throws Exception {
+    private Optional<MewsUpdateCompanyResponse> updateCompanyInMews(SalesforceBookingResponse booking, SalesforceAccountResponse account, SalesforceContactResponse contact,MewsGetCompanyResponse companyMews ,Map<String, Object> responseData) throws Exception {
         Optional<MewsUpdateCompanyResponse> updateCompany;
-        MewsUpdateCompanyRequest mewsCompanyRequest = mewsController.createUpdateCompanyPayload(account, booking, contact, companyMews);
-        updateCompany = this.responseParser.updateCompanyInMews(mewsCompanyRequest);
+        MewsUpdateCompanyRequest request = mewsController.createUpdateCompanyPayload(account, booking, contact, companyMews);
+        updateCompany = this.responseParser.updateCompanyInMews(request);
         if (updateCompany.isPresent()) {
             responseData.put("Mews_Update_Company", updateCompany.get());
         }
         return updateCompany;
     }
 
-    private void isBookerExistInMews(SalesforceBookingResponse booking, SalesforceAccountResponse account, SalesforceContactResponse contact, SalesforceGetPMSAccountResponse pmsAccount, ApiResponse apiResponse, Map<String, Object> responseData) throws Exception {
-
-        Optional<MewsUpdateBookerResponse> updateBooker = Optional.empty();
-        Optional<MewsBookerResponse> createBooker = Optional.empty();
+    private Optional<MewsGetBookerResponse> isBookerExistInMews( SalesforceAccountResponse account, SalesforceContactResponse contact, SalesforceGetPMSAccountResponse pmsAccount, Map<String, Object> responseData) throws Exception {
+        Optional<MewsGetBookerResponse> response = Optional.empty();
         if (pmsAccount.getTotalSize() > 0) {
-            MewsGetBookerRequest mewsGetBookerRequest = mewsController.createGetBookerPayload(account, contact);
-            Optional<MewsGetBookerResponse> response = this.responseParser.getBookerFromMews(mewsGetBookerRequest);
+            MewsGetBookerRequest request = mewsController.createGetBookerPayload(account, contact);
+            response = this.responseParser.getBookerFromMews(request);
             if (response.isPresent()) {
                 MewsGetBookerResponse result = response.get();
                 responseData.put("Mews_Get_Booker", response.get());
-                if (result.getCustomers().length > 0) {
-                    MewsUpdateBookerRequest mewsBookerRequest = mewsController.createUpdateBookerPayload(booking, account, contact, response.get());
-                    updateBooker = this.responseParser.updateBookerInMews(mewsBookerRequest);
-                }
+            } else {
+                responseData.put("Mews_Get_Booker", "No Booker found.");
             }
-        } else {
-            MewsBookerRequest mewsBookerRequest = this.mewsController.createBookerPayload(booking, account, contact);
-            createBooker = this.responseParser.addBookerInMews(mewsBookerRequest);
         }
+        return response;
+    }
 
-        if (updateBooker.isPresent()) {
-            responseData.put("Mews_Update_Booker", updateBooker.get());
-        }
+    private Optional<MewsBookerResponse> createBookerInMews(SalesforceBookingResponse booking, SalesforceAccountResponse account, SalesforceContactResponse contact,  Map<String, Object> responseData) throws Exception {
+        Optional<MewsBookerResponse> createBooker;
+        MewsBookerRequest request = mewsController.createBookerPayload(booking, account, contact);
+        createBooker = this.responseParser.addBookerInMews(request);
         if (createBooker.isPresent()) {
             responseData.put("Mews_Create_Booker", createBooker.get());
         }
+        return createBooker;
     }
+
+    private Optional<MewsUpdateBookerResponse> updateBookerInMews(SalesforceBookingResponse booking, SalesforceAccountResponse account, SalesforceContactResponse contact,MewsGetBookerResponse fetchedBooker, Map<String, Object> responseData) throws Exception {
+        Optional<MewsUpdateBookerResponse> updateBooker;
+        MewsUpdateBookerRequest request = mewsController.createUpdateBookerPayload(booking, account, contact, fetchedBooker);
+        updateBooker = this.responseParser.updateBookerInMews(request);
+        if (updateBooker.isPresent()) {
+            responseData.put("Mews_Update_Booker", updateBooker.get());
+        }
+        return updateBooker;
+    }
+
+
 
     private void setSuccessStatus(ApiResponse apiResponse, String message) {
         apiResponse.setStatus(ResponseStatus.FAILED);

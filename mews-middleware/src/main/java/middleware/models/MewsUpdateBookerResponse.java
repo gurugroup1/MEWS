@@ -1,576 +1,435 @@
 package middleware.models;
-
 import com.fasterxml.jackson.annotation.JsonProperty;
-import java.util.List;
 
 public class MewsUpdateBookerResponse {
+    @JsonProperty("Companies")
+    private Company[] companies;
 
-    @JsonProperty("Id")
-    private String id;
+    @JsonProperty("Cursor")
+    private String cursor;
 
-    @JsonProperty("ChainId")
-    private String chainId;
-
-    @JsonProperty("Number")
-    private String number;
-
-    @JsonProperty("Title")
-    private Object title;
-
-    @JsonProperty("Sex")
-    private Object sex;
-
-    @JsonProperty("Gender")
-    private Object gender;
-
-    @JsonProperty("FirstName")
-    private String firstName;
-
-    @JsonProperty("LastName")
-    private String lastName;
-
-    @JsonProperty("SecondLastName")
-    private String secondLastName;
+    public Company[] getCompanies() {
+        return companies;
+    }
 
-    @JsonProperty("NationalityCode")
-    private Object nationalityCode;
+    public void setCompanies(Company[] companies) {
+        this.companies = companies;
+    }
 
-    @JsonProperty("LanguageCode")
-    private Object languageCode;
+    public String getCursor() {
+        return cursor;
+    }
 
-    @JsonProperty("BirthDate")
-    private String birthDate;
+    public void setCursor(String cursor) {
+        this.cursor = cursor;
+    }
 
-    @JsonProperty("BirthPlace")
-    private String birthPlace;
+    public static class Company {
+        @JsonProperty("Id")
+        private String id;
 
-    @JsonProperty("CitizenNumber")
-    private Object citizenNumber;
+        @JsonProperty("ChainId")
+        private String chainId;
 
-    @JsonProperty("MotherName")
-    private Object motherName;
+        @JsonProperty("Name")
+        private String name;
 
-    @JsonProperty("FatherName")
-    private Object fatherName;
+        @JsonProperty("MotherCompanyId")
+        private String motherCompanyId;
 
-    @JsonProperty("Occupation")
-    private Object occupation;
+        @JsonProperty("InvoicingEmail")
+        private String invoicingEmail;
 
-    @JsonProperty("Email")
-    private String email;
+        @JsonProperty("WebsiteUrl")
+        private String websiteUrl;
 
-    @JsonProperty("Phone")
-    private String phone;
+        @JsonProperty("InvoiceDueInterval")
+        private Integer invoiceDueInterval;
 
-    @JsonProperty("TaxIdentificationNumber")
-    private Object taxIdentificationNumber;
+        @JsonProperty("NchClassifications")
+        private NchClassifications nchClassifications;
 
-    @JsonProperty("LoyaltyCode")
-    private String loyaltyCode;
+        @JsonProperty("Options")
+        private Options options;
 
-    @JsonProperty("AccountingCode")
-    private Object accountingCode;
+        @JsonProperty("CreditRating")
+        private CreditRating creditRating;
 
-    @JsonProperty("BillingCode")
-    private Object billingCode;
+        @JsonProperty("Department")
+        private String department;
 
-    @JsonProperty("Notes")
-    private Object notes;
+        @JsonProperty("DunsNumber")
+        private String dunsNumber;
 
-    @JsonProperty("CarRegistrationNumber")
-    private Object carRegistrationNumber;
+        @JsonProperty("ReferenceIdentifier")
+        private String referenceIdentifier;
 
-    @JsonProperty("CreatedUtc")
-    private String createdUtc;
+        @JsonProperty("AccountingCode")
+        private String accountingCode;
 
-    @JsonProperty("UpdatedUtc")
-    private String updatedUtc;
+        @JsonProperty("AdditionalTaxIdentifier")
+        private String additionalTaxIdentifier;
 
-    @JsonProperty("Passport")
-    private Object passport;
+        @JsonProperty("BillingCode")
+        private String billingCode;
 
-    @JsonProperty("IdentityCard")
-    private Object identityCard;
+        @JsonProperty("Contact")
+        private String contact;
 
-    @JsonProperty("Visa")
-    private Object visa;
+        @JsonProperty("ContactPerson")
+        private String contactPerson;
 
-    @JsonProperty("DriversLicense")
-    private Object driversLicense;
+        @JsonProperty("ElectronicInvoiceIdentifier")
+        private String electronicInvoiceIdentifier;
 
-    @JsonProperty("Address")
-    private Address address;
+        @JsonProperty("Identifier")
+        private String identifier;
 
-    @JsonProperty("AddressId")
-    private String addressId;
+        @JsonProperty("Iata")
+        private String iata;
 
-    @JsonProperty("Classifications")
-    private List<Object> classifications;
+        @JsonProperty("IsActive")
+        private boolean isActive;
 
-    @JsonProperty("Options")
-    private List<String> options;
+        @JsonProperty("Notes")
+        private String notes;
 
-    @JsonProperty("CategoryId")
-    private Object categoryId;
+        @JsonProperty("Number")
+        private int number;
 
-    @JsonProperty("BirthDateUtc")
-    private String birthDateUtc;
+        @JsonProperty("TaxIdentifier")
+        private String taxIdentifier;
 
-    @JsonProperty("ItalianDestinationCode")
-    private Object italianDestinationCode;
+        @JsonProperty("Telephone")
+        private String telephone;
 
-    @JsonProperty("ItalianFiscalCode")
-    private Object italianFiscalCode;
+        @JsonProperty("Address")
+        private Address address;
 
-    @JsonProperty("CompanyId")
-    private Object companyId;
+        @JsonProperty("AddressId")
+        private String addressId;
 
-    @JsonProperty("MergeTargetId")
-    private Object mergeTargetId;
+        @JsonProperty("TaxIdentificationNumber")
+        private String taxIdentificationNumber;
 
-    @JsonProperty("ActivityState")
-    private String activityState;
+        @JsonProperty("ExternalIdentifier")
+        private String externalIdentifier;
 
-    public String getId() {
-        return id;
-    }
+        public String getId() {
+            return id;
+        }
 
-    public void setId(String id) {
-        this.id = id;
-    }
+        public void setId(String id) {
+            this.id = id;
+        }
 
-    public String getChainId() {
-        return chainId;
-    }
+        public String getChainId() {
+            return chainId;
+        }
 
-    public void setChainId(String chainId) {
-        this.chainId = chainId;
-    }
+        public void setChainId(String chainId) {
+            this.chainId = chainId;
+        }
 
-    public String getNumber() {
-        return number;
-    }
+        public String getName() {
+            return name;
+        }
 
-    public void setNumber(String number) {
-        this.number = number;
-    }
+        public void setName(String name) {
+            this.name = name;
+        }
 
-    public Object getTitle() {
-        return title;
-    }
+        public String getMotherCompanyId() {
+            return motherCompanyId;
+        }
 
-    public void setTitle(Object title) {
-        this.title = title;
-    }
+        public void setMotherCompanyId(String motherCompanyId) {
+            this.motherCompanyId = motherCompanyId;
+        }
 
-    public Object getSex() {
-        return sex;
-    }
+        public String getInvoicingEmail() {
+            return invoicingEmail;
+        }
 
-    public void setSex(Object sex) {
-        this.sex = sex;
-    }
+        public void setInvoicingEmail(String invoicingEmail) {
+            this.invoicingEmail = invoicingEmail;
+        }
 
-    public Object getGender() {
-        return gender;
-    }
+        public String getWebsiteUrl() {
+            return websiteUrl;
+        }
 
-    public void setGender(Object gender) {
-        this.gender = gender;
-    }
+        public void setWebsiteUrl(String websiteUrl) {
+            this.websiteUrl = websiteUrl;
+        }
 
-    public String getFirstName() {
-        return firstName;
-    }
+        public Integer getInvoiceDueInterval() {
+            return invoiceDueInterval;
+        }
 
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
+        public void setInvoiceDueInterval(Integer invoiceDueInterval) {
+            this.invoiceDueInterval = invoiceDueInterval;
+        }
 
-    public String getLastName() {
-        return lastName;
-    }
+        public NchClassifications getNchClassifications() {
+            return nchClassifications;
+        }
 
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
+        public void setNchClassifications(NchClassifications nchClassifications) {
+            this.nchClassifications = nchClassifications;
+        }
 
-    public String getSecondLastName() {
-        return secondLastName;
-    }
+        public Options getOptions() {
+            return options;
+        }
 
-    public void setSecondLastName(String secondLastName) {
-        this.secondLastName = secondLastName;
-    }
+        public void setOptions(Options options) {
+            this.options = options;
+        }
 
-    public Object getNationalityCode() {
-        return nationalityCode;
-    }
+        public CreditRating getCreditRating() {
+            return creditRating;
+        }
 
-    public void setNationalityCode(Object nationalityCode) {
-        this.nationalityCode = nationalityCode;
-    }
+        public void setCreditRating(CreditRating creditRating) {
+            this.creditRating = creditRating;
+        }
 
-    public Object getLanguageCode() {
-        return languageCode;
-    }
+        public String getDepartment() {
+            return department;
+        }
 
-    public void setLanguageCode(Object languageCode) {
-        this.languageCode = languageCode;
-    }
+        public void setDepartment(String department) {
+            this.department = department;
+        }
 
-    public String getBirthDate() {
-        return birthDate;
-    }
+        public String getDunsNumber() {
+            return dunsNumber;
+        }
 
-    public void setBirthDate(String birthDate) {
-        this.birthDate = birthDate;
-    }
+        public void setDunsNumber(String dunsNumber) {
+            this.dunsNumber = dunsNumber;
+        }
 
-    public String getBirthPlace() {
-        return birthPlace;
-    }
+        public String getReferenceIdentifier() {
+            return referenceIdentifier;
+        }
 
-    public void setBirthPlace(String birthPlace) {
-        this.birthPlace = birthPlace;
-    }
+        public void setReferenceIdentifier(String referenceIdentifier) {
+            this.referenceIdentifier = referenceIdentifier;
+        }
 
-    public Object getCitizenNumber() {
-        return citizenNumber;
-    }
+        public String getAccountingCode() {
+            return accountingCode;
+        }
 
-    public void setCitizenNumber(Object citizenNumber) {
-        this.citizenNumber = citizenNumber;
-    }
+        public void setAccountingCode(String accountingCode) {
+            this.accountingCode = accountingCode;
+        }
 
-    public Object getMotherName() {
-        return motherName;
-    }
+        public String getAdditionalTaxIdentifier() {
+            return additionalTaxIdentifier;
+        }
 
-    public void setMotherName(Object motherName) {
-        this.motherName = motherName;
-    }
+        public void setAdditionalTaxIdentifier(String additionalTaxIdentifier) {
+            this.additionalTaxIdentifier = additionalTaxIdentifier;
+        }
 
-    public Object getFatherName() {
-        return fatherName;
-    }
+        public String getBillingCode() {
+            return billingCode;
+        }
 
-    public void setFatherName(Object fatherName) {
-        this.fatherName = fatherName;
-    }
+        public void setBillingCode(String billingCode) {
+            this.billingCode = billingCode;
+        }
 
-    public Object getOccupation() {
-        return occupation;
-    }
+        public String getContact() {
+            return contact;
+        }
 
-    public void setOccupation(Object occupation) {
-        this.occupation = occupation;
-    }
+        public void setContact(String contact) {
+            this.contact = contact;
+        }
 
-    public String getEmail() {
-        return email;
-    }
+        public String getContactPerson() {
+            return contactPerson;
+        }
 
-    public void setEmail(String email) {
-        this.email = email;
-    }
+        public void setContactPerson(String contactPerson) {
+            this.contactPerson = contactPerson;
+        }
 
-    public String getPhone() {
-        return phone;
-    }
+        public String getElectronicInvoiceIdentifier() {
+            return electronicInvoiceIdentifier;
+        }
 
-    public void setPhone(String phone) {
-        this.phone = phone;
-    }
+        public void setElectronicInvoiceIdentifier(String electronicInvoiceIdentifier) {
+            this.electronicInvoiceIdentifier = electronicInvoiceIdentifier;
+        }
 
-    public Object getTaxIdentificationNumber() {
-        return taxIdentificationNumber;
-    }
+        public String getIdentifier() {
+            return identifier;
+        }
 
-    public void setTaxIdentificationNumber(Object taxIdentificationNumber) {
-        this.taxIdentificationNumber = taxIdentificationNumber;
-    }
+        public void setIdentifier(String identifier) {
+            this.identifier = identifier;
+        }
 
-    public String getLoyaltyCode() {
-        return loyaltyCode;
-    }
+        public String getIata() {
+            return iata;
+        }
 
-    public void setLoyaltyCode(String loyaltyCode) {
-        this.loyaltyCode = loyaltyCode;
-    }
+        public void setIata(String iata) {
+            this.iata = iata;
+        }
 
-    public Object getAccountingCode() {
-        return accountingCode;
-    }
+        public boolean isActive() {
+            return isActive;
+        }
 
-    public void setAccountingCode(Object accountingCode) {
-        this.accountingCode = accountingCode;
-    }
+        public void setActive(boolean active) {
+            isActive = active;
+        }
 
-    public Object getBillingCode() {
-        return billingCode;
-    }
+        public String getNotes() {
+            return notes;
+        }
 
-    public void setBillingCode(Object billingCode) {
-        this.billingCode = billingCode;
-    }
+        public void setNotes(String notes) {
+            this.notes = notes;
+        }
 
-    public Object getNotes() {
-        return notes;
-    }
+        public int getNumber() {
+            return number;
+        }
 
-    public void setNotes(Object notes) {
-        this.notes = notes;
-    }
+        public void setNumber(int number) {
+            this.number = number;
+        }
 
-    public Object getCarRegistrationNumber() {
-        return carRegistrationNumber;
-    }
+        public String getTaxIdentifier() {
+            return taxIdentifier;
+        }
 
-    public void setCarRegistrationNumber(Object carRegistrationNumber) {
-        this.carRegistrationNumber = carRegistrationNumber;
-    }
+        public void setTaxIdentifier(String taxIdentifier) {
+            this.taxIdentifier = taxIdentifier;
+        }
 
-    public String getCreatedUtc() {
-        return createdUtc;
-    }
+        public String getTelephone() {
+            return telephone;
+        }
 
-    public void setCreatedUtc(String createdUtc) {
-        this.createdUtc = createdUtc;
-    }
+        public void setTelephone(String telephone) {
+            this.telephone = telephone;
+        }
 
-    public String getUpdatedUtc() {
-        return updatedUtc;
-    }
+        public Address getAddress() {
+            return address;
+        }
 
-    public void setUpdatedUtc(String updatedUtc) {
-        this.updatedUtc = updatedUtc;
-    }
+        public void setAddress(Address address) {
+            this.address = address;
+        }
 
-    public Object getPassport() {
-        return passport;
-    }
+        public String getAddressId() {
+            return addressId;
+        }
 
-    public void setPassport(Object passport) {
-        this.passport = passport;
-    }
+        public void setAddressId(String addressId) {
+            this.addressId = addressId;
+        }
 
-    public Object getIdentityCard() {
-        return identityCard;
-    }
+        public String getTaxIdentificationNumber() {
+            return taxIdentificationNumber;
+        }
 
-    public void setIdentityCard(Object identityCard) {
-        this.identityCard = identityCard;
-    }
+        public void setTaxIdentificationNumber(String taxIdentificationNumber) {
+            this.taxIdentificationNumber = taxIdentificationNumber;
+        }
 
-    public Object getVisa() {
-        return visa;
-    }
+        public String getExternalIdentifier() {
+            return externalIdentifier;
+        }
 
-    public void setVisa(Object visa) {
-        this.visa = visa;
-    }
+        public void setExternalIdentifier(String externalIdentifier) {
+            this.externalIdentifier = externalIdentifier;
+        }
 
-    public Object getDriversLicense() {
-        return driversLicense;
-    }
+        // Getters and Setters for all the fields...
 
-    public void setDriversLicense(Object driversLicense) {
-        this.driversLicense = driversLicense;
-    }
+        // Nested Classes
+        public static class NchClassifications {
+            @JsonProperty("Corporate")
+            private boolean corporate;
 
-    public Address getAddress() {
-        return address;
-    }
+            @JsonProperty("Internal")
+            private boolean internal;
 
-    public void setAddress(Address address) {
-        this.address = address;
-    }
+            @JsonProperty("Private")
+            private boolean privateCompany;
 
-    public String getAddressId() {
-        return addressId;
-    }
+            @JsonProperty("OnlineTravelAgency")
+            private boolean onlineTravelAgency;
 
-    public void setAddressId(String addressId) {
-        this.addressId = addressId;
-    }
+            @JsonProperty("GlobalDistributionSystem")
+            private boolean globalDistributionSystem;
 
-    public List<Object> getClassifications() {
-        return classifications;
-    }
+            @JsonProperty("Marketing")
+            private boolean marketing;
 
-    public void setClassifications(List<Object> classifications) {
-        this.classifications = classifications;
-    }
+            @JsonProperty("Inactive")
+            private boolean inactive;
 
-    public List<String> getOptions() {
-        return options;
-    }
+            // Getters and Setters for all the fields...
+        }
 
-    public void setOptions(List<String> options) {
-        this.options = options;
-    }
+        public static class Options {
+            @JsonProperty("Invoiceable")
+            private boolean invoiceable;
 
-    public Object getCategoryId() {
-        return categoryId;
-    }
+            @JsonProperty("AddFeesToInvoices")
+            private boolean addFeesToInvoices;
 
-    public void setCategoryId(Object categoryId) {
-        this.categoryId = categoryId;
-    }
+            // Getters and Setters for all the fields...
+        }
 
-    public String getBirthDateUtc() {
-        return birthDateUtc;
-    }
+        public static class CreditRating {
+            @JsonProperty("Basic")
+            private String basic;
 
-    public void setBirthDateUtc(String birthDateUtc) {
-        this.birthDateUtc = birthDateUtc;
-    }
+            // Getters and Setters for all the fields...
+        }
 
-    public Object getItalianDestinationCode() {
-        return italianDestinationCode;
-    }
+        public static class Address {
+            @JsonProperty("Id")
+            private String id;
 
-    public void setItalianDestinationCode(Object italianDestinationCode) {
-        this.italianDestinationCode = italianDestinationCode;
-    }
+            @JsonProperty("Line1")
+            private String line1;
 
-    public Object getItalianFiscalCode() {
-        return italianFiscalCode;
-    }
+            @JsonProperty("Line2")
+            private String line2;
 
-    public void setItalianFiscalCode(Object italianFiscalCode) {
-        this.italianFiscalCode = italianFiscalCode;
-    }
+            @JsonProperty("City")
+            private String city;
 
-    public Object getCompanyId() {
-        return companyId;
-    }
+            @JsonProperty("PostalCode")
+            private String postalCode;
 
-    public void setCompanyId(Object companyId) {
-        this.companyId = companyId;
-    }
+            @JsonProperty("CountryCode")
+            private String countryCode;
 
-    public Object getMergeTargetId() {
-        return mergeTargetId;
-    }
+            @JsonProperty("CountrySubdivisionCode")
+            private String countrySubdivisionCode;
 
-    public void setMergeTargetId(Object mergeTargetId) {
-        this.mergeTargetId = mergeTargetId;
-    }
+            @JsonProperty("Latitude")
+            private String latitude;
 
-    public String getActivityState() {
-        return activityState;
-    }
+            @JsonProperty("Longitude")
+            private String longitude;
 
-    public void setActivityState(String activityState) {
-        this.activityState = activityState;
+            // Getters and Setters for all the fields...
+        }
     }
-
-    //Getters and Setters
-    //...
 }
 
-class Address {
-    @JsonProperty("Id")
-    private String id;
-
-    @JsonProperty("Line1")
-    private Object line1;
-
-    @JsonProperty("Line2")
-    private Object line2;
-
-    @JsonProperty("City")
-    private Object city;
-
-    @JsonProperty("PostalCode")
-    private Object postalCode;
-
-    @JsonProperty("CountryCode")
-    private Object countryCode;
-
-    @JsonProperty("CountrySubdivisionCode")
-    private Object countrySubdivisionCode;
-
-    @JsonProperty("Latitude")
-    private Object latitude;
-
-    @JsonProperty("Longitude")
-    private Object longitude;
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public Object getLine1() {
-        return line1;
-    }
-
-    public void setLine1(Object line1) {
-        this.line1 = line1;
-    }
-
-    public Object getLine2() {
-        return line2;
-    }
-
-    public void setLine2(Object line2) {
-        this.line2 = line2;
-    }
-
-    public Object getCity() {
-        return city;
-    }
-
-    public void setCity(Object city) {
-        this.city = city;
-    }
-
-    public Object getPostalCode() {
-        return postalCode;
-    }
-
-    public void setPostalCode(Object postalCode) {
-        this.postalCode = postalCode;
-    }
-
-    public Object getCountryCode() {
-        return countryCode;
-    }
-
-    public void setCountryCode(Object countryCode) {
-        this.countryCode = countryCode;
-    }
-
-    public Object getCountrySubdivisionCode() {
-        return countrySubdivisionCode;
-    }
-
-    public void setCountrySubdivisionCode(Object countrySubdivisionCode) {
-        this.countrySubdivisionCode = countrySubdivisionCode;
-    }
-
-    public Object getLatitude() {
-        return latitude;
-    }
-
-    public void setLatitude(Object latitude) {
-        this.latitude = latitude;
-    }
-
-    public Object getLongitude() {
-        return longitude;
-    }
-
-    public void setLongitude(Object longitude) {
-        this.longitude = longitude;
-    }
-
-    //Getters and Setters
-    //...
-}

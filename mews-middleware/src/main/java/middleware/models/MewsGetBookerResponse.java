@@ -1,17 +1,44 @@
 package middleware.models;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.time.LocalDateTime;
+import java.util.List;
 
 public class MewsGetBookerResponse {
     @JsonProperty("Customers")
-    private Customer[] customers;
+    private List<Customer> customers;
 
     @JsonProperty("Documents")
-    private Document[] documents;
+    private List<Object> documents;
 
     @JsonProperty("Cursor")
     private String cursor;
+
+    public List<Customer> getCustomers() {
+        return customers;
+    }
+
+    public void setCustomers(List<Customer> customers) {
+        this.customers = customers;
+    }
+
+    public List<Object> getDocuments() {
+        return documents;
+    }
+
+    public void setDocuments(List<Object> documents) {
+        this.documents = documents;
+    }
+
+    public String getCursor() {
+        return cursor;
+    }
+
+    public void setCursor(String cursor) {
+        this.cursor = cursor;
+    }
 
     public static class Customer {
         @JsonProperty("Id")
@@ -89,11 +116,13 @@ public class MewsGetBookerResponse {
         @JsonProperty("CarRegistrationNumber")
         private String carRegistrationNumber;
 
-        @JsonProperty("CreatedUtc")
-        private LocalDateTime createdUtc;
+//        @JsonProperty("CreatedUtc")
+//        @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss'Z'")
+//        private LocalDateTime createdUtc;
 
-        @JsonProperty("UpdatedUtc")
-        private LocalDateTime updatedUtc;
+//        @JsonProperty("UpdatedUtc")
+//        @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss'Z'")
+//        private LocalDateTime updatedUtc;
 
         @JsonProperty("Passport")
         private String passport;
@@ -114,16 +143,16 @@ public class MewsGetBookerResponse {
         private String addressId;
 
         @JsonProperty("Classifications")
-        private String[] classifications;
+        private List<String> classifications;
 
         @JsonProperty("Options")
-        private String[] options;
+        private List<String> options;
 
         @JsonProperty("CategoryId")
         private String categoryId;
 
         @JsonProperty("BirthDateUtc")
-        private LocalDateTime birthDateUtc;
+        private String birthDateUtc;
 
         @JsonProperty("ItalianDestinationCode")
         private String italianDestinationCode;
@@ -139,8 +168,6 @@ public class MewsGetBookerResponse {
 
         @JsonProperty("ActivityState")
         private String activityState;
-
-        // Getters and setters for the fields
 
         public String getId() {
             return id;
@@ -342,21 +369,21 @@ public class MewsGetBookerResponse {
             this.carRegistrationNumber = carRegistrationNumber;
         }
 
-        public LocalDateTime getCreatedUtc() {
-            return createdUtc;
-        }
-
-        public void setCreatedUtc(LocalDateTime createdUtc) {
-            this.createdUtc = createdUtc;
-        }
-
-        public LocalDateTime getUpdatedUtc() {
-            return updatedUtc;
-        }
-
-        public void setUpdatedUtc(LocalDateTime updatedUtc) {
-            this.updatedUtc = updatedUtc;
-        }
+//        public LocalDateTime getCreatedUtc() {
+//            return createdUtc;
+//        }
+//
+//        public void setCreatedUtc(LocalDateTime createdUtc) {
+//            this.createdUtc = createdUtc;
+//        }
+//
+//        public LocalDateTime getUpdatedUtc() {
+//            return updatedUtc;
+//        }
+//
+//        public void setUpdatedUtc(LocalDateTime updatedUtc) {
+//            this.updatedUtc = updatedUtc;
+//        }
 
         public String getPassport() {
             return passport;
@@ -406,19 +433,19 @@ public class MewsGetBookerResponse {
             this.addressId = addressId;
         }
 
-        public String[] getClassifications() {
+        public List<String> getClassifications() {
             return classifications;
         }
 
-        public void setClassifications(String[] classifications) {
+        public void setClassifications(List<String> classifications) {
             this.classifications = classifications;
         }
 
-        public String[] getOptions() {
+        public List<String> getOptions() {
             return options;
         }
 
-        public void setOptions(String[] options) {
+        public void setOptions(List<String> options) {
             this.options = options;
         }
 
@@ -430,11 +457,11 @@ public class MewsGetBookerResponse {
             this.categoryId = categoryId;
         }
 
-        public LocalDateTime getBirthDateUtc() {
+        public String getBirthDateUtc() {
             return birthDateUtc;
         }
 
-        public void setBirthDateUtc(LocalDateTime birthDateUtc) {
+        public void setBirthDateUtc(String birthDateUtc) {
             this.birthDateUtc = birthDateUtc;
         }
 
@@ -477,10 +504,8 @@ public class MewsGetBookerResponse {
         public void setActivityState(String activityState) {
             this.activityState = activityState;
         }
-    }
 
-    public static class Document {
-        // Define the fields for Document here (if any)
+        // Getters and Setters for all the fields...
     }
 
     public static class Address {
@@ -506,109 +531,11 @@ public class MewsGetBookerResponse {
         private String countrySubdivisionCode;
 
         @JsonProperty("Latitude")
-        private Double latitude;
+        private String latitude;
 
         @JsonProperty("Longitude")
-        private Double longitude;
+        private String longitude;
 
-        // Getters and setters for Address fields
-
-        public String getId() {
-            return id;
-        }
-
-        public void setId(String id) {
-            this.id = id;
-        }
-
-        public String getLine1() {
-            return line1;
-        }
-
-        public void setLine1(String line1) {
-            this.line1 = line1;
-        }
-
-        public String getLine2() {
-            return line2;
-        }
-
-        public void setLine2(String line2) {
-            this.line2 = line2;
-        }
-
-        public String getCity() {
-            return city;
-        }
-
-        public void setCity(String city) {
-            this.city = city;
-        }
-
-        public String getPostalCode() {
-            return postalCode;
-        }
-
-        public void setPostalCode(String postalCode) {
-            this.postalCode = postalCode;
-        }
-
-        public String getCountryCode() {
-            return countryCode;
-        }
-
-        public void setCountryCode(String countryCode) {
-            this.countryCode = countryCode;
-        }
-
-        public String getCountrySubdivisionCode() {
-            return countrySubdivisionCode;
-        }
-
-        public void setCountrySubdivisionCode(String countrySubdivisionCode) {
-            this.countrySubdivisionCode = countrySubdivisionCode;
-        }
-
-        public Double getLatitude() {
-            return latitude;
-        }
-
-        public void setLatitude(Double latitude) {
-            this.latitude = latitude;
-        }
-
-        public Double getLongitude() {
-            return longitude;
-        }
-
-        public void setLongitude(Double longitude) {
-            this.longitude = longitude;
-        }
-    }
-
-    // Getters and setters for the fields
-
-    public Customer[] getCustomers() {
-        return customers;
-    }
-
-    public void setCustomers(Customer[] customers) {
-        this.customers = customers;
-    }
-
-    public Document[] getDocuments() {
-        return documents;
-    }
-
-    public void setDocuments(Document[] documents) {
-        this.documents = documents;
-    }
-
-    public String getCursor() {
-        return cursor;
-    }
-
-    public void setCursor(String cursor) {
-        this.cursor = cursor;
+        // Getters and Setters for all the fields...
     }
 }

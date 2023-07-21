@@ -65,6 +65,9 @@ public class MewsConnectorService {
                 .addHeader("Content-Type", "application/json")
                 .addHeader("Authorization", "Bearer " + applicationConfiguration.getMewsAccessToken())
                 .build();
+
+        System.out.println(jsonStr);
+        System.out.println(request.url());
         try (Response calloutResponse = httpClient.newCall(request).execute()) {
             if (!calloutResponse.isSuccessful()) {
                 String errorMessage = "Error in " + object + " call: " + calloutResponse.code() + " - " + calloutResponse.message();
@@ -122,8 +125,8 @@ public class MewsConnectorService {
                 .addHeader("Content-Type", "application/json")
                 .addHeader("Authorization", "Bearer " + applicationConfiguration.getMewsAccessToken())
                 .build();
-                System.out.println(jsonStr);
-
+        System.out.println(jsonStr);
+        System.out.println(request.url());
         try (Response calloutResponse = httpClient.newCall(request).execute()) {
             String responseBody = calloutResponse.body().string();
             if (!calloutResponse.isSuccessful()) {

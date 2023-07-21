@@ -92,27 +92,32 @@ public class MewsController {
         request.setClient(applicationConfiguration.getMewsClientName());
         request.setAccessToken(applicationConfiguration.getMewsAccessToken());
         request.setClientToken(applicationConfiguration.getMewsClientToken());
-        List<String> email = new ArrayList<>();
-        email.add(contact.getEmail());
-        request.setEmail(email);
+        List<String> emailList = new ArrayList<>();
+        String email = contact.getEmail();
+        System.out.println(email);
+        if (email != null && !email.isEmpty()) {
+            emailList.add(email);
+        }
+        request.setEmail(emailList);
 
         MewsGetBookerRequest.Limitation limitation = new MewsGetBookerRequest.Limitation();
-        limitation.setCount(10);
+        limitation.setCount(1);
         request.setLimitation(limitation);
-
+        System.out.println(request.getEmail());
         return request;
     }
-    public MewsUpdateBookerRequest createUpdateBookerPayload(SalesforceBookingResponse book,SalesforceAccountResponse account,SalesforceContactResponse contact,MewsGetBookerResponse getbooker) throws JsonProcessingException {
-        String firstName = getbooker.getCustomers()[0].getFirstName();
-        String lastName = getbooker.getCustomers()[0].getLastName();
-        String secondLastName = getbooker.getCustomers()[0].getSecondLastName();
-        String nationalityCode = getbooker.getCustomers()[0].getNationalityCode();
-        String birthDate = getbooker.getCustomers()[0].getBirthDate();
-        String birthPlace = getbooker.getCustomers()[0].getBirthPlace();
-        String email = getbooker.getCustomers()[0].getEmail();
-        String phone = getbooker.getCustomers()[0].getPhone();
-        String loyaltyCode = getbooker.getCustomers()[0].getLoyaltyCode();
-        String notes = getbooker.getCustomers()[0].getNotes();
+    public MewsUpdateBookerRequest createUpdateBookerPayload(SalesforceBookingResponse book,SalesforceAccountResponse account,SalesforceContactResponse contact,MewsGetBookerResponse booker) throws JsonProcessingException {
+        MewsGetBookerResponse.Customer customer = booker.getCustomers().get(0);
+        String firstName = customer.getFirstName();
+        String lastName = customer.getLastName();
+        String secondLastName = customer.getSecondLastName();
+        String nationalityCode = customer.getNationalityCode();
+        String birthDate = customer.getBirthDate();
+        String birthPlace = customer.getBirthPlace();
+        String email = customer.getEmail();
+        String phone = customer.getPhone();
+        String loyaltyCode = customer.getLoyaltyCode();
+        String notes = customer.getNotes();
         String contactFirstName = contact.getFirstName();
         String contactLastName = contact.getLastName();
         String contactSecondLastName = contact.getName();
@@ -128,7 +133,7 @@ public class MewsController {
         request.setClient(applicationConfiguration.getMewsClientName());
         request.setAccessToken(applicationConfiguration.getMewsAccessToken());
         request.setClientToken(applicationConfiguration.getMewsClientToken());
-        request.setCustomerId(getbooker.getCustomers()[0].getId());
+        request.setCustomerId(customer.getId());
 
         request.setFirstName(getUpdatedValue(contactFirstName, firstName));
         request.setLastName(getUpdatedValue(contactLastName, lastName));
@@ -387,7 +392,6 @@ public class MewsController {
         request.setAvailabilityBlockIds(availabilityBlockIds);
         return request;
     }
-
 
     private <ValueType> ValueType getUpdatedValue(ValueType salesforceValue, ValueType mewsValue) {
         return salesforceValue != null && mewsValue != null ? (salesforceValue.equals(mewsValue) ? mewsValue : salesforceValue) : (mewsValue != null ? mewsValue : salesforceValue);
