@@ -65,15 +65,15 @@ public class MewsConnectorService {
                 .addHeader("Content-Type", "application/json")
                 .addHeader("Authorization", "Bearer " + applicationConfiguration.getMewsAccessToken())
                 .build();
-
-        System.out.println(jsonStr);
         System.out.println(request.url());
+        System.out.println(jsonStr);
         try (Response calloutResponse = httpClient.newCall(request).execute()) {
             if (!calloutResponse.isSuccessful()) {
                 String errorMessage = "Error in " + object + " call: " + calloutResponse.code() + " - " + calloutResponse.message();
                 throw new IOException(errorMessage);
             }
             String responseBody = calloutResponse.body().string();
+            System.out.println(responseBody);
             return responseBody;
         }
     }
@@ -91,12 +91,16 @@ public class MewsConnectorService {
                 .addHeader("Content-Type", "application/json")
                 .addHeader("Authorization", "Bearer " + applicationConfiguration.getMewsAccessToken())
                 .build();
+        System.out.println(jsonStr);
+        System.out.println(request.url());
+
         try (Response calloutResponse = httpClient.newCall(request).execute()) {
             String responseBody = calloutResponse.body().string();
             if (!calloutResponse.isSuccessful()) {
                 String errorMessage = "Error in " + object + " call: " + calloutResponse.code() + " - " + parseErrorMessage(responseBody);
                 throw new IOException(errorMessage);
             }
+            System.out.println(responseBody);
             return responseBody;
         }
     }
@@ -125,8 +129,9 @@ public class MewsConnectorService {
                 .addHeader("Content-Type", "application/json")
                 .addHeader("Authorization", "Bearer " + applicationConfiguration.getMewsAccessToken())
                 .build();
-        System.out.println(jsonStr);
+
         System.out.println(request.url());
+        System.out.println(jsonStr);
         try (Response calloutResponse = httpClient.newCall(request).execute()) {
             String responseBody = calloutResponse.body().string();
             if (!calloutResponse.isSuccessful()) {
@@ -138,7 +143,6 @@ public class MewsConnectorService {
             }
 
             if (responseBody.equals("{}")) {
-                System.out.println(responseBody);
                 return responseBody;
             }
             return responseBody;

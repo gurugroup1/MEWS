@@ -142,12 +142,12 @@ public class MewsController {
         if (email != null && !email.isEmpty()) {
             emailList.add(email);
         }
-        request.setEmail(emailList);
+        request.setEmails(emailList);
 
         MewsGetBookerRequest.Limitation limitation = new MewsGetBookerRequest.Limitation();
         limitation.setCount(1);
         request.setLimitation(limitation);
-        System.out.println(request.getEmail());
+        System.out.println(request.getEmails());
         return request;
     }
     public MewsBookerRequest createBookerPayload(SalesforceBookingResponse book, SalesforceAccountResponse account, SalesforceContactResponse contact) throws JsonProcessingException {
@@ -183,7 +183,7 @@ public class MewsController {
         String lastName = customer.getLastName();
         String secondLastName = customer.getSecondLastName();
         String nationalityCode = customer.getNationalityCode();
-        String birthDate = customer.getBirthDate();
+        String birthDate = String.valueOf(customer.getBirthDate());
         String birthPlace = customer.getBirthPlace();
         String email = customer.getEmail();
         String phone = customer.getPhone();
@@ -339,11 +339,11 @@ public class MewsController {
             availabilityUpdate.setFirstTimeUnitStartUtc(book.getThn__Arrival_Date__c() + "T23:00:00.000Z");
             availabilityUpdate.setLastTimeUnitStartUtc(book.getThn__Departure_Date__c() + "T23:00:00.000Z");
             availabilityUpdate.setResourceCategoryId(mewsId);
-            List<MewsAvailabilityBlockResponse.AvailabilityBlock> availabilityBlocks = availabilityBlockId.getAvailabilityBlocks();
-
-            for (MewsAvailabilityBlockResponse.AvailabilityBlock block : availabilityBlocks) {
-                blockId = block.getId();
-            }
+//            List<MewsAvailabilityBlockResponse.AvailabilityBlock> availabilityBlocks = availabilityBlockId.getAvailabilityBlocks();
+//
+//            for (MewsAvailabilityBlockResponse.AvailabilityBlock block : availabilityBlocks) {
+//                blockId = block.getId();
+//            }
             availabilityUpdate.setAvailabilityBlockId(blockId);
 
             MewsUpdateAvailabilityRequest.UnitCountAdjustment unitCountAdjustment = new MewsUpdateAvailabilityRequest.UnitCountAdjustment();
@@ -361,11 +361,11 @@ public class MewsController {
         request.setClient(applicationConfiguration.getMewsClientName());
         request.setAccessToken(applicationConfiguration.getMewsAccessToken());
         request.setClientToken(applicationConfiguration.getMewsClientToken());
-        List<MewsAvailabilityBlockResponse.AvailabilityBlock> availabilityBlocks = rateId.getAvailabilityBlocks();
-
-        for (MewsAvailabilityBlockResponse.AvailabilityBlock block : availabilityBlocks) {
-            blockId = block.getRateId();
-        }
+//        List<MewsAvailabilityBlockResponse.AvailabilityBlock> availabilityBlocks = rateId.getAvailabilityBlocks();
+//
+//        for (MewsAvailabilityBlockResponse.AvailabilityBlock block : availabilityBlocks) {
+//            blockId = block.getRateId();
+//        }
         request.setRateId(blockId);
         MewsUpdateRateRequest.PriceUpdate priceUpdate = new MewsUpdateRateRequest.PriceUpdate();
         priceUpdate.setFirstTimeUnitStartUtc(book.getThn__Arrival_Date__c() + "T23:00:00.000Z");

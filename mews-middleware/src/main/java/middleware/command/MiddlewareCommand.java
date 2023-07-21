@@ -14,6 +14,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -77,8 +78,9 @@ public class MiddlewareCommand implements Command {
                                                     Optional<MewsCompanyResponse> createdCompany = createCompanyInMews(booking, account, contact, responseData);
                                                 }
                                                 Optional<MewsGetBookerResponse> BookerMews = isBookerExistInMews(account, contact, pmsAccount, responseData);
-                                                MewsGetBookerResponse.Customer customer = BookerMews.get().getCustomers().get(0);
-                                                bookerId = customer.getId();
+                                                List<MewsGetBookerResponse.Customer> customers = BookerMews.get().getCustomers();
+                                                MewsGetBookerResponse.Customer firstCustomer = customers.get(0);
+                                                bookerId = firstCustomer.getId();
                                                 if (BookerMews.isPresent()) {
                                                     Optional<MewsUpdateBookerResponse> updatedBooker = updateBookerInMews(booking, account, contact, BookerMews.get(), responseData);
 
@@ -306,9 +308,6 @@ public class MiddlewareCommand implements Command {
         }
         return createAvailabilityBlock;
     }
-
-
-
     private void setSuccessStatus(ApiResponse apiResponse, String message) {
         apiResponse.setStatus(ResponseStatus.FAILED);
         apiResponse.setMessage(message);

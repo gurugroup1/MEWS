@@ -5,20 +5,20 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 
 public class MewsGetBookerRequest {
-
+    @JsonProperty("client")
     private String client;
 
-
+    @JsonProperty("accessToken")
     private String accessToken;
 
-
+    @JsonProperty("clientToken")
     private String clientToken;
 
-
-    private List<String> email;
-
-
+    @JsonProperty("limitation")
     private Limitation limitation;
+
+    @JsonProperty("Emails")
+    private List<String> emails;
 
     public String getClient() {
         return client;
@@ -44,14 +44,6 @@ public class MewsGetBookerRequest {
         this.clientToken = clientToken;
     }
 
-    public List<String> getEmail() {
-        return email;
-    }
-
-    public void setEmail(List<String> email) {
-        this.email = email;
-    }
-
     public Limitation getLimitation() {
         return limitation;
     }
@@ -60,7 +52,16 @@ public class MewsGetBookerRequest {
         this.limitation = limitation;
     }
 
+    public List<String> getEmails() {
+        return emails;
+    }
+
+    public void setEmails(List<String> emails) {
+        this.emails = emails;
+    }
+
     public static class Limitation {
+        @JsonProperty("count")
         private int count;
 
         public int getCount() {

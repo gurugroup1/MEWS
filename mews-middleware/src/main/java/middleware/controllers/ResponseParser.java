@@ -77,6 +77,7 @@ public class ResponseParser {
         }
     }
 
+
     public <T> T parseResponse(String response, Class<T> responseType, String object) throws Exception {
         try {
             JsonNode responseJson = objectMapper.readTree(response);

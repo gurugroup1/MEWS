@@ -2,12 +2,17 @@ package middleware.controllers;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import middleware.enums.ResponseStatus;
 
 import java.util.Map;
 
 public class ApiResponse {
     private ResponseStatus status;
+    private String BookingId;
+    private String message;
+    private Map<String, Object> data;
 
     public String getBookingId() {
         return BookingId;
@@ -16,10 +21,6 @@ public class ApiResponse {
     public void setBookingId(String bookingId) {
         BookingId = bookingId;
     }
-
-    private String BookingId;
-    private String message;
-    private Map<String, Object> data;
 
     public ResponseStatus getStatus() {
         return status;
@@ -52,11 +53,12 @@ public class ApiResponse {
 
     private String convertToJson(ApiResponse response) {
         try {
-            return new ObjectMapper().writeValueAsString(response);
+            ObjectMapper objectMapper = new ObjectMapper();
+            objectMapper.registerModule(new JavaTimeModule());
+            objectMapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+            return objectMapper.writeValueAsString(response);
         } catch (JsonProcessingException e) {
             throw new RuntimeException("Failed to convert the response to JSON", e);
         }
     }
-
-
 }

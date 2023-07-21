@@ -1,5 +1,8 @@
 package middleware.configurations;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import middleware.services.SalesforceConnectorService;
 import okhttp3.OkHttpClient;
 import org.springframework.beans.factory.annotation.Value;
@@ -93,6 +96,14 @@ public class ApplicationConfiguration {
         initializer.setDatabasePopulator(populator);
         return initializer;
     }
+
+//    @Bean
+//    public ObjectMapper objectMapper() {
+//        ObjectMapper mapper = new ObjectMapper();
+//        mapper.registerModule(new JavaTimeModule());
+//        mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+//        return mapper;
+//    }
 
     @Bean
     public OkHttpClient httpClient() {
