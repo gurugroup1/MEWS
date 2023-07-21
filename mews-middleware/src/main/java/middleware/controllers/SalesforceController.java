@@ -212,7 +212,7 @@ public class SalesforceController {
         return payload;
     }
 
-    public SalesforcePSMBlockRequest createPMSBlockPayload(SalesforceBookingResponse book,SalesforceAccountResponse account, SalesforceContactResponse contact, SalesforceRateResponse rate, SalesforcePropertyResponse property,MewsAvailabilityBlockResponse availabilityBlockId) throws JsonProcessingException {
+    public SalesforcePSMBlockRequest createPMSBlockPayload(SalesforceBookingResponse book,SalesforceAccountResponse account, SalesforceContactResponse contact, SalesforceRateResponse rate, SalesforcePropertyResponse property,MewsAvailabilityBlockResponse availabilityBlockId,String pmsAccountId) throws JsonProcessingException {
         SalesforcePSMBlockRequest payload = new SalesforcePSMBlockRequest();
         payload.setName(contact.getName());
         payload.setCurrencyIsoCode(book.getCurrencyIsoCode());
@@ -242,7 +242,10 @@ public class SalesforceController {
         payload.setUniquePMSKey(rate.getUniquePmsKey());
         payload.setProperty(property.getId());
         payload.setBooker(contact.getThn__Guest__c());
-
+        payload.setPmsAccountCompany(pmsAccountId);
+        payload.setPmsAccountGroup(pmsAccountId);
+        payload.setPmsAccountSource(pmsAccountId);
+        payload.setPmsAccountTravelAgent(pmsAccountId);
 
 //        payload.setPmsResponse(book.getPmsResponse());
 //        payload.setPmsResponseDateTime(book.getPmsResponseDateTime());
@@ -256,10 +259,6 @@ public class SalesforceController {
 //        payload.setCurrencyPrecision(rate.getCurrencyPrecision());
 //        payload.setGuaranteeCode(book.getGuaranteeCode());
 //        payload.setHapiId(book.getHapiId());
-//        payload.setPmsAccountCompany(account.getId());
-//        payload.setPmsAccountGroup(account.getId());
-//        payload.setPmsAccountSource(account.getId());
-//        payload.setPmsAccountTravelAgent(account.getId());
 //        payload.setPmsSystemId(book.getPmsSystemId());
 //        payload.setPmsSystemType(book.getPmsSystemType());
 //        payload.setPmsBlockStatus(book.getPmsBlockStatus());

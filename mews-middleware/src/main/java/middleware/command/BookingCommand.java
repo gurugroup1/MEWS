@@ -158,6 +158,7 @@ public class BookingCommand implements Command {
                                                             PSMAccountRequest pmsAccountRequest = this.salesforceController.createPSMAccountPayload(booking.get(), account.get(), contact.get(), rate.get(), property.get());
                                                             String pmsAccountRequestString = objectMapper.writeValueAsString(pmsAccountRequest);
                                                             String pmsAccountResponse = this.salesforceController.addRecordInSalesforce(applicationConfiguration.getSalesforcePMSAccount(), salesforceToken.getAccess_token(), pmsAccountRequestString);
+                                                            JsonNode responsePmsAccountNode = objectMapper.readTree(pmsAccountResponse);
                                                             if (pmsAccountResponse != null && !pmsAccountResponse.isEmpty()) {
                                                                 responseData.put("Salesforce_Post_PMS_Account", pmsAccountResponse);
                                                                 apiResponse.setStatus(ResponseStatus.SUCCESS);
@@ -166,8 +167,9 @@ public class BookingCommand implements Command {
                                                                 String guestRequestResponse = this.salesforceController.addRecordInSalesforce(applicationConfiguration.getSalesforceGuest(), salesforceToken.getAccess_token(), guestRequestString);
                                                                 if (guestRequestResponse != null && !guestRequestResponse.isEmpty()) {
                                                                     responseData.put("Salesforce_Post_Guest", guestRequestResponse);
+                                                                    String pmsAccountResponseId = responsePmsAccountNode.get("id").asText();
                                                                     apiResponse.setStatus(ResponseStatus.SUCCESS);
-                                                                    SalesforcePSMBlockRequest pmsBlockRequest = this.salesforceController.createPMSBlockPayload(booking.get(), account.get(), contact.get(), rate.get(), property.get(), availabilityBlockResponse.get());
+                                                                    SalesforcePSMBlockRequest pmsBlockRequest = this.salesforceController.createPMSBlockPayload(booking.get(), account.get(), contact.get(), rate.get(), property.get(), availabilityBlockResponse.get(),pmsAccountResponseId);
                                                                     String pmsBlockRequestString = objectMapper.writeValueAsString(pmsBlockRequest);
                                                                     String pmsBlockRequestResponse = this.salesforceController.addRecordInSalesforce(applicationConfiguration.getSalesforcePMSBlock(), salesforceToken.getAccess_token(), pmsBlockRequestString);
                                                                     JsonNode responseNode = objectMapper.readTree(pmsBlockRequestResponse);
