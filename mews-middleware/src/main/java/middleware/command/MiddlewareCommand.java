@@ -314,9 +314,6 @@ public class MiddlewareCommand implements Command {
         return createAvailabilityBlock;
     }
 
-<<<<<<< Updated upstream
-    
-=======
     private String updateAvailabilityInMewsByCreated(SalesforceBookingResponse booking, SalesforceRateResponse rate, SalesforcePropertyResponse property,  Optional<MewsAvailabilityBlockResponse> availabilityBlock, SalesforceQueryResponse guest, Map<String, Object> responseData) throws Exception {
         MewsUpdateAvailabilityRequest request = mewsController.createUpdateAvailabilityPayload(booking, rate, property, availabilityBlock.get(), guest);
         String response = mewsController.updateAvailability(request);
@@ -335,7 +332,7 @@ public class MiddlewareCommand implements Command {
         return response;
     }
 
->>>>>>> Stashed changes
+
     private void setSuccessStatus(ApiResponse apiResponse, String message) {
         apiResponse.setStatus(ResponseStatus.FAILED);
         apiResponse.setMessage(message);

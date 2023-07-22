@@ -384,11 +384,11 @@ public class MewsController {
             availabilityUpdate.setFirstTimeUnitStartUtc(book.getThn__Arrival_Date__c() + "T23:00:00.000Z");
             availabilityUpdate.setLastTimeUnitStartUtc(book.getThn__Departure_Date__c() + "T23:00:00.000Z");
             availabilityUpdate.setResourceCategoryId(mewsId);
-//            List<MewsAvailabilityBlockResponse.AvailabilityBlock> availabilityBlocks = availabilityBlockId.getAvailabilityBlocks();
-//
-//            for (MewsAvailabilityBlockResponse.AvailabilityBlock block : availabilityBlocks) {
-//                blockId = block.getId();
-//            }
+            MewsGetAvailabilityBlockResponse.AvailabilityBlock[] availabilityBlocks = availabilityBlockId.getAvailabilityBlocks();
+
+            for (MewsGetAvailabilityBlockResponse.AvailabilityBlock block : availabilityBlocks) {
+                blockId = block.getId();
+            }
             availabilityUpdate.setAvailabilityBlockId(blockId);
 
             MewsUpdateAvailabilityRequest.UnitCountAdjustment unitCountAdjustment = new MewsUpdateAvailabilityRequest.UnitCountAdjustment();
