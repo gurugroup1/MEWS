@@ -217,7 +217,7 @@ public class SalesforceController {
         payload.setName(contact.getName());
         payload.setCurrencyIsoCode(book.getCurrencyIsoCode());
         payload.setMyceQuote(book.getId());
-        payload.setPmsId(availabilityBlockId.getRateId());
+//        payload.setPmsId(availabilityBlockId.getRateId());
         payload.setPmsBlockEndTime(property.getCheckOut());
         payload.setPmsBlockStartTime(property.getCheckIn());
         payload.setPmsReleaseDateTime(book.getThn__Release_Date__c());

@@ -304,10 +304,12 @@ public class MiddlewareCommand implements Command {
         MewsAvailabilityBlockRequest request = mewsController.createAvailabilityBlockPayload(booking, rate,contact, property, bookerId);
         createAvailabilityBlock = this.responseParser.addAvailabilityBlockInMews(request);
         if (createAvailabilityBlock.isPresent()) {
-            responseData.put("Mews_Create_Booker", createAvailabilityBlock.get());
+            responseData.put("Mews_Availability_Block", createAvailabilityBlock.get());
         }
         return createAvailabilityBlock;
     }
+
+    
     private void setSuccessStatus(ApiResponse apiResponse, String message) {
         apiResponse.setStatus(ResponseStatus.FAILED);
         apiResponse.setMessage(message);
