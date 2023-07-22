@@ -91,9 +91,14 @@ public class MiddlewareCommand implements Command {
                                                 Optional<MewsGetAvailabilityBlockResponse> availabilityBlockMews = isAvailabilityBlockExistInMews(account, contact, pmsBlock, responseData);
                                                 if (availabilityBlockMews.isPresent()) {
 //                                                    Optional<MewsUpdateBookerResponse> updatedBooker = updateBookerInMews(booking, account, contact, BookerMews.get(), responseData);
+                                                    String updateAvailabilityInMews = updateAvailabilityInMewsByGet(booking, rate, property, availabilityBlockMews, guestRoom,responseData);
                                                 } else {
-                                                    Optional<MewsAvailabilityBlockResponse> createdAvailabilityBlock = createAvailabilityBlockInMews(booking,contact,rate,property,bookerId, responseData);
+                                                    Optional<MewsAvailabilityBlockResponse> createdAvailabilityBlock = createAvailabilityBlockInMews(booking, contact, rate, property, bookerId, responseData);
+                                                    String updateAvailabilityInMews = updateAvailabilityInMewsByCreated(booking, rate, property, createdAvailabilityBlock, guestRoom,responseData);
                                                 }
+
+
+
                                             }
                                         }
                                     }
@@ -299,9 +304,9 @@ public class MiddlewareCommand implements Command {
         return response;
     }
 
-    private Optional<MewsAvailabilityBlockResponse> createAvailabilityBlockInMews(SalesforceBookingResponse booking, SalesforceContactResponse contact,SalesforceRateResponse rate,SalesforcePropertyResponse property,String bookerId, Map<String, Object> responseData) throws Exception {
+    private Optional<MewsAvailabilityBlockResponse> createAvailabilityBlockInMews(SalesforceBookingResponse booking, SalesforceContactResponse contact, SalesforceRateResponse rate, SalesforcePropertyResponse property, String bookerId, Map<String, Object> responseData) throws Exception {
         Optional<MewsAvailabilityBlockResponse> createAvailabilityBlock;
-        MewsAvailabilityBlockRequest request = mewsController.createAvailabilityBlockPayload(booking, rate,contact, property, bookerId);
+        MewsAvailabilityBlockRequest request = mewsController.createAvailabilityBlockPayload(booking, rate, contact, property, bookerId);
         createAvailabilityBlock = this.responseParser.addAvailabilityBlockInMews(request);
         if (createAvailabilityBlock.isPresent()) {
             responseData.put("Mews_Availability_Block", createAvailabilityBlock.get());
@@ -309,7 +314,28 @@ public class MiddlewareCommand implements Command {
         return createAvailabilityBlock;
     }
 
+<<<<<<< Updated upstream
     
+=======
+    private String updateAvailabilityInMewsByCreated(SalesforceBookingResponse booking, SalesforceRateResponse rate, SalesforcePropertyResponse property,  Optional<MewsAvailabilityBlockResponse> availabilityBlock, SalesforceQueryResponse guest, Map<String, Object> responseData) throws Exception {
+        MewsUpdateAvailabilityRequest request = mewsController.createUpdateAvailabilityPayload(booking, rate, property, availabilityBlock.get(), guest);
+        String response = mewsController.updateAvailability(request);
+        if (response.equals("{}")) {
+            responseData.put("Mews_Update_Availability", response);
+        }
+        return response;
+    }
+
+    private String updateAvailabilityInMewsByGet(SalesforceBookingResponse booking, SalesforceRateResponse rate, SalesforcePropertyResponse property,  Optional<MewsGetAvailabilityBlockResponse> availabilityBlock, SalesforceQueryResponse guest, Map<String, Object> responseData) throws Exception {
+        MewsUpdateAvailabilityRequest request = mewsController.createUpdateAvailabilityPayloadByGet(booking, rate, property, availabilityBlock.get(), guest);
+        String response = mewsController.updateAvailability(request);
+        if (response.equals("{}")) {
+            responseData.put("Mews_Update_Availability", response);
+        }
+        return response;
+    }
+
+>>>>>>> Stashed changes
     private void setSuccessStatus(ApiResponse apiResponse, String message) {
         apiResponse.setStatus(ResponseStatus.FAILED);
         apiResponse.setMessage(message);
