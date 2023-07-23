@@ -212,7 +212,75 @@ public class SalesforceController {
         return payload;
     }
 
-    public SalesforcePSMBlockRequest createPMSBlockPayload(SalesforceBookingResponse book,SalesforceAccountResponse account, SalesforceContactResponse contact, SalesforceRateResponse rate, SalesforcePropertyResponse property,MewsAvailabilityBlockResponse availabilityBlockId,String pmsAccountId) throws JsonProcessingException {
+    public SalesforcePSMBlockRequest createPMSBlockPayloadByGet(SalesforceBookingResponse book,SalesforceAccountResponse account, SalesforceContactResponse contact, SalesforceRateResponse rate, SalesforcePropertyResponse property,MewsGetAvailabilityBlockResponse availabilityBlockId,String pmsAccountId) throws JsonProcessingException {
+        SalesforcePSMBlockRequest payload = new SalesforcePSMBlockRequest();
+        payload.setName(contact.getName());
+        payload.setCurrencyIsoCode(book.getCurrencyIsoCode());
+        payload.setMyceQuote(book.getId());
+//        payload.setPmsId(availabilityBlockId.getRateId());
+        payload.setPmsBlockEndTime(property.getCheckOut());
+        payload.setPmsBlockStartTime(property.getCheckIn());
+        payload.setPmsReleaseDateTime(book.getThn__Release_Date__c());
+        payload.setFirstName(contact.getFirstName());
+        payload.setLastName(contact.getLastName());
+        payload.setNationality(contact.getThn__Nationality__c());
+        payload.setPhone(contact.getPhone());
+        payload.setRate(rate.getId());
+        payload.setCurrencyCode(rate.getCurrencyIsoCode());
+        payload.setEndShoulderDate(book.getThn__Shoulder_End_Date__c());
+        payload.setEnd(book.getThn__Departure_Date__c());
+        payload.setInventoryBlockType(book.getThn__InventoryBlockType__c());
+        payload.setSegmentationSource(book.getThn__Source__c());
+        payload.setSendToPms(book.getThn__SendToPMS__c());
+        payload.setStartShoulderDate(book.getThn__Shoulder_Start_Date__c());
+        payload.setStart(book.getThn__Arrival_Date__c());
+        payload.setUniquePMSKey(rate.getUniquePmsKey());
+        payload.setProperty(property.getId());
+        payload.setBooker(contact.getThn__Guest__c());
+        payload.setPmsAccountCompany(pmsAccountId);
+        payload.setPmsAccountGroup(pmsAccountId);
+        payload.setPmsAccountSource(pmsAccountId);
+        payload.setPmsAccountTravelAgent(pmsAccountId);
+
+//        payload.setPmsResponse(book.getPmsResponse());
+//        payload.setPmsResponseDateTime(book.getPmsResponseDateTime());
+//        payload.setPmsStatus(book.getPmsStatus());
+//        payload.setStatus(book.getStatus());
+//        payload.setAbsoluteCutoffDate(book.getAbsoluteCutoffDate());
+//        payload.setCancellationReasonCode(book.getCancellationReasonCode());
+//        payload.setCancellationReasonText(book.getCancellationReasonText());
+//        payload.setCode(book.getCode());
+//        payload.setCreatedDateTime(book.getCreatedDateTime());
+//        payload.setCurrencyPrecision(rate.getCurrencyPrecision());
+//        payload.setGuaranteeCode(book.getGuaranteeCode());
+//        payload.setHapiId(book.getHapiId());
+//        payload.setPmsSystemId(book.getPmsSystemId());
+//        payload.setPmsSystemType(book.getPmsSystemType());
+//        payload.setPmsBlockStatus(book.getPmsBlockStatus());
+//        payload.setPaymentMethodCode(book.getPaymentMethodCode());
+//        payload.setPropertyDetailsBrandCode(property.getPropertyDetailsBrandCode());
+//        payload.setPropertyDetailsChainCode(property.getPropertyDetailsChainCode());
+//        payload.setPropertyDetailsCode(property.getPropertyDetailsCode());
+//        payload.setPropertyDetailsId(property.getPropertyDetailsId());
+//        payload.setReleaseDaysBeforeStayDate(book.getReleaseDaysBeforeStayDate());
+//        payload.setReservationPickUpMethod(book.getReservationPickUpMethod());
+//        payload.setSegmentationChannel(book.getSegmentationChannel());
+//        payload.setSegmentationMarket(book.getSegmentationMarket());
+//        payload.setSegmentationOrigin(book.getSegmentationOrigin());
+//        payload.setType(book.getType());
+//        payload.setSyncStatus(book.getSyncStatus());
+//        payload.setBlockStatus(book.getBlockStatus());
+//        payload.setGuaranteeCode2(book.getGuaranteeCode2());
+//        payload.setSendFailedPMSBlock(book.isSendFailedPMSBlock());
+//        payload.setCountry(contact.getCountry());
+//        payload.setEmail(contact.getEmail());
+//        payload.setPostingAccountId(account.getPostingAccountId());
+//        payload.setReservationTypeCode(book.getReservationTypeCode());
+//        payload.setSegmentationCode(book.getSegmentationCode());
+        return payload;
+    }
+
+    public SalesforcePSMBlockRequest createPMSBlockPayloadByCreated(SalesforceBookingResponse book,SalesforceAccountResponse account, SalesforceContactResponse contact, SalesforceRateResponse rate, SalesforcePropertyResponse property,MewsAvailabilityBlockResponse availabilityBlockId,String pmsAccountId) throws JsonProcessingException {
         SalesforcePSMBlockRequest payload = new SalesforcePSMBlockRequest();
         payload.setName(contact.getName());
         payload.setCurrencyIsoCode(book.getCurrencyIsoCode());

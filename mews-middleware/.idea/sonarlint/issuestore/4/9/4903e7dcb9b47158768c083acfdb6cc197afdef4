@@ -1,0 +1,76 @@
+
+n
+java:S1192ƒ"PDefine a constant instead of duplicating this literal "T23:00:00.000Z" 12 times.(›«£8õ Ê”˜1
+j
+java:S1192æ"GDefine a constant instead of duplicating this literal "Block-" 3 times.(İ¿šşÿÿÿÿ8ö Ê”˜1
+®
+java:S1130"‹Remove the declaration of thrown exception 'com.fasterxml.jackson.core.JsonProcessingException', as it cannot be thrown from method's body.(•‘¿Øúÿÿÿÿ8§ºÊ”˜1
+®
+java:S1130,"‹Remove the declaration of thrown exception 'com.fasterxml.jackson.core.JsonProcessingException', as it cannot be thrown from method's body.(•†¹Éûÿÿÿÿ8¯ºÊ”˜1
+]	java:S125@"<This block of commented-out lines of code should be removed.(¦à­—ıÿÿÿÿ8¶ºÊ”˜1
+©
+java:S1130N"‹Remove the declaration of thrown exception 'com.fasterxml.jackson.core.JsonProcessingException', as it cannot be thrown from method's body.(¶¯Œ”8¹ºÊ”˜1
+¯
+java:S1130…"‹Remove the declaration of thrown exception 'com.fasterxml.jackson.core.JsonProcessingException', as it cannot be thrown from method's body.(‰“±¯şÿÿÿÿ8ÍºÊ”˜1
+Q
+java:S1172…".Remove this unused method parameter "account".(‰“±¯şÿÿÿÿ8ÍºÊ”˜1
+[	java:S106"9Replace this use of System.out or System.err by a logger.(î¸ıÿÿÿÿ8ĞºÊ”˜1
+V	java:S106–"9Replace this use of System.out or System.err by a logger.(ÎõÚç8ÒºÊ”˜1
+¯
+java:S1130™"‹Remove the declaration of thrown exception 'com.fasterxml.jackson.core.JsonProcessingException', as it cannot be thrown from method's body.(Àôà­şÿÿÿÿ8ÔºÊ”˜1
+[
+java:S1172™"8Remove these unused method parameters "book", "account".(Àôà­şÿÿÿÿ8ÕºÊ”˜1
+¯
+java:S1130´"‹Remove the declaration of thrown exception 'com.fasterxml.jackson.core.JsonProcessingException', as it cannot be thrown from method's body.(´¾ÓÙşÿÿÿÿ8âºÊ”˜1
+Q
+java:S1172´".Remove this unused method parameter "account".(´¾ÓÙşÿÿÿÿ8âºÊ”˜1
+ª
+java:S1130Ş"‹Remove the declaration of thrown exception 'com.fasterxml.jackson.core.JsonProcessingException', as it cannot be thrown from method's body.(½‘¹Ñ8òºÊ”˜1
+L
+java:S1172Ş".Remove this unused method parameter "account".(½‘¹Ñ8òºÊ”˜1
+V	java:S106ç"9Replace this use of System.out or System.err by a logger.(·É’ğ8øºÊ”˜1
+¯
+java:S1130÷"‹Remove the declaration of thrown exception 'com.fasterxml.jackson.core.JsonProcessingException', as it cannot be thrown from method's body.(ƒ¤­“ùÿÿÿÿ8‚»Ê”˜1
+[	java:S106†"9Replace this use of System.out or System.err by a logger.(§È½ƒûÿÿÿÿ8»Ê”˜1
+[	java:S106Š"9Replace this use of System.out or System.err by a logger.(ì‚öœÿÿÿÿÿ8•»Ê”˜1
+U	java:S106‘"9Replace this use of System.out or System.err by a logger.(í”»8š»Ê”˜1
+¯
+java:S1130•"‹Remove the declaration of thrown exception 'com.fasterxml.jackson.core.JsonProcessingException', as it cannot be thrown from method's body.(§ ûÿÿÿÿ8»Ê”˜1
+_
+java:S1172•"<Remove these unused method parameters "account", "property".(§ ûÿÿÿÿ8¡»Ê”˜1
+V	java:S106 "9Replace this use of System.out or System.err by a logger.(Ù¼ñ•8§»Ê”˜1
+V	java:S106©"9Replace this use of System.out or System.err by a logger.(úÒ˜¯8¬»Ê”˜1
+U	java:S106®"9Replace this use of System.out or System.err by a logger.(»Š‚8Ä»Ê”˜1
+ª
+java:S1130º"‹Remove the declaration of thrown exception 'com.fasterxml.jackson.core.JsonProcessingException', as it cannot be thrown from method's body.(æ™µ§8Ë»Ê”˜1
+I
+java:S1172º"+Remove this unused method parameter "rate".(æ™µ§8Ë»Ê”˜1
+]
+java:S6213Ä":Rename this variable to not match a restricted identifier.(ÜÔ¦°úÿÿÿÿ8Ñ»Ê”˜1
+V	java:S106Í"9Replace this use of System.out or System.err by a logger.(©Â¨8Ô»Ê”˜1
+V	java:S106Î"9Replace this use of System.out or System.err by a logger.(‘³Ô«8×»Ê”˜1
+[	java:S106Ï"9Replace this use of System.out or System.err by a logger.(¡ßÿ‚ùÿÿÿÿ8Û»Ê”˜1
+[	java:S106Ğ"9Replace this use of System.out or System.err by a logger.(­¨Íıÿÿÿÿ8Ş»Ê”˜1
+ª
+java:S1130ç"‹Remove the declaration of thrown exception 'com.fasterxml.jackson.core.JsonProcessingException', as it cannot be thrown from method's body.(ÎşúÔ8ê»Ê”˜1
+I
+java:S1172ç"+Remove this unused method parameter "rate".(ÎşúÔ8ì»Ê”˜1
+]
+java:S6213ñ":Rename this variable to not match a restricted identifier.(ÜÔ¦°úÿÿÿÿ8ğ»Ê”˜1
+V	java:S106ú"9Replace this use of System.out or System.err by a logger.(©Â¨8ò»Ê”˜1
+V	java:S106û"9Replace this use of System.out or System.err by a logger.(‘³Ô«8ó»Ê”˜1
+[	java:S106ü"9Replace this use of System.out or System.err by a logger.(¡ßÿ‚ùÿÿÿÿ8ó»Ê”˜1
+[	java:S106ı"9Replace this use of System.out or System.err by a logger.(­¨Íıÿÿÿÿ8ô»Ê”˜1
+¯
+java:S1130“"‹Remove the declaration of thrown exception 'com.fasterxml.jackson.core.JsonProcessingException', as it cannot be thrown from method's body.(¾Áâçûÿÿÿÿ8ü»Ê”˜1
+ª
+java:S1130¨"‹Remove the declaration of thrown exception 'com.fasterxml.jackson.core.JsonProcessingException', as it cannot be thrown from method's body.(Á“§¿8ˆ¼Ê”˜1
+¯
+java:S1130¼"‹Remove the declaration of thrown exception 'com.fasterxml.jackson.core.JsonProcessingException', as it cannot be thrown from method's body.(‡Õï”ùÿÿÿÿ8¼Ê”˜1
+f	java:S119Æ"IRename this generic name to match the regular expression '^[A-Z][0-9]?$'.(¦Ö„ï8§¼Ê”˜1
+b
+java:S3358Ç"DExtract this nested ternary operation into an independent statement.(öĞê8¨¼Ê”˜1
+b
+java:S3358Ç"DExtract this nested ternary operation into an independent statement.(öĞê8¨¼Ê”˜1
+e
+java:S1128"HRemove this unused import 'com.fasterxml.jackson.databind.ObjectMapper'.(´‘¨™8¿¼Ê”˜1
