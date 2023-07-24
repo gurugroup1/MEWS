@@ -99,8 +99,8 @@ public class MiddlewareCommand implements Command {
                                                     String updateAvailabilityInMews = updateAvailabilityInMewsByCreated(booking, rate, property, createdAvailabilityBlock, guestRoom, responseData);
                                                     String updateRatePriceInMewsByCreate = updateRatePriceInMewsByCreated(booking, createdAvailabilityBlock, responseData);
                                                 }
-                                                String pmsAccountResponseId = pmsAccount.getRecords().get(0).getId();
-                                                String pmsBlockId = pmsBlockId.getRecords().get(0).getId();
+                                                String pmsAccountResponseId = "";
+                                                String pmsBlockId = "";
                                                 if (pmsAccount.getTotalSize() <= 0 && pmsBlock.getTotalSize() <= 0) {
                                                     String createdPMSAccount = createPMSAccountForCompanyInSalesforce(booking, account, contact, rate, property, salesforceToken, responseData);
                                                     JsonNode createdPMSAccountNode = objectMapper.readTree(createdPMSAccount);
@@ -130,6 +130,9 @@ public class MiddlewareCommand implements Command {
                                                             }
                                                         }
                                                     }
+                                                }else{
+                                                     pmsAccountResponseId = pmsAccount.getRecords().get(0).getId();
+                                                     pmsBlockId = pmsBlock.getRecords().get(0).getId();
                                                 }
                                                 String updatedGuestRoomWithPmsBlock = updateGuestRoomWithPmsBlockInSalesforce(booking, account, contact, rate, property, salesforceToken, guestRoom, pmsBlockId, responseData);
                                                 if (updatedGuestRoomWithPmsBlock.isEmpty()) {
