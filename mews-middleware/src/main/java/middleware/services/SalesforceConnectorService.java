@@ -123,7 +123,8 @@ public class SalesforceConnectorService {
                 .addHeader("Content-Type", "application/json")
                 .addHeader("Authorization", "Bearer " + sfAccessToken)
                 .build();
-
+        System.out.println(request.url());
+        System.out.println(jsonBody);
         try (Response response = httpClient.newCall(request).execute()) {
             String responseBody = response.body().string();
             if (!response.isSuccessful()) {

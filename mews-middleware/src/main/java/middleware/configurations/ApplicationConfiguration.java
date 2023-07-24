@@ -68,6 +68,16 @@ public class ApplicationConfiguration {
     @Value("${salesforce_pms_block_rates}")
     private String salesforcePMSBlockRates;
 
+    public String getSalesforceGuestRooms() {
+        return salesforceGuestRooms;
+    }
+
+    public void setSalesforceGuestRooms(String salesforceGuestRooms) {
+        this.salesforceGuestRooms = salesforceGuestRooms;
+    }
+
+    @Value("${salesforce_guest_rooms}")
+    private String salesforceGuestRooms;
 
     public String getSalesforcePMSAccount() {
         return salesforcePMSAccount;
