@@ -120,8 +120,7 @@ public class MiddlewareCommand implements Command {
                                                                 JsonNode createdPMSBlockRatesNode = objectMapper.readTree(createdPMSBlockRates);
                                                                 if (createdPMSBlockRatesNode.get("success").asBoolean() == true) {
                                                                     String updatedBooking = updateBookingInSalesforce(booking,account,contact,rate,property,salesforceToken,responseData);
-                                                                    JsonNode updateBookingInSalesforceNode = objectMapper.readTree(updatedBooking);
-                                                                        if (updateBookingInSalesforceNode.get("success").asBoolean() == true) {
+                                                                        if (updatedBooking.isEmpty()) {
                                                                             apiResponse.setStatus(ResponseStatus.SUCCESS);
                                                                             apiResponse.setMessage("Process has been completed.");
                                                                         }
@@ -526,20 +525,10 @@ public class MiddlewareCommand implements Command {
         System.out.println("bookingId"+bookingId);
         String response = this.salesforceController.updateRecordInSalesforce(applicationConfiguration.getSalesforceBookingObject(), salesforceToken.getAccess_token(), requestString,bookingId);
         System.out.println("response"+response);
-        String result = "Failed";
-        if (response != null && !response.isEmpty()) {
-            ObjectMapper objectMapper = new ObjectMapper();
-            Map<String,Object> responseMap = objectMapper.readValue(response, new TypeReference<Map<String, Object>>(){});
-
-            Boolean success = (Boolean) responseMap.get("success");
-            String id = (String) responseMap.get("id");
-
-            if (success != null && success && id != null && !id.isEmpty()) {
-                responseData.put("Salesforce_Update_Booking", response);
-                result = "Success";
-            }
+        if (response.isEmpty()) {
+            responseData.put("Salesforce_Update_Booking", response);
         }
-        return result;
+        return response;
     }
 
 
