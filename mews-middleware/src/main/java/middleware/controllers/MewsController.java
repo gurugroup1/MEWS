@@ -193,8 +193,8 @@ public class MewsController {
         String contactLastName = contact.getLastName();
         String contactSecondLastName = contact.getName();
         String contactNationalityCode = contact.getThn__Nationality__c();
-        String contactBirthDate = contact.getBirthdate();
-        String bookBirthPlace = book.getOrigin__c();
+//        String contactBirthDate = contact.getBirthdate();
+//        String bookBirthPlace = book.getOrigin__c();
         String contactEmail = contact.getEmail();
         String contactPhone = contact.getPhone();
         String contactLoyaltyCode = contact.getLoyalty__c();
@@ -210,8 +210,8 @@ public class MewsController {
         request.setLastName(getUpdatedValue(contactLastName, lastName));
         request.setSecondLastName(getUpdatedValue(contactSecondLastName, secondLastName));
         request.setNationalityCode(getUpdatedValue(contactNationalityCode, nationalityCode));
-        request.setBirthDate(getUpdatedValue(contactBirthDate, birthDate));
-        request.setBirthPlace(getUpdatedValue(bookBirthPlace, birthPlace));
+//        request.setBirthDate(getUpdatedValue(contactBirthDate, birthDate));
+//        request.setBirthPlace(getUpdatedValue(bookBirthPlace, birthPlace));
         request.setEmail(getUpdatedValue(contactEmail, email));
         request.setPhone(getUpdatedValue(contactPhone, phone));
         request.setLoyaltyCode(getUpdatedValue(contactLoyaltyCode, loyaltyCode));
