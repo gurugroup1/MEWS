@@ -80,13 +80,14 @@ public class SalesforceConnectorService {
                 .addHeader("Content-Type", "application/json")
                 .addHeader("Authorization", "Bearer " + sfAccessToken)
                 .build();
-
         try (Response calloutResponse = httpClient.newCall(request).execute()) {
             String responseBody = calloutResponse.body().string();
             if (!calloutResponse.isSuccessful()) {
                 String errorMessage = parseErrorMessage(responseBody);
                 throw new IOException(errorMessage);
             }
+            System.out.println("responseBody"+responseBody);
+
             return responseBody;
         }
     }

@@ -62,6 +62,8 @@ public class MiddlewareCommand implements Command {
                         SalesforceAccountResponse account = getAccountDetails(salesforceToken, booking, apiResponse, responseData);
                         if (account != null) {
                             SalesforceContactResponse contact = getContactDetails(salesforceToken, booking, apiResponse, responseData);
+                            String contactId =contact.getThn__Guest__c();
+                            System.out.println("contactId"+contactId);
                             if (contact != null) {
                                 SalesforceRateResponse rate = getRateDetails(salesforceToken, booking, apiResponse, responseData);
                                 if (rate != null) {
@@ -111,9 +113,9 @@ public class MiddlewareCommand implements Command {
                                                         String createdPMSBlockInSalesforce = "";
                                                         if (createdGuestForBookerNode.get("success").asBoolean() == true) {
                                                             if (availabilityBlockMews.isPresent()) {
-                                                                createdPMSBlockInSalesforce = createPMSBlockInSalesforceByGet(booking, account, contact, rate, property, salesforceToken, availabilityBlockMews, pmsAccountResponseId, responseData);
+                                                                createdPMSBlockInSalesforce = createPMSBlockInSalesforceByGet(booking, account, contact, rate, property, salesforceToken, availabilityBlockMews, pmsAccountResponseId,contactId, responseData);
                                                             } else {
-                                                                createdPMSBlockInSalesforce = createPMSBlockInSalesforceByCreated(booking, account, contact, rate, property, salesforceToken, createdAvailabilityBlock, pmsAccountResponseId, responseData);
+                                                                createdPMSBlockInSalesforce = createPMSBlockInSalesforceByCreated(booking, account, contact, rate, property, salesforceToken, createdAvailabilityBlock, pmsAccountResponseId,contactId, responseData);
                                                             }
                                                             JsonNode pmsBlockNode = objectMapper.readTree(createdPMSBlockInSalesforce);
                                                             pmsBlockId = pmsBlockNode.get("id").asText();
@@ -133,6 +135,7 @@ public class MiddlewareCommand implements Command {
                                                 }else{
                                                      pmsAccountResponseId = pmsAccount.getRecords().get(0).getId();
                                                      pmsBlockId = pmsBlock.getRecords().get(0).getId();
+                                                     contactId = contact.getThn__Guest__c();
                                                 }
                                                 String updatedGuestRoomWithPmsBlock = updateGuestRoomWithPmsBlockInSalesforce(booking, account, contact, rate, property, salesforceToken, guestRoom, pmsBlockId, responseData);
                                                 if (updatedGuestRoomWithPmsBlock.isEmpty()) {
@@ -447,8 +450,8 @@ public class MiddlewareCommand implements Command {
         return response;
     }
 
-    private String createPMSBlockInSalesforceByGet(SalesforceBookingResponse booking, SalesforceAccountResponse account, SalesforceContactResponse contact, SalesforceRateResponse rate, SalesforcePropertyResponse property, SalesforceTokenResponse salesforceToken, Optional<MewsGetAvailabilityBlockResponse> availabiltyBlock, String pmsAccountResponseId, Map<String, Object> responseData) throws Exception {
-        SalesforcePSMBlockRequest request = this.salesforceController.createPMSBlockPayloadByGet(booking, account, contact, rate, property, availabiltyBlock.get(), pmsAccountResponseId);
+    private String createPMSBlockInSalesforceByGet(SalesforceBookingResponse booking, SalesforceAccountResponse account, SalesforceContactResponse contact, SalesforceRateResponse rate, SalesforcePropertyResponse property, SalesforceTokenResponse salesforceToken ,Optional<MewsGetAvailabilityBlockResponse> availabiltyBlock, String pmsAccountResponseId,String contactId, Map<String, Object> responseData) throws Exception {
+        SalesforcePSMBlockRequest request = this.salesforceController.createPMSBlockPayloadByGet(booking, account, contact, rate, property, availabiltyBlock.get(), pmsAccountResponseId,contactId);
         String requestString = objectMapper.writeValueAsString(request);
         String response = this.salesforceController.addRecordInSalesforce(applicationConfiguration.getSalesforcePMSBlock(), salesforceToken.getAccess_token(), requestString);
         if (response != null && !response.isEmpty()) {
@@ -466,8 +469,8 @@ public class MiddlewareCommand implements Command {
         return response;
     }
 
-    private String createPMSBlockInSalesforceByCreated(SalesforceBookingResponse booking, SalesforceAccountResponse account, SalesforceContactResponse contact, SalesforceRateResponse rate, SalesforcePropertyResponse property, SalesforceTokenResponse salesforceToken, Optional<MewsAvailabilityBlockResponse> availabiltyBlock, String pmsAccountResponseId, Map<String, Object> responseData) throws Exception {
-        SalesforcePSMBlockRequest request = this.salesforceController.createPMSBlockPayloadByCreated(booking, account, contact, rate, property, availabiltyBlock.get(), pmsAccountResponseId);
+    private String createPMSBlockInSalesforceByCreated(SalesforceBookingResponse booking, SalesforceAccountResponse account, SalesforceContactResponse contact, SalesforceRateResponse rate, SalesforcePropertyResponse property, SalesforceTokenResponse salesforceToken, Optional<MewsAvailabilityBlockResponse> availabiltyBlock, String pmsAccountResponseId,String contactId, Map<String, Object> responseData) throws Exception {
+        SalesforcePSMBlockRequest request = this.salesforceController.createPMSBlockPayloadByCreated(booking, account, contact, rate, property, availabiltyBlock.get(), pmsAccountResponseId,contactId);
         String requestString = objectMapper.writeValueAsString(request);
         String response = this.salesforceController.addRecordInSalesforce(applicationConfiguration.getSalesforcePMSBlock(), salesforceToken.getAccess_token(), requestString);
         if (response != null && !response.isEmpty()) {

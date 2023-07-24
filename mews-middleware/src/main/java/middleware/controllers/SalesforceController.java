@@ -425,7 +425,7 @@ public class SalesforceController {
         return payload;
     }
 
-    public SalesforcePSMBlockRequest createPMSBlockPayloadByGet(SalesforceBookingResponse book,SalesforceAccountResponse account, SalesforceContactResponse contact, SalesforceRateResponse rate, SalesforcePropertyResponse property,MewsGetAvailabilityBlockResponse availabilityBlockId,String pmsAccountId) throws JsonProcessingException {
+    public SalesforcePSMBlockRequest createPMSBlockPayloadByGet(SalesforceBookingResponse book,SalesforceAccountResponse account, SalesforceContactResponse contact, SalesforceRateResponse rate, SalesforcePropertyResponse property,MewsGetAvailabilityBlockResponse availabilityBlockId,String pmsAccountId,String contactId) throws JsonProcessingException {
         SalesforcePSMBlockRequest payload = new SalesforcePSMBlockRequest();
         payload.setName(contact.getName());
         payload.setCurrencyIsoCode(book.getCurrencyIsoCode());
@@ -449,7 +449,8 @@ public class SalesforceController {
         payload.setStart(book.getThn__Arrival_Date__c());
         payload.setUniquePMSKey(rate.getUniquePmsKey());
         payload.setProperty(property.getId());
-        payload.setBooker(contact.getThn__Guest__c());
+        payload.setBooker(contactId);
+        System.out.println("contactId"+contactId);
         payload.setPmsAccountCompany(pmsAccountId);
         payload.setPmsAccountGroup(pmsAccountId);
         payload.setPmsAccountSource(pmsAccountId);
@@ -493,7 +494,7 @@ public class SalesforceController {
         return payload;
     }
 
-    public SalesforcePSMBlockRequest createPMSBlockPayloadByCreated(SalesforceBookingResponse book,SalesforceAccountResponse account, SalesforceContactResponse contact, SalesforceRateResponse rate, SalesforcePropertyResponse property,MewsAvailabilityBlockResponse availabilityBlockId,String pmsAccountId) throws JsonProcessingException {
+    public SalesforcePSMBlockRequest createPMSBlockPayloadByCreated(SalesforceBookingResponse book,SalesforceAccountResponse account, SalesforceContactResponse contact, SalesforceRateResponse rate, SalesforcePropertyResponse property,MewsAvailabilityBlockResponse availabilityBlockId,String pmsAccountId,String contactId) throws JsonProcessingException {
         SalesforcePSMBlockRequest payload = new SalesforcePSMBlockRequest();
         payload.setName(contact.getName());
         payload.setCurrencyIsoCode(book.getCurrencyIsoCode());
@@ -517,7 +518,8 @@ public class SalesforceController {
         payload.setStart(book.getThn__Arrival_Date__c());
         payload.setUniquePMSKey(rate.getUniquePmsKey());
         payload.setProperty(property.getId());
-        payload.setBooker(contact.getThn__Guest__c());
+        payload.setBooker(contactId);
+        System.out.println("contactId"+contactId);
         payload.setPmsAccountCompany(pmsAccountId);
         payload.setPmsAccountGroup(pmsAccountId);
         payload.setPmsAccountSource(pmsAccountId);
