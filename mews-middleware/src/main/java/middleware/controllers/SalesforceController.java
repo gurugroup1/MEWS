@@ -31,7 +31,7 @@ public class SalesforceController {
                 "service must not be null");
     }
 
-    public SalesforceBookingRequest createBookingPayload(SalesforceBookingResponse book,SalesforceAccountResponse account, SalesforceContactResponse contact, SalesforceRateResponse rate, SalesforcePropertyResponse property) throws JsonProcessingException {
+    public SalesforceBookingRequest createBookingPayload(SalesforceBookingResponse book,SalesforceAccountResponse account, SalesforceContactResponse contact, SalesforceRateResponse rate, SalesforcePropertyResponse property,String pmsAccountId) throws JsonProcessingException {
         SalesforceBookingRequest payload = new SalesforceBookingRequest();
         payload.setName(book.getName());
         payload.setCurrencyIsoCode(account.getCurrencyIsoCode());
@@ -233,10 +233,10 @@ public class SalesforceController {
 //        payload.setPotentialMaxRevenueProduct(booking.getPotentialMaxRevenueProduct());
 //        payload.setTotalPaid(booking.getTotalPaid());
 //        payload.setInventoryBlockType(block.getInventoryBlockType());
-//        payload.setPmsCompany(booking.getPmsCompany());
-//        payload.setPmsGroup(booking.getPmsGroup());
-//        payload.setPmsSource(booking.getPmsSource());
-//        payload.setPmsTravelAgent(booking.getPmsTravelAgent());
+        payload.setPmsCompany(pmsAccountId);
+        payload.setPmsGroup(pmsAccountId);
+        payload.setPmsSource(pmsAccountId);
+        payload.setPmsTravelAgent(pmsAccountId);
 //        payload.setGuaranteeCode(block.getGuaranteeCode());
 //        payload.setDietaryRequirementsLong(booking.getDietaryRequirementsLong());
 //        payload.setStatus(account.getThn__Status__c());

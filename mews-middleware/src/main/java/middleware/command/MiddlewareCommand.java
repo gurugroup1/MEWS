@@ -120,7 +120,7 @@ public class MiddlewareCommand implements Command {
                                                                 String createdPMSBlockRates = createPMSBlockRatesInSalesforce(booking, account, contact, rate, property, salesforceToken, pmsBlockId, guestRoom, responseData);
                                                                 JsonNode createdPMSBlockRatesNode = objectMapper.readTree(createdPMSBlockRates);
                                                                 if (createdPMSBlockRatesNode.get("success").asBoolean() == true) {
-                                                                    String updatedBooking = updateBookingInSalesforce(booking,account,contact,rate,property,salesforceToken,responseData);
+                                                                    String updatedBooking = updateBookingInSalesforce(booking,account,contact,rate,property,salesforceToken,responseData,pmsAccountResponseId);
                                                                         if (updatedBooking.isEmpty()) {
                                                                             apiResponse.setStatus(ResponseStatus.SUCCESS);
                                                                             apiResponse.setMessage("Process has been completed.");
@@ -531,8 +531,8 @@ public class MiddlewareCommand implements Command {
         return result;
     }
 
-    private String updateBookingInSalesforce(SalesforceBookingResponse booking,SalesforceAccountResponse account,SalesforceContactResponse contact,SalesforceRateResponse rate,SalesforcePropertyResponse property,SalesforceTokenResponse salesforceToken, Map<String, Object> responseData) throws Exception {
-        SalesforceBookingRequest request = this.salesforceController.createBookingPayload(booking,account,contact,rate,property);
+    private String updateBookingInSalesforce(SalesforceBookingResponse booking,SalesforceAccountResponse account,SalesforceContactResponse contact,SalesforceRateResponse rate,SalesforcePropertyResponse property,SalesforceTokenResponse salesforceToken, Map<String, Object> responseData,String pmsAccountResponseId) throws Exception {
+        SalesforceBookingRequest request = this.salesforceController.createBookingPayload(booking,account,contact,rate,property,pmsAccountResponseId);
         String requestString = objectMapper.writeValueAsString(request);
         String bookingId = booking.getId();
         System.out.println("bookingId"+bookingId);

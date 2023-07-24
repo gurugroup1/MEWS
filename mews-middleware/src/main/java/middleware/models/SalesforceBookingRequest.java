@@ -609,17 +609,17 @@ public class SalesforceBookingRequest {
 //    @JsonProperty("thn__InventoryBlockType__c")
 //    private String inventoryBlockType;
 //
-//    @JsonProperty("thn__PMS_Company__c")
-//    private String pmsCompany;
+    @JsonProperty("thn__PMS_Company__c")
+    private String pmsCompany;
+
+    @JsonProperty("thn__PMS_Group__c")
+    private String pmsGroup;
+
+    @JsonProperty("thn__PMS_Source__c")
+    private String pmsSource;
 //
-//    @JsonProperty("thn__PMS_Group__c")
-//    private String pmsGroup;
-//
-//    @JsonProperty("thn__PMS_Source__c")
-//    private String pmsSource;
-//
-//    @JsonProperty("thn__PMS_Travel_Agent__c")
-//    private String pmsTravelAgent;
+    @JsonProperty("thn__PMS_Travel_Agent__c")
+    private String pmsTravelAgent;
 //
 //
 //    @JsonProperty("thn__Guarantee_Code__c")
@@ -2279,38 +2279,38 @@ public class SalesforceBookingRequest {
 //        this.inventoryBlockType = inventoryBlockType;
 //    }
 //
-//    public String getPmsCompany() {
-//        return pmsCompany;
-//    }
-//
-//    public void setPmsCompany(String pmsCompany) {
-//        this.pmsCompany = pmsCompany;
-//    }
-//
-//    public String getPmsGroup() {
-//        return pmsGroup;
-//    }
-//
-//    public void setPmsGroup(String pmsGroup) {
-//        this.pmsGroup = pmsGroup;
-//    }
-//
-//    public String getPmsSource() {
-//        return pmsSource;
-//    }
-//
-//    public void setPmsSource(String pmsSource) {
-//        this.pmsSource = pmsSource;
-//    }
-//
-//    public String getPmsTravelAgent() {
-//        return pmsTravelAgent;
-//    }
-//
-//    public void setPmsTravelAgent(String pmsTravelAgent) {
-//        this.pmsTravelAgent = pmsTravelAgent;
-//    }
-//
+    public String getPmsCompany() {
+        return pmsCompany;
+    }
+
+    public void setPmsCompany(String pmsCompany) {
+        this.pmsCompany = pmsCompany;
+    }
+
+    public String getPmsGroup() {
+        return pmsGroup;
+    }
+
+    public void setPmsGroup(String pmsGroup) {
+        this.pmsGroup = pmsGroup;
+    }
+
+    public String getPmsSource() {
+        return pmsSource;
+    }
+
+    public void setPmsSource(String pmsSource) {
+        this.pmsSource = pmsSource;
+    }
+
+    public String getPmsTravelAgent() {
+        return pmsTravelAgent;
+    }
+
+    public void setPmsTravelAgent(String pmsTravelAgent) {
+        this.pmsTravelAgent = pmsTravelAgent;
+    }
+
 //
 //
 //    public String getGuaranteeCode() {
