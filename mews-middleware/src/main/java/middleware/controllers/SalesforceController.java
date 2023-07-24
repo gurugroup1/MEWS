@@ -31,15 +31,15 @@ public class SalesforceController {
                 "service must not be null");
     }
 
-    public SalesforceBookingRequest createBookingPayload(SalesforceBookingResponse book,SalesforceAccountResponse account, SalesforceContactResponse contact, SalesforceRateResponse rate, SalesforcePropertyResponse property, SalesforcePSMBlockRequest block) throws JsonProcessingException {
+    public SalesforceBookingRequest createBookingPayload(SalesforceBookingResponse book,SalesforceAccountResponse account, SalesforceContactResponse contact, SalesforceRateResponse rate, SalesforcePropertyResponse property) throws JsonProcessingException {
         SalesforceBookingRequest payload = new SalesforceBookingRequest();
         payload.setName(book.getName());
         payload.setCurrencyIsoCode(account.getCurrencyIsoCode());
-        payload.setRecordTypeId(account.getRecordTypeId());
+//        payload.setRecordTypeId(account.getRecordTypeId());
 //        payload.setAccomodationNotes(booking.getAccomodationNotes());
 //        payload.setAgentContact(booking.getAgentContact());
 //        payload.setAgent(booking.getAgent());
-//        payload.setArrivalDate(booking.getArrivalDate());
+//        payload.setArrivalDate(book.getThn__Arrival_Date__c());
 //        payload.setArrivalDay(booking.getArrivalDay());
 //        payload.setBillTo(booking.getBillTo());
 //        payload.setBillingAccount(booking.getBillingAccount());
@@ -52,7 +52,7 @@ public class SalesforceController {
 //        payload.setCompanyContact(booking.getCompanyContact());
 //        payload.setCompany(booking.getCompany());
 //        payload.setDaysUntilArrival(booking.getDaysUntilArrival());
-//        payload.setDepartureDate(booking.getDepartureDate());
+//        payload.setDepartureDate(book.getThn__Departure_Date__c());
 //        payload.setDepartureDay(booking.getDepartureDay());
 //        payload.setDepositPayDate(booking.getDepositPayDate());
 //        payload.setDeposit(booking.getDeposit());
@@ -63,24 +63,23 @@ public class SalesforceController {
 //        payload.setInvoicingDetails(booking.getInvoicingDetails());
 //        payload.setLostRefusedRemarks(booking.getLostRefusedRemarks());
 //        payload.setMewsGroupId(booking.getMewsGroupId());
-//        payload.setPax(booking.getPax());
+        payload.setPax(book.getThn__Pax__c());
 //        payload.setProbability(booking.getProbability());
 //        payload.setReasonLostCancelled(booking.getReasonLostCancelled());
 //        payload.setRequestDate(booking.getRequestDate());
 //        payload.setReservationGuest(booking.getReservationGuest());
 //        payload.setSource(booking.getSource());
-        payload.setStage(account.getStage__c());
+//        payload.setStage(account.getStage__c());
 //        payload.setStructuredReference(booking.getStructuredReference());
 //        payload.setSubtype(account.getThn__Subtype__c());
 //        payload.setTotalAmountExclTax(booking.getTotalAmountExclTax());
 //        payload.setTotalAmountInclTax(booking.getTotalAmountInclTax());
-        payload.setType(account.getThn__Type__c());
+//        payload.setType(account.getThn__Type__c());
 //        payload.setHotelRoomsAmount(property.getHotelRoomsAmount());
 //        payload.setMeetingRoomsAmount(booking.getMeetingRoomsAmount());
 //        payload.setNumberOfPacks(booking.getNumberOfPacks());
 //        payload.setProductsAmount(booking.getProductsAmount());
 //        payload.setTotalTax(booking.getTotalTax());
-        payload.setMarketSegment(block.getSegmentationMarket());
 //        payload.setOfferDate(booking.getOfferDate());
 //        payload.setReleaseDate(booking.getReleaseDate());
 //        payload.setSignatureDate(booking.getSignatureDate());
@@ -124,7 +123,7 @@ public class SalesforceController {
 //        payload.setOfferSent2(booking.getOfferSent2());
 //        payload.setOriginal(booking.getOriginal());
 //        payload.setOthers(booking.getOthers());
-        payload.setOther(account.getThn__Other__c());
+//        payload.setOther(account.getThn__Other__c());
 //        payload.setPickedUpNetADR(booking.getPickedUpNetADR());
 //        payload.setPickedUp(booking.getPickedUp());
 //        payload.setRoomMgr(booking.getRoomMgr());
@@ -134,7 +133,7 @@ public class SalesforceController {
 //        payload.setSourceMarket(booking.getSourceMarket());
 //        payload.setQuoteNumber(booking.getQuoteNumber());
 //        payload.setCutoffDate2(booking.getCutoffDate2());
-        payload.setCutoffDate(block.getAbsoluteCutoffDate());
+//        payload.setCutoffDate(block.getAbsoluteCutoffDate());
 //        payload.setD1(booking.getD1());
 //        payload.setD2(booking.getD2());
 //        payload.setD3(booking.getD3());
@@ -159,7 +158,7 @@ public class SalesforceController {
 //        payload.setOtherReasonLostTurndownCancelled(booking.getOtherReasonLostTurndownCancelled());
         payload.setLanguage(contact.getThn__Language__c());
 //        payload.setAccountReference(booking.getAccountReference());
-        payload.setOrigin(account.getOrigin__c());
+//        payload.setOrigin(account.getOrigin__c());
 //        payload.setInternal(booking.getInternal());
 //        payload.setDietaryRequirements2(booking.getDietaryRequirements2());
 //        payload.setPaymentMethod(booking.getPaymentMethod());
@@ -205,7 +204,7 @@ public class SalesforceController {
 //        payload.setReservationGuestName(booking.getReservationGuestName());
 //        payload.setLocaleForDocuments(booking.getLocaleForDocuments());
 //        payload.setCompanyShortName(booking.getCompanyShortName());
-        payload.setCommActivity(account.getThn__Comm_Activity__c());
+//        payload.setCommActivity(account.getThn__Comm_Activity__c());
         payload.setCommBeverage(property.getCommBeverage());
         payload.setCommEquipment(account.getThn__Comm_Equipment__c());
         payload.setCommFood(property.getCommFood());
@@ -218,8 +217,8 @@ public class SalesforceController {
 //        payload.setLastSyncStatus(booking.getLastSyncStatus());
 //        payload.setSyncErrorMessage(booking.getSyncErrorMessage());
 //        payload.setTotalCommissionOnQuote(booking.getTotalCommissionOnQuote());
-        payload.setShoulderEndDate(block.getEndShoulderDate());
-        payload.setShoulderStartDate(block.getStartShoulderDate());
+//        payload.setShoulderEndDate(block.getEndShoulderDate());
+//        payload.setShoulderStartDate(block.getStartShoulderDate());
 //        payload.setTotalInclTax(booking.getTotalInclTax());
 //        payload.setTotalHotelRoomInclTax(booking.getTotalHotelRoomInclTax());
 //        payload.setTotalMeetingRoomInclTax(booking.getTotalMeetingRoomInclTax());
@@ -233,14 +232,14 @@ public class SalesforceController {
 //        payload.setPotentialMaxRevenuePackage(booking.getPotentialMaxRevenuePackage());
 //        payload.setPotentialMaxRevenueProduct(booking.getPotentialMaxRevenueProduct());
 //        payload.setTotalPaid(booking.getTotalPaid());
-        payload.setInventoryBlockType(block.getInventoryBlockType());
+//        payload.setInventoryBlockType(block.getInventoryBlockType());
 //        payload.setPmsCompany(booking.getPmsCompany());
 //        payload.setPmsGroup(booking.getPmsGroup());
 //        payload.setPmsSource(booking.getPmsSource());
 //        payload.setPmsTravelAgent(booking.getPmsTravelAgent());
-        payload.setGuaranteeCode(block.getGuaranteeCode());
+//        payload.setGuaranteeCode(block.getGuaranteeCode());
 //        payload.setDietaryRequirementsLong(booking.getDietaryRequirementsLong());
-        payload.setStatus(account.getThn__Status__c());
+//        payload.setStatus(account.getThn__Status__c());
 //        payload.setBlockRate(booking.getBlockRate());
 //        payload.setRatingStars(booking.getRatingStars());
 //        payload.setPackageAmountInclTax(booking.getPackageAmountInclTax());
@@ -611,7 +610,7 @@ public class SalesforceController {
         return payload;
     }
 
-    public SalesforceUpdateGuestRoomWithPmsBlock createUpdateGuestRoomWithPmsBlock(SalesforceBookingResponse book,SalesforceAccountResponse account, SalesforceContactResponse contact, SalesforceRateResponse rate, SalesforcePropertyResponse property,String pmsBlockRequestResponse) throws JsonProcessingException {
+    public SalesforceUpdateGuestRoomWithPmsBlock createUpdateGuestRoomWithPmsBlock(SalesforceBookingResponse book,SalesforceAccountResponse account, SalesforceContactResponse contact, SalesforceRateResponse rate, SalesforcePropertyResponse property,SalesforceQueryResponse guestRoom) throws JsonProcessingException {
         SalesforceUpdateGuestRoomWithPmsBlock payload = new SalesforceUpdateGuestRoomWithPmsBlock();
 
         payload.setThn__MYCE_Quote__c(book.getId());
@@ -620,10 +619,16 @@ public class SalesforceController {
 //        payload.setThn__Departure_Date_Time__c(book.getThn__Departure_Date__c()+"T10:00:00.000+0000");
 //        payload.setThn__Departure_Time__c("T10:00:00.000+0000");
 //        payload.setThn__Discount__c((book.getThn__Discount_Percent__c()));
-        payload.setThn__Pax__c(book.getThn__Pax__c());
-        payload.setThn__ReleasedDate__c(book.getThn__Release_Date__c());
+          payload.setThn__Pax__c(book.getThn__Pax__c());
+          payload.setThn__ReleasedDate__c(book.getThn__Release_Date__c());
 //        payload.setThn__Property__c(property.getId());
-        payload.setThn__PMS_Block__c(pmsBlockRequestResponse);
+//        payload.setThn__PMS_Block__c();
+        List<SalesforceQueryResponse.QuoteHotelRoom> records = guestRoom.getRecords();
+        for (SalesforceQueryResponse.QuoteHotelRoom record : records) {
+            String id = record.getId();
+            SalesforceQueryResponse.SpaceArea spaceAreaDetails = record.getSpaceAreaDetails();
+            System.out.println("Record ID: " + id);
+        }
 
         return payload;
     }
