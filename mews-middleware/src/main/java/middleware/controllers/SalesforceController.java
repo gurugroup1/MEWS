@@ -156,7 +156,7 @@ public class SalesforceController {
 //        payload.setPublicURL(booking.getPublicURL());
 //        payload.setCompetitor(booking.getCompetitor());
 //        payload.setOtherReasonLostTurndownCancelled(booking.getOtherReasonLostTurndownCancelled());
-        payload.setLanguage(contact.getThn__Language__c());
+//        payload.setLanguage(contact.getThn__Language__c());
 //        payload.setAccountReference(booking.getAccountReference());
 //        payload.setOrigin(account.getOrigin__c());
 //        payload.setInternal(booking.getInternal());
@@ -610,25 +610,18 @@ public class SalesforceController {
         return payload;
     }
 
-    public SalesforceUpdateGuestRoomWithPmsBlock createUpdateGuestRoomWithPmsBlock(SalesforceBookingResponse book,SalesforceAccountResponse account, SalesforceContactResponse contact, SalesforceRateResponse rate, SalesforcePropertyResponse property,SalesforceQueryResponse guestRoom) throws JsonProcessingException {
+    public SalesforceUpdateGuestRoomWithPmsBlock createUpdateGuestRoomWithPmsBlock(SalesforceBookingResponse book,SalesforceAccountResponse account, SalesforceContactResponse contact, SalesforceRateResponse rate, SalesforcePropertyResponse property,SalesforceQueryResponse guestRoom,String pmsBlockId) throws JsonProcessingException {
         SalesforceUpdateGuestRoomWithPmsBlock payload = new SalesforceUpdateGuestRoomWithPmsBlock();
 
-        payload.setThn__MYCE_Quote__c(book.getId());
-//        payload.setThn__Arrival_Date_Time__c(book.getThn__Arrival_Date__c()+"T14:00:00.000+0000");
-//        payload.setThn__Arrival_Time__c("T14:00:00.000+0000");
-//        payload.setThn__Departure_Date_Time__c(book.getThn__Departure_Date__c()+"T10:00:00.000+0000");
-//        payload.setThn__Departure_Time__c("T10:00:00.000+0000");
-//        payload.setThn__Discount__c((book.getThn__Discount_Percent__c()));
+            payload.setName(contact.getName());
           payload.setThn__Pax__c(book.getThn__Pax__c());
           payload.setThn__ReleasedDate__c(book.getThn__Release_Date__c());
-//        payload.setThn__Property__c(property.getId());
-//        payload.setThn__PMS_Block__c();
-        List<SalesforceQueryResponse.QuoteHotelRoom> records = guestRoom.getRecords();
-        for (SalesforceQueryResponse.QuoteHotelRoom record : records) {
-            String id = record.getId();
-            SalesforceQueryResponse.SpaceArea spaceAreaDetails = record.getSpaceAreaDetails();
-            System.out.println("Record ID: " + id);
-        }
+          payload.setThn__PMS_Block__c(pmsBlockId);
+//        List<SalesforceQueryResponse.QuoteHotelRoom> records = guestRoom.getRecords();
+//        for (SalesforceQueryResponse.QuoteHotelRoom record : records) {
+//            String id = record.getId();
+//            System.out.println("Record ID: " + id);
+//        }
 
         return payload;
     }

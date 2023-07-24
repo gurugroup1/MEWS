@@ -376,8 +376,8 @@ public class SalesforceBookingRequest {
 //    @JsonProperty("Other_reason_lost_turndown_Cancelled__c")
 //    private String otherReasonLostTurndownCancelled;
 
-    @JsonProperty("thn__Language__c")
-    private String language;
+//    @JsonProperty("thn__Language__c")
+//    private String language;
 
 //    @JsonProperty("Account_reference__c")
 //    private String accountReference;
@@ -1647,13 +1647,13 @@ public class SalesforceBookingRequest {
 //        this.otherReasonLostTurndownCancelled = otherReasonLostTurndownCancelled;
 //    }
 //
-    public String getLanguage() {
-        return language;
-    }
-
-    public void setLanguage(String language) {
-        this.language = language;
-    }
+//    public String getLanguage() {
+//        return language;
+//    }
+//
+//    public void setLanguage(String language) {
+//        this.language = language;
+//    }
 //
 //    public String getAccountReference() {
 //        return accountReference;
