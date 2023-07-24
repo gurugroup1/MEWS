@@ -119,9 +119,14 @@ public class MiddlewareCommand implements Command {
                                                                 String createdPMSBlockRates = createPMSBlockRatesInSalesforce(booking, account, contact, rate, property, salesforceToken, pmsBlockId, guestRoom, responseData);
                                                                 JsonNode createdPMSBlockRatesNode = objectMapper.readTree(createdPMSBlockRates);
                                                                 if (createdPMSBlockRatesNode.get("success").asBoolean() == true) {
-                                                                    apiResponse.setStatus(ResponseStatus.SUCCESS);
-                                                                    apiResponse.setMessage("Process has been completed.");
-
+//                                                                    apiResponse.setStatus(ResponseStatus.SUCCESS);
+//                                                                    apiResponse.setMessage("Process has been completed.");
+                                                                    String updatedGuestRoomWithPmsBlock = updateGuestRoomWithPmsBlockInSalesforce(booking,account,contact,rate,property,salesforceToken,pmsBlockId,guestRoom,pmsBlockId,responseData);
+                                                                    JsonNode updatedGuestRoomWithPmsBlockNode = objectMapper.readTree(updatedGuestRoomWithPmsBlock);
+                                                                        if (updatedGuestRoomWithPmsBlockNode.get("success").asBoolean() == true) {
+                                                                            apiResponse.setStatus(ResponseStatus.SUCCESS);
+                                                                            apiResponse.setMessage("Process has been completed.");
+                                                                        }
                                                                 }
                                                             }
 
@@ -494,26 +499,45 @@ public class MiddlewareCommand implements Command {
         }
         return response;
     }
+    private String updateGuestRoomWithPmsBlockInSalesforce(SalesforceBookingResponse booking,SalesforceAccountResponse account,SalesforceContactResponse contact,SalesforceRateResponse rate,SalesforcePropertyResponse property,SalesforceTokenResponse salesforceToken,String pmsBlockId,SalesforceQueryResponse guestRooms,String pmsBlockRequestResponse, Map<String, Object> responseData) throws Exception {
+        SalesforceUpdateGuestRoomWithPmsBlock request = this.salesforceController.createUpdateGuestRoomWithPmsBlock(booking,account,contact,rate,property,pmsBlockRequestResponse);
+        String requestString = objectMapper.writeValueAsString(request);
+        String response = this.salesforceController.updateRecordInSalesforce(applicationConfiguration.getSalesforcePMSBlock(), salesforceToken.getAccess_token(), requestString,pmsBlockId);
+        String result = "Failed";
+        if (response != null && !response.isEmpty()) {
+            ObjectMapper objectMapper = new ObjectMapper();
+            Map<String,Object> responseMap = objectMapper.readValue(response, new TypeReference<Map<String, Object>>(){});
 
-//    private String updateBookingInSalesforce(SalesforceBookingResponse booking,SalesforceAccountResponse account,SalesforceContactResponse contact,SalesforceRateResponse rate,SalesforcePropertyResponse property,SalesforceTokenResponse salesforceToken,String pmsBlockId,SalesforceQueryResponse guestRooms, Map<String, Object> responseData) throws Exception {
-//        SalesforceBookingRequest request = this.salesforceController.createBookingPayload(booking);
-//        String requestString = objectMapper.writeValueAsString(request);
-//        String response = this.salesforceController.addRecordInSalesforce(applicationConfiguration.getSalesforcePMSAccount(), salesforceToken.getAccess_token(), requestString);
-//        String result = "Failed";
-//        if (response != null && !response.isEmpty()) {
-//            ObjectMapper objectMapper = new ObjectMapper();
-//            Map<String,Object> responseMap = objectMapper.readValue(response, new TypeReference<Map<String, Object>>(){});
-//
-//            Boolean success = (Boolean) responseMap.get("success");
-//            String id = (String) responseMap.get("id");
-//
-//            if (success != null && success && id != null && !id.isEmpty()) {
-//                responseData.put("Salesforce_Post_PMS_Block_Rates", response);
-//                result = "Success";
-//            }
-//        }
-//        return result;
-//    }
+            Boolean success = (Boolean) responseMap.get("success");
+            String id = (String) responseMap.get("id");
+
+            if (success != null && success && id != null && !id.isEmpty()) {
+                responseData.put("Salesforce_Post_PMS_Block_Rates", response);
+                result = "Success";
+            }
+        }
+        return result;
+    }
+
+    private String updateBookingInSalesforce(SalesforceBookingResponse booking,SalesforceAccountResponse account,SalesforceContactResponse contact,SalesforceRateResponse rate,SalesforcePropertyResponse property,SalesforceTokenResponse salesforceToken,String pmsBlockId,SalesforceQueryResponse guestRooms,SalesforcePSMBlockRequest block, Map<String, Object> responseData) throws Exception {
+        SalesforceBookingRequest request = this.salesforceController.createBookingPayload(booking,account,contact,rate,property,block);
+        String requestString = objectMapper.writeValueAsString(request);
+        String response = this.salesforceController.addRecordInSalesforce(applicationConfiguration.getSalesforcePMSAccount(), salesforceToken.getAccess_token(), requestString);
+        String result = "Failed";
+        if (response != null && !response.isEmpty()) {
+            ObjectMapper objectMapper = new ObjectMapper();
+            Map<String,Object> responseMap = objectMapper.readValue(response, new TypeReference<Map<String, Object>>(){});
+
+            Boolean success = (Boolean) responseMap.get("success");
+            String id = (String) responseMap.get("id");
+
+            if (success != null && success && id != null && !id.isEmpty()) {
+                responseData.put("Salesforce_Post_PMS_Block_Rates", response);
+                result = "Success";
+            }
+        }
+        return result;
+    }
 
 
     private void setSuccessStatus(ApiResponse apiResponse, String message) {

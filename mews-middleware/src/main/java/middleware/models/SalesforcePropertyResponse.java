@@ -33,6 +33,113 @@ public class SalesforcePropertyResponse {
 
     @JsonProperty("thn__Mews_Id__c")
     private String thn__Mews_Id__c;
+
+    @JsonProperty("thn__Booking_Internal_Notes_Template__c")
+    private String bookingInternalNotes;
+
+    @JsonProperty("Max_hotel_rooms__c")
+    private Double hotelRoomsAmount;
+
+    @JsonProperty("thn__Resort__c")
+    private String resort;
+    @JsonProperty("Logo_URL__c")
+    private String logoURL;
+    @JsonProperty("thn__Comm_Beverage__c")
+    private String commBeverage;
+    @JsonProperty("thn__Comm_Food__c")
+    private String commFood;
+    @JsonProperty("thn__Comm_Hotel_Rooms__c")
+    private String commHotelRooms;
+
+    @JsonProperty("thn__Comm_Meeting_Rooms__c")
+    private String commMeetingRooms;
+
+    @JsonProperty("thn__Comm_Other__c")
+    private String commOther;
+
+    @JsonProperty("thn__Comm_Package__c")
+    private String commPackage;
+
+    public String getCommOther() {
+        return commOther;
+    }
+
+    public void setCommOther(String commOther) {
+        this.commOther = commOther;
+    }
+
+    public String getCommPackage() {
+        return commPackage;
+    }
+
+    public void setCommPackage(String commPackage) {
+        this.commPackage = commPackage;
+    }
+
+    public String getCommHotelRooms() {
+        return commHotelRooms;
+    }
+
+    public void setCommHotelRooms(String commHotelRooms) {
+        this.commHotelRooms = commHotelRooms;
+    }
+
+    public String getCommMeetingRooms() {
+        return commMeetingRooms;
+    }
+
+    public void setCommMeetingRooms(String commMeetingRooms) {
+        this.commMeetingRooms = commMeetingRooms;
+    }
+
+    public String getCommFood() {
+        return commFood;
+    }
+
+    public void setCommFood(String commFood) {
+        this.commFood = commFood;
+    }
+
+    public String getCommBeverage() {
+        return commBeverage;
+    }
+
+    public void setCommBeverage(String commBeverage) {
+        this.commBeverage = commBeverage;
+    }
+
+    public String getLogoURL() {
+        return logoURL;
+    }
+
+    public void setLogoURL(String logoURL) {
+        this.logoURL = logoURL;
+    }
+
+    public String getResort() {
+        return resort;
+    }
+
+    public void setResort(String resort) {
+        this.resort = resort;
+    }
+
+    public Double getHotelRoomsAmount() {
+        return hotelRoomsAmount;
+    }
+
+    public void setHotelRoomsAmount(Double hotelRoomsAmount) {
+        this.hotelRoomsAmount = hotelRoomsAmount;
+    }
+
+    public String getBookingInternalNotes() {
+        return bookingInternalNotes;
+    }
+
+    public void setBookingInternalNotes(String bookingInternalNotes) {
+        this.bookingInternalNotes = bookingInternalNotes;
+    }
+
     public String getAdditionalAdult() {
         return additionalAdult;
     }

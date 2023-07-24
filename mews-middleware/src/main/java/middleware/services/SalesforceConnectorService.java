@@ -44,7 +44,7 @@ public class SalesforceConnectorService {
             url = "https://postillion-hotels--postfull.sandbox.my.salesforce.com/services/data/v57.0/query/?q=SELECT+Id%2C+thn__Space_Area__c%2C+thn__Space_Area__r.thn__Mews_Id__c%2C+Rooms_amount__c%2C+thn__Unit_Price__c%2C+thn__Unit_Price_excl_Tax__c+FROM+thn__Quote_Hotel_Room__c+WHERE+thn__MYCE_Quote__c+%3D+%27" + bookingId + "%27";
         }
         if(Objects.equals(object, "PSM_Block")){
-            url = "https://postillion-hotels--postfull.sandbox.my.salesforce.com/services/data/v57.0/query/?q=SELECT+id%2C+Name%2Cthn__PMSId__c%2Cthn__Rate__c%2Cthn__PMS_Release_Date_Time__c+from+thn__PMS_Block__c+where+thn__MYCE_Quote__c+%3D+'" + bookingId + "'";
+            url = "https://postillion-hotels--postfull.sandbox.my.salesforce.com/services/data/v57.0/query/?q=SELECT+id%2C+Name%2Cthn__PMSId__c%2Cthn__SegmentationMarket__c%2Cthn__Rate__c%2Cthn__PMS_Release_Date_Time__c+from+thn__PMS_Block__c+where+thn__MYCE_Quote__c+%3D+'" + bookingId + "'";
         }
         if(Objects.equals(object, "PSM_Account")){
             url = "https://postillion-hotels--postfull.sandbox.my.salesforce.com/services/data/v57.0/query/?q=SELECT+id%2C+Name%2Cthn__PMSId__c%2Cthn__MYCE_Quote__c%2Cthn__Email__c%2Cthn__Phone__c+from+thn__PMS_Account__c+where+thn__MYCE_Quote__c+%3D+'" + bookingId + "'";
