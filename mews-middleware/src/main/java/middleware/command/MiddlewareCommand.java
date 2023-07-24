@@ -77,10 +77,11 @@ public class MiddlewareCommand implements Command {
                                                     Optional<MewsCompanyResponse> createdCompany = createCompanyInMews(booking, account, contact, responseData);
                                                 }
                                                 Optional<MewsGetBookerResponse> BookerMews = isBookerExistInMews(account, contact, pmsAccount, responseData);
-                                                List<MewsGetBookerResponse.Customer> customers = BookerMews.get().getCustomers();
-                                                MewsGetBookerResponse.Customer firstCustomer = customers.get(0);
-                                                bookerId = firstCustomer.getId();
+
                                                 if (BookerMews.isPresent()) {
+                                                    List<MewsGetBookerResponse.Customer> customers = BookerMews.get().getCustomers();
+                                                    MewsGetBookerResponse.Customer firstCustomer = customers.get(0);
+                                                    bookerId = firstCustomer.getId();
                                                     Optional<MewsUpdateBookerResponse> updatedBooker = updateBookerInMews(booking, account, contact, BookerMews.get(), responseData);
 
                                                 } else {
@@ -288,18 +289,30 @@ public class MiddlewareCommand implements Command {
 
     private Optional<MewsGetBookerResponse> isBookerExistInMews(SalesforceAccountResponse account, SalesforceContactResponse contact, SalesforceGetPMSAccountResponse pmsAccount, Map<String, Object> responseData) throws Exception {
         Optional<MewsGetBookerResponse> response = Optional.empty();
+
+        // Step 1: Verify pmsAccount.getTotalSize()
         if (pmsAccount.getTotalSize() > 0) {
             MewsGetBookerRequest request = mewsController.createGetBookerPayload(account, contact);
-            response = this.responseParser.getBookerFromMews(request);
-            if (response.isPresent()) {
-                MewsGetBookerResponse result = response.get();
-                responseData.put("Mews_Get_Booker", response.get());
-            } else {
-                responseData.put("Mews_Get_Booker", "No Booker found.");
+
+            try {
+                // Step 2: Check getBookerFromMews method
+                response = this.responseParser.getBookerFromMews(request);
+
+                if (response.isPresent()) {
+                    MewsGetBookerResponse result = response.get();
+                    responseData.put("Mews_Get_Booker", response.get());
+                } else {
+                    responseData.put("Mews_Get_Booker", "No Booker found.");
+                }
+            } catch (Exception e) {
+                // Step 5: Exception handling
+                responseData.put("Mews_Get_Booker_Error", e.getMessage());
+                // You may also print the exception stack trace for further debugging.
             }
         }
         return response;
     }
+
 
     private Optional<MewsBookerResponse> createBookerInMews(SalesforceBookingResponse booking, SalesforceAccountResponse account, SalesforceContactResponse contact, Map<String, Object> responseData) throws Exception {
         Optional<MewsBookerResponse> createBooker;
