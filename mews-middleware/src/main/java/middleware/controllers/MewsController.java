@@ -181,7 +181,6 @@ public class MewsController {
         MewsGetBookerResponse.Customer customer = booker.getCustomers().get(0);
         String firstName = customer.getFirstName();
         String lastName = customer.getLastName();
-        String secondLastName = customer.getSecondLastName();
         String nationalityCode = customer.getNationalityCode();
         String birthDate = String.valueOf(customer.getBirthDate());
         String birthPlace = customer.getBirthPlace();
@@ -191,7 +190,6 @@ public class MewsController {
         String notes = customer.getNotes();
         String contactFirstName = contact.getFirstName();
         String contactLastName = contact.getLastName();
-        String contactSecondLastName = contact.getName();
         String contactNationalityCode = contact.getThn__Nationality__c();
 //        String contactBirthDate = contact.getBirthdate();
 //        String bookBirthPlace = book.getOrigin__c();
@@ -208,7 +206,6 @@ public class MewsController {
 
         request.setFirstName(getUpdatedValue(contactFirstName, firstName));
         request.setLastName(getUpdatedValue(contactLastName, lastName));
-        request.setSecondLastName(getUpdatedValue(contactSecondLastName, secondLastName));
         request.setNationalityCode(getUpdatedValue(contactNationalityCode, nationalityCode));
 //        request.setBirthDate(getUpdatedValue(contactBirthDate, birthDate));
 //        request.setBirthPlace(getUpdatedValue(bookBirthPlace, birthPlace));
