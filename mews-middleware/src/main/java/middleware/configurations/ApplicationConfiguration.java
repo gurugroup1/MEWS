@@ -92,23 +92,6 @@ public class ApplicationConfiguration {
     @Value("${mews.apiUrl}")
     private String mewsApiUrl;
 
-//    @Bean
-//    public DataSourceInitializer dataSourceInitializer(DataSource dataSource) {
-//        DataSourceInitializer initializer = new DataSourceInitializer();
-//        initializer.setDataSource(dataSource);
-//        ResourceDatabasePopulator populator = new ResourceDatabasePopulator();
-//        initializer.setDatabasePopulator(populator);
-//        return initializer;
-//    }
-
-//    @Bean
-//    public ObjectMapper objectMapper() {
-//        ObjectMapper mapper = new ObjectMapper();
-//        mapper.registerModule(new JavaTimeModule());
-//        mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
-//        return mapper;
-//    }
-
     @Bean
     public OkHttpClient httpClient() {
         return new OkHttpClient.Builder().build();
