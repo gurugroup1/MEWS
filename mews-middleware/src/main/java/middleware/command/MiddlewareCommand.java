@@ -62,7 +62,6 @@ public class MiddlewareCommand implements Command {
                         SalesforceAccountResponse account = getAccountDetails(salesforceToken, booking, apiResponse, responseData);
                         if (account != null) {
                             SalesforceContactResponse contact = getContactDetails(salesforceToken, booking, apiResponse, responseData);
-                            String contactId = getContactDetails(salesforceToken, booking, apiResponse, responseData).getThn__Guest__c();
                             if (contact != null) {
                                 SalesforceRateResponse rate = getRateDetails(salesforceToken, booking, apiResponse, responseData);
                                 if (rate != null) {
@@ -115,13 +114,10 @@ public class MiddlewareCommand implements Command {
                                                         String createdPMSBlockInSalesforce = "";
                                                         if (createdGuestForBookerNode.get("success").asBoolean() == true) {
                                                             String contactGuestId = getContactDetails(salesforceToken, booking, apiResponse, responseData).getThn__Guest__c();
-                                                            System.out.println("contactIddetail"+contactId);
                                                             if (availabilityBlockMews.isPresent()) {
                                                                 createdPMSBlockInSalesforce = createPMSBlockInSalesforceByGet(booking, account, contact, rate, property, salesforceToken, createdAvailabilityBlock, pmsAccountResponseId,contactGuestId,guestRoom, responseData);
-                                                                System.out.println("contactId"+contactId);
                                                             } else {
                                                                 createdPMSBlockInSalesforce = createPMSBlockInSalesforceByCreated(booking, account, contact, rate, property, salesforceToken, createdAvailabilityBlock, pmsAccountResponseId,contactGuestId,guestRoom, responseData);
-                                                                System.out.println("contactId"+contactId);
 
                                                             }
                                                             JsonNode pmsBlockNode = objectMapper.readTree(createdPMSBlockInSalesforce);
@@ -146,7 +142,7 @@ public class MiddlewareCommand implements Command {
                                                 String updatedGuestRoomWithPmsBlock = updateGuestRoomWithPmsBlockInSalesforce(booking, account, contact, rate, property, salesforceToken, guestRoom, pmsBlockId, responseData);
                                                 if (updatedGuestRoomWithPmsBlock.isEmpty()) {
                                                     apiResponse.setStatus(ResponseStatus.SUCCESS);
-                                                    String updatedBooking = updateBookingInSalesforce(booking, account, contact, rate, property, salesforceToken, responseData,contactId, pmsAccountResponseId);
+                                                    String updatedBooking = updateBookingInSalesforce(booking, account, contact, rate, property, salesforceToken, responseData, pmsAccountResponseId);
                                                     if (updatedBooking.isEmpty()) {
                                                         apiResponse.setStatus(ResponseStatus.SUCCESS);
                                                         apiResponse.setMessage("Process has been completed.");
@@ -545,8 +541,8 @@ public class MiddlewareCommand implements Command {
         return response;
     }
 
-    private String updateBookingInSalesforce(SalesforceBookingResponse booking, SalesforceAccountResponse account, SalesforceContactResponse contact, SalesforceRateResponse rate, SalesforcePropertyResponse property, SalesforceTokenResponse salesforceToken, Map<String, Object> responseData,String contactId, String pmsAccountResponseId) throws Exception {
-        SalesforceBookingRequest request = this.salesforceController.createBookingPayload(booking, account, contact, rate, property, pmsAccountResponseId, contactId);
+    private String updateBookingInSalesforce(SalesforceBookingResponse booking, SalesforceAccountResponse account, SalesforceContactResponse contact, SalesforceRateResponse rate, SalesforcePropertyResponse property, SalesforceTokenResponse salesforceToken, Map<String, Object> responseData, String pmsAccountResponseId) throws Exception {
+        SalesforceBookingRequest request = this.salesforceController.createBookingPayload(booking, account, contact, rate, property, pmsAccountResponseId);
         String requestString = objectMapper.writeValueAsString(request);
         String bookingId = booking.getId();
         System.out.println("bookingId" + bookingId);

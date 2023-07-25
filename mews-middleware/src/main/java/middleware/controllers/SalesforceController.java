@@ -32,11 +32,11 @@ public class SalesforceController {
                 "service must not be null");
     }
 
-    public SalesforceBookingRequest createBookingPayload(SalesforceBookingResponse book,SalesforceAccountResponse account, SalesforceContactResponse contact, SalesforceRateResponse rate, SalesforcePropertyResponse property,String pmsAccountId,String contactId) throws JsonProcessingException {
+    public SalesforceBookingRequest createBookingPayload(SalesforceBookingResponse book,SalesforceAccountResponse account, SalesforceContactResponse contact, SalesforceRateResponse rate, SalesforcePropertyResponse property,String pmsAccountId) throws JsonProcessingException {
         SalesforceBookingRequest payload = new SalesforceBookingRequest();
         payload.setName(book.getName());
         payload.setCurrencyIsoCode(account.getCurrencyIsoCode());
-        payload.setReservationGuest(contactId);
+        payload.setReservationGuest(contact.getThn__Guest__c());
 //        payload.setRecordTypeId(account.getRecordTypeId());
 //        payload.setAccomodationNotes(booking.getAccomodationNotes());
 //        payload.setAgentContact(booking.getAgentContact());
