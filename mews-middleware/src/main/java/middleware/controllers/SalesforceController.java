@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.io.IOException;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 @RestController
 public class SalesforceController {
@@ -250,7 +251,7 @@ public class SalesforceController {
         return payload;
     }
 
-    public PSMAccountRequest createPSMAccountPayload(SalesforceBookingResponse book,SalesforceAccountResponse account, SalesforceContactResponse contact, SalesforceRateResponse rate, SalesforcePropertyResponse property) throws JsonProcessingException {
+    public PSMAccountRequest createPSMAccountPayload(SalesforceBookingResponse book, SalesforceAccountResponse account, SalesforceContactResponse contact, SalesforceRateResponse rate, SalesforcePropertyResponse property) throws JsonProcessingException {
         PSMAccountRequest payload = new PSMAccountRequest();
         payload.setName(account.getName());
         payload.setCurrencyIsoCode(book.getCurrencyIsoCode());
@@ -294,6 +295,7 @@ public class SalesforceController {
         payload.setSicDescription(account.getSicDesc());
         payload.setStatus(account.getThn__Status__c());
         payload.setTaxId(account.getThn__TaxIdentifier__c());
+//        payload.setPmsId(mewsCompanyId.get().getCompanies().get(0).getId());
 //      payload.setAccountReceivableNumber("12345");
 //      payload.setCreateAccount(true);
 //      payload.setHapiId("Hapi ID");
@@ -425,7 +427,7 @@ public class SalesforceController {
         return payload;
     }
 
-    public SalesforcePSMBlockRequest createPMSBlockPayloadByGet(SalesforceBookingResponse book,SalesforceAccountResponse account, SalesforceContactResponse contact, SalesforceRateResponse rate, SalesforcePropertyResponse property,MewsGetAvailabilityBlockResponse availabilityBlockId,String pmsAccountId,String contactId) throws JsonProcessingException {
+    public SalesforcePSMBlockRequest createPMSBlockPayloadByGet(SalesforceBookingResponse book,SalesforceAccountResponse account, SalesforceContactResponse contact, SalesforceRateResponse rate, SalesforcePropertyResponse property,MewsAvailabilityBlockResponse availabilityBlockId,String pmsAccountId,String contactId,SalesforceQueryResponse pmsId) throws JsonProcessingException {
         SalesforcePSMBlockRequest payload = new SalesforcePSMBlockRequest();
         payload.setName(contact.getName());
         payload.setCurrencyIsoCode(book.getCurrencyIsoCode());
@@ -455,7 +457,7 @@ public class SalesforceController {
         payload.setPmsAccountGroup(pmsAccountId);
         payload.setPmsAccountSource(pmsAccountId);
         payload.setPmsAccountTravelAgent(pmsAccountId);
-
+        payload.setPmsId(availabilityBlockId.getAvailabilityBlocks().get(0).getId());
 //        payload.setPmsResponse(book.getPmsResponse());
 //        payload.setPmsResponseDateTime(book.getPmsResponseDateTime());
 //        payload.setPmsStatus(book.getPmsStatus());
@@ -494,7 +496,7 @@ public class SalesforceController {
         return payload;
     }
 
-    public SalesforcePSMBlockRequest createPMSBlockPayloadByCreated(SalesforceBookingResponse book,SalesforceAccountResponse account, SalesforceContactResponse contact, SalesforceRateResponse rate, SalesforcePropertyResponse property,MewsAvailabilityBlockResponse availabilityBlockId,String pmsAccountId,String contactId) throws JsonProcessingException {
+    public SalesforcePSMBlockRequest createPMSBlockPayloadByCreated(SalesforceBookingResponse book,SalesforceAccountResponse account, SalesforceContactResponse contact, SalesforceRateResponse rate, SalesforcePropertyResponse property,MewsAvailabilityBlockResponse availabilityBlockId,String pmsAccountId,String contactId,SalesforceQueryResponse pmsId) throws JsonProcessingException {
         SalesforcePSMBlockRequest payload = new SalesforcePSMBlockRequest();
         payload.setName(contact.getName());
         payload.setCurrencyIsoCode(book.getCurrencyIsoCode());
@@ -524,6 +526,7 @@ public class SalesforceController {
         payload.setPmsAccountGroup(pmsAccountId);
         payload.setPmsAccountSource(pmsAccountId);
         payload.setPmsAccountTravelAgent(pmsAccountId);
+        payload.setPmsId(availabilityBlockId.getAvailabilityBlocks().get(0).getId());
 
 //        payload.setPmsResponse(book.getPmsResponse());
 //        payload.setPmsResponseDateTime(book.getPmsResponseDateTime());
