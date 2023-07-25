@@ -47,6 +47,7 @@ public class SalesforceConnectorService {
                 String errorMessage = parseErrorMessage(responseBody);
                 throw new IOException(errorMessage);
             }
+
             return responseBody;
         }
     }

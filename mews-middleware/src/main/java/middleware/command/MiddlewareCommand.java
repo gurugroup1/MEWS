@@ -11,14 +11,13 @@ import middleware.models.*;
 import middleware.services.MewsConnectorService;
 import middleware.services.SalesforceConnectorService;
 import middleware.util.JsonUtils;
+import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.io.IOException;
+import java.util.*;
 
 public class MiddlewareCommand implements Command {
     private static final Logger logger = LoggerFactory.getLogger(MiddlewareCommand.class);
@@ -44,6 +43,19 @@ public class MiddlewareCommand implements Command {
         this.responseParser = responseParser;
     }
 
+    public SalesforceRestControllerResponse processRestRequest(SalesforceController salesforceController, String bookingId, SalesforceTokenResponse salesforceToken) {
+        try {
+            SalesforceRestControllerRequest request = salesforceController.createRestControllerPayload(bookingId);
+            String restRequest = objectMapper.writeValueAsString(request);
+            String restResponse = salesforceController.restControllerSalesforce(salesforceToken.getAccess_token(), restRequest);
+            return objectMapper.readValue(restResponse, SalesforceRestControllerResponse.class);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     @Override
     public ApiResponse execute(String requestBody) {
         ApiResponse apiResponse = new ApiResponse();
@@ -55,114 +67,18 @@ public class MiddlewareCommand implements Command {
                 generateLog("**** Mews Middleware Start ****");
                 apiResponse.setBookingId(bookingId);
                 SalesforceTokenResponse salesforceToken = this.responseParser.retrieveSalesforceToken();
-                SalesforceRestControllerRequest request = salesforceController.createRestControllerPayload(bookingId);
-                String restRequest = objectMapper.writeValueAsString(request);
-                String  asd = salesforceController.restControllerSalesforce(salesforceToken.getAccess_token(), restRequest);
-                System.out.println(asd);
-                responseData.put("Salesforce_Get_Guest_Rooms", asd);
-//                SalesforceBookingResponse booking = getBookingDetails(salesforceToken, bookingId, apiResponse, responseData);
-//                if (booking != null) {
-//                    SalesforceQueryResponse guestRoom = getGuestDetails(salesforceToken, bookingId, apiResponse, responseData);
-//                    if (guestRoom != null) {
-//                        SalesforceAccountResponse account = getAccountDetails(salesforceToken, booking, apiResponse, responseData);
-//                        if (account != null) {
-//                            SalesforceContactResponse contact = getContactDetails(salesforceToken, booking, apiResponse, responseData);
-//                            if (contact != null) {
-//                                SalesforceRateResponse rate = getRateDetails(salesforceToken, booking, apiResponse, responseData);
-//                                if (rate != null) {
-//                                    SalesforcePropertyResponse property = getPropertyDetails(salesforceToken, rate, apiResponse, responseData);
-//                                    if (property != null) {
-//                                        SalesforceGetPMSBlockResponse pmsBlock = getPSMBlockDetails(salesforceToken, bookingId, apiResponse, responseData);
-//                                        if (pmsBlock != null) {
-//                                            SalesforceGetPMSAccountResponse pmsAccount = getPSMAccountDetails(salesforceToken, bookingId, apiResponse, responseData);
-//                                            if (pmsAccount != null) {
-//                                                Optional<MewsGetCompanyResponse> companyMews = isCompanyExistInMews(account, pmsAccount, responseData);
-//                                                Optional<MewsUpdateCompanyResponse> updatedCompany = null;
-//                                                Optional<MewsCompanyResponse> createdCompany = null;
-//                                                if (companyMews.isPresent()) {
-//                                                     updatedCompany = updateCompanyInMews(booking, account, contact, companyMews.get(), responseData);
-//                                                } else {
-//                                                     createdCompany = createCompanyInMews(booking, account, contact, responseData);
-//
-//                                                }
-//                                                Optional<MewsGetBookerResponse> BookerMews = isBookerExistInMews(account, contact, pmsAccount, responseData);
-//
-//                                                if (BookerMews.isPresent()) {
-//                                                    List<MewsGetBookerResponse.Customer> customers = BookerMews.get().getCustomers();
-//                                                    MewsGetBookerResponse.Customer firstCustomer = customers.get(0);
-//                                                    bookerId = firstCustomer.getId();
-//                                                    Optional<MewsUpdateBookerResponse> updatedBooker = updateBookerInMews(booking, account, contact, BookerMews.get(), responseData);
-//
-//                                                } else {
-//                                                    Optional<MewsBookerResponse> createdBooker = createBookerInMews(booking, account, contact, responseData);
-//                                                    bookerId = createdBooker.get().getId();
-//                                                }
-//                                                Optional<MewsGetAvailabilityBlockResponse> availabilityBlockMews = isAvailabilityBlockExistInMews(account, contact, pmsBlock, responseData);
-//                                                Optional<MewsAvailabilityBlockResponse> createdAvailabilityBlock = Optional.empty();
-//                                                if (availabilityBlockMews.isPresent()) {
-//                                                    String updateAvailabilityInMews = updateAvailabilityInMewsByGet(booking, rate, property, availabilityBlockMews, guestRoom, responseData);
-//                                                    String updateRatePriceInMewsByGet = updateRatePriceInMewsByGet(booking, availabilityBlockMews, responseData);
-//                                                } else {
-//                                                    createdAvailabilityBlock = createAvailabilityBlockInMews(booking, contact, rate, property, bookerId, responseData);
-//                                                    String updateAvailabilityInMews = updateAvailabilityInMewsByCreated(booking, rate, property, createdAvailabilityBlock, guestRoom, responseData);
-//                                                    String updateRatePriceInMewsByCreate = updateRatePriceInMewsByCreated(booking, createdAvailabilityBlock, responseData);
-//                                                }
-//                                                String pmsAccountResponseId = "";
-//                                                String pmsBlockId = "";
-//                                                if (pmsAccount.getTotalSize() <= 0 && pmsBlock.getTotalSize() <= 0) {
-//                                                    String createdPMSAccount = createPMSAccountForCompanyInSalesforce(booking, account, contact, rate, property, salesforceToken,guestRoom, createdCompany, responseData);
-//                                                    JsonNode createdPMSAccountNode = objectMapper.readTree(createdPMSAccount);
-//                                                    pmsAccountResponseId = createdPMSAccountNode.get("id").asText();
-//                                                    if (createdPMSAccountNode.get("success").asBoolean() == true) {
-//                                                        String createdGuestForBooker = createGuestForBookerInSalesforce(booking, account, contact, rate, property, salesforceToken, responseData);
-//                                                        JsonNode createdGuestForBookerNode = objectMapper.readTree(createdGuestForBooker);
-//                                                        String createdPMSBlockInSalesforce = "";
-//                                                        if (createdGuestForBookerNode.get("success").asBoolean() == true) {
-//                                                            String contactGuestId = getContactDetails(salesforceToken, booking, apiResponse, responseData).getThn__Guest__c();
-//                                                            if (availabilityBlockMews.isPresent()) {
-//                                                                createdPMSBlockInSalesforce = createPMSBlockInSalesforceByGet(booking, account, contact, rate, property, salesforceToken, createdAvailabilityBlock, pmsAccountResponseId,contactGuestId,guestRoom, responseData);
-//                                                            } else {
-//                                                                createdPMSBlockInSalesforce = createPMSBlockInSalesforceByCreated(booking, account, contact, rate, property, salesforceToken, createdAvailabilityBlock, pmsAccountResponseId,contactGuestId,guestRoom, responseData);
-//
-//                                                            }
-//                                                            JsonNode pmsBlockNode = objectMapper.readTree(createdPMSBlockInSalesforce);
-//                                                            pmsBlockId = pmsBlockNode.get("id").asText();
-//                                                            if (pmsBlockNode.get("success").asBoolean() == true) {
-//                                                                String createdMewsBlockInventoriesInSalesforce = createMewsBlockInventoriesInSalesforce(booking, account, contact, rate, property, salesforceToken, pmsBlockId, guestRoom, responseData);
-//                                                                JsonNode createdMewsBlockInventoriesNode = objectMapper.readTree(createdMewsBlockInventoriesInSalesforce);
-//                                                                if (createdMewsBlockInventoriesNode.get("success").asBoolean() == true) {
-//                                                                    String createdPMSBlockRates = createPMSBlockRatesInSalesforce(booking, account, contact, rate, property, salesforceToken, pmsBlockId, guestRoom, responseData);
-////                                                                    JsonNode createdPMSBlockRatesNode = objectMapper.readTree(createdPMSBlockRates);
-////                                                                    if (createdPMSBlockRatesNode.get("success").asBoolean() == true) {
-////                                                                    }
-//                                                                }
-//
-//                                                            }
-//                                                        }
-//                                                    }
-//                                                }else{
-//                                                     pmsAccountResponseId = pmsAccount.getRecords().get(0).getId();
-//                                                     pmsBlockId = pmsBlock.getRecords().get(0).getId();
-//                                                }
-//                                                String updatedGuestRoomWithPmsBlock = updateGuestRoomWithPmsBlockInSalesforce(booking, account, contact, rate, property, salesforceToken, guestRoom, pmsBlockId, responseData);
-//                                                if (updatedGuestRoomWithPmsBlock.isEmpty()) {
-//                                                    apiResponse.setStatus(ResponseStatus.SUCCESS);
-//                                                    String updatedBooking = updateBookingInSalesforce(booking, account, contact, rate, property, salesforceToken, responseData, pmsAccountResponseId);
-//                                                    if (updatedBooking.isEmpty()) {
-//                                                        apiResponse.setStatus(ResponseStatus.SUCCESS);
-//                                                        apiResponse.setMessage("Process has been completed.");
-//                                                    }
-//                                                }
-//
-//
-//                                            }
-//                                        }
-//                                    }
-//                                }
-//                            }
-//                        }
-//                    }
-//                }
+
+                // Get Complete Data from salesforce using rest controller
+                SalesforceRestControllerResponse restResponses = processRestRequest(salesforceController , bookingId, salesforceToken);
+                System.out.println(restResponses);
+                if(Objects.equals(restResponses.getStatus(), "Success")){
+                    responseData.put("Salesforce_Data",restResponses);
+                    setSuccessStatus(apiResponse,"Process has been completed.");
+                }
+                else{
+                    setFailedStatus(apiResponse, "Error in getting initial data from salesforce.");
+                }
+
             } else {
                 setFailedStatus(apiResponse, "No booking Id provided in the request body");
             }
@@ -179,101 +95,6 @@ public class MiddlewareCommand implements Command {
         return apiResponse;
     }
 
-    private SalesforceBookingResponse getBookingDetails(SalesforceTokenResponse salesforceToken, String bookingId, ApiResponse apiResponse, Map<String, Object> responseData) {
-        Optional<SalesforceBookingResponse> booking = this.responseParser.retrieveAndParseResponse(salesforceToken, bookingId, SalesforceBookingResponse.class, applicationConfiguration.getSalesforceBookingObject());
-        if (booking.isPresent()) {
-            responseData.put("Salesforce_Get_Booking", booking.get());
-            SalesforceBookingResponse bookingResponse = booking.get();
-            return bookingResponse;
-        } else {
-            setFailedStatus(apiResponse, "Request body does not contain booking Id");
-            return null;
-        }
-    }
-
-    private SalesforceQueryResponse getGuestDetails(SalesforceTokenResponse salesforceToken, String bookingId, ApiResponse apiResponse, Map<String, Object> responseData) {
-        Optional<SalesforceQueryResponse> response = this.responseParser.retrieveAndParseQueryResponse(salesforceToken, bookingId, SalesforceQueryResponse.class, "Guest");
-        if (response.isPresent()) {
-            responseData.put("Salesforce_Get_Guest_Rooms", response.get());
-            SalesforceQueryResponse result = response.get();
-            return result;
-        } else {
-            setFailedStatus(apiResponse, "Request body does not contain Guest Id");
-            return null;
-        }
-    }
-
-    private SalesforceAccountResponse getAccountDetails(SalesforceTokenResponse salesforceToken, SalesforceBookingResponse booking, ApiResponse apiResponse, Map<String, Object> responseData) {
-        Optional<SalesforceAccountResponse> response = this.responseParser.retrieveAndParseResponse(salesforceToken, booking.getThn__Company__c(), SalesforceAccountResponse.class, applicationConfiguration.getSalesforceAccountObject());
-        if (response.isPresent()) {
-            responseData.put("Salesforce_Get_Account", response.get());
-            SalesforceAccountResponse result = response.get();
-            return result;
-        } else {
-            setFailedStatus(apiResponse, "Request body does not contain Account Id");
-            return null;
-        }
-    }
-
-    private SalesforceContactResponse getContactDetails(SalesforceTokenResponse salesforceToken, SalesforceBookingResponse booking, ApiResponse apiResponse, Map<String, Object> responseData) {
-        Optional<SalesforceContactResponse> response = this.responseParser.retrieveAndParseResponse(salesforceToken, booking.getThn__Company_Contact__c(), SalesforceContactResponse.class, applicationConfiguration.getSalesforceCompanyContactObject());
-        if (response.isPresent()) {
-            responseData.put("Salesforce_Get_Contact", response.get());
-            SalesforceContactResponse result = response.get();
-            return result;
-        } else {
-            setFailedStatus(apiResponse, "Request body does not contain Contact Id");
-            return null;
-        }
-    }
-
-    private SalesforceRateResponse getRateDetails(SalesforceTokenResponse salesforceToken, SalesforceBookingResponse booking, ApiResponse apiResponse, Map<String, Object> responseData) {
-        Optional<SalesforceRateResponse> response = this.responseParser.retrieveAndParseResponse(salesforceToken, booking.getThn__Block_Rate__c(), SalesforceRateResponse.class, applicationConfiguration.getSalesforceRateObject());
-        if (response.isPresent()) {
-            responseData.put("Salesforce_Get_Rate", response.get());
-            SalesforceRateResponse result = response.get();
-            return result;
-        } else {
-            setFailedStatus(apiResponse, "Request body does not contain rate Id");
-            return null;
-        }
-    }
-
-    private SalesforcePropertyResponse getPropertyDetails(SalesforceTokenResponse salesforceToken, SalesforceRateResponse rate, ApiResponse apiResponse, Map<String, Object> responseData) {
-        Optional<SalesforcePropertyResponse> response = this.responseParser.retrieveAndParseResponse(salesforceToken, rate.getHotel(), SalesforcePropertyResponse.class, applicationConfiguration.getSalesforcePropertyObject());
-        if (response.isPresent()) {
-            responseData.put("Salesforce_Get_Property", response.get());
-            SalesforcePropertyResponse result = response.get();
-            return result;
-        } else {
-            setFailedStatus(apiResponse, "Request body does not contain Property Id");
-            return null;
-        }
-    }
-
-    private SalesforceGetPMSAccountResponse getPSMAccountDetails(SalesforceTokenResponse salesforceToken, String bookingId, ApiResponse apiResponse, Map<String, Object> responseData) {
-        Optional<SalesforceGetPMSAccountResponse> response = this.responseParser.retrieveAndParseQueryResponse(salesforceToken, bookingId, SalesforceGetPMSAccountResponse.class, "PSM_Account");
-        if (response.isPresent()) {
-            responseData.put("Salesforce_Get_PMS_Account", response.get());
-            SalesforceGetPMSAccountResponse result = response.get();
-            return result;
-        } else {
-            setFailedStatus(apiResponse, "Request body does not contain PMS Account Id");
-            return null;
-        }
-    }
-
-    private SalesforceGetPMSBlockResponse getPSMBlockDetails(SalesforceTokenResponse salesforceToken, String bookingId, ApiResponse apiResponse, Map<String, Object> responseData) {
-        Optional<SalesforceGetPMSBlockResponse> response = this.responseParser.retrieveAndParseQueryResponse(salesforceToken, bookingId, SalesforceGetPMSBlockResponse.class, "PSM_Block");
-        if (response.isPresent()) {
-            responseData.put("Salesforce_Get_PMS_Block", response.get());
-            SalesforceGetPMSBlockResponse result = response.get();
-            return result;
-        } else {
-            setFailedStatus(apiResponse, "Request body does not contain PMS Block Id");
-            return null;
-        }
-    }
 
     private Optional<MewsGetCompanyResponse> isCompanyExistInMews(SalesforceAccountResponse account, SalesforceGetPMSAccountResponse pmsAccount, Map<String, Object> responseData) throws Exception {
         Optional<MewsGetCompanyResponse> response = Optional.empty();
@@ -561,7 +382,7 @@ public class MiddlewareCommand implements Command {
 
 
     private void setSuccessStatus(ApiResponse apiResponse, String message) {
-        apiResponse.setStatus(ResponseStatus.FAILED);
+        apiResponse.setStatus(ResponseStatus.SUCCESS);
         apiResponse.setMessage(message);
     }
 
