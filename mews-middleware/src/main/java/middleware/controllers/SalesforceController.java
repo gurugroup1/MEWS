@@ -32,11 +32,11 @@ public class SalesforceController {
                 "service must not be null");
     }
 
-    public SalesforceBookingRequest createBookingPayload(SalesforceBookingResponse book,SalesforceAccountResponse account, SalesforceContactResponse contact, SalesforceRateResponse rate, SalesforcePropertyResponse property,String pmsAccountId) throws JsonProcessingException {
+    public SalesforceBookingRequest createBookingPayload(SalesforceBookingResponse book,SalesforceAccountResponse account, SalesforceContactResponse contact, SalesforceRateResponse rate, SalesforcePropertyResponse property,String pmsAccountId,String contactId) throws JsonProcessingException {
         SalesforceBookingRequest payload = new SalesforceBookingRequest();
         payload.setName(book.getName());
         payload.setCurrencyIsoCode(account.getCurrencyIsoCode());
-        payload.setReservationGuest(contact.getThn__Guest__c());
+        payload.setReservationGuest(contactId);
 //        payload.setRecordTypeId(account.getRecordTypeId());
 //        payload.setAccomodationNotes(booking.getAccomodationNotes());
 //        payload.setAgentContact(booking.getAgentContact());
@@ -252,7 +252,7 @@ public class SalesforceController {
         return payload;
     }
 
-    public PSMAccountRequest createPSMAccountPayload(SalesforceBookingResponse book, SalesforceAccountResponse account, SalesforceContactResponse contact, SalesforceRateResponse rate, SalesforcePropertyResponse property,String companyId) throws JsonProcessingException {
+    public PSMAccountRequest createPSMAccountPayload(SalesforceBookingResponse book, SalesforceAccountResponse account, SalesforceContactResponse contact, SalesforceRateResponse rate, SalesforcePropertyResponse property,Optional<MewsCompanyResponse> createdcompanyId) throws JsonProcessingException {
         PSMAccountRequest payload = new PSMAccountRequest();
         payload.setName(account.getName());
         payload.setCurrencyIsoCode(book.getCurrencyIsoCode());
@@ -296,8 +296,8 @@ public class SalesforceController {
         payload.setSicDescription(account.getSicDesc());
         payload.setStatus(account.getThn__Status__c());
         payload.setTaxId(account.getThn__TaxIdentifier__c());
-        payload.setPmsId(companyId);
-        System.out.println("companyId"+companyId);
+        payload.setPmsId(createdcompanyId.get().getCompanies().get(0).getId());
+        System.out.println("companyId"+createdcompanyId.get().getCompanies().get(0).getId());
 //      payload.setAccountReceivableNumber("12345");
 //      payload.setCreateAccount(true);
 //      payload.setHapiId("Hapi ID");

@@ -62,8 +62,7 @@ public class MiddlewareCommand implements Command {
                         SalesforceAccountResponse account = getAccountDetails(salesforceToken, booking, apiResponse, responseData);
                         if (account != null) {
                             SalesforceContactResponse contact = getContactDetails(salesforceToken, booking, apiResponse, responseData);
-                            String contactId =contact.getThn__Guest__c();
-                            System.out.println("contactId"+contactId);
+                            String contactId = getContactDetails(salesforceToken, booking, apiResponse, responseData).getThn__Guest__c();
                             if (contact != null) {
                                 SalesforceRateResponse rate = getRateDetails(salesforceToken, booking, apiResponse, responseData);
                                 if (rate != null) {
@@ -74,10 +73,12 @@ public class MiddlewareCommand implements Command {
                                             SalesforceGetPMSAccountResponse pmsAccount = getPSMAccountDetails(salesforceToken, bookingId, apiResponse, responseData);
                                             if (pmsAccount != null) {
                                                 Optional<MewsGetCompanyResponse> companyMews = isCompanyExistInMews(account, pmsAccount, responseData);
+                                                Optional<MewsUpdateCompanyResponse> updatedCompany = null;
+                                                Optional<MewsCompanyResponse> createdCompany = null;
                                                 if (companyMews.isPresent()) {
-                                                    Optional<MewsUpdateCompanyResponse> updatedCompany = updateCompanyInMews(booking, account, contact, companyMews.get(), responseData);
+                                                     updatedCompany = updateCompanyInMews(booking, account, contact, companyMews.get(), responseData);
                                                 } else {
-                                                    Optional<MewsCompanyResponse> createdCompany = createCompanyInMews(booking, account, contact, responseData);
+                                                     createdCompany = createCompanyInMews(booking, account, contact, responseData);
 
                                                 }
                                                 Optional<MewsGetBookerResponse> BookerMews = isBookerExistInMews(account, contact, pmsAccount, responseData);
@@ -104,10 +105,7 @@ public class MiddlewareCommand implements Command {
                                                 }
                                                 String pmsAccountResponseId = "";
                                                 String pmsBlockId = "";
-                                                String companyId = "";
                                                 if (pmsAccount.getTotalSize() <= 0 && pmsBlock.getTotalSize() <= 0) {
-                                                    String  createdCompany =createCompanyInMews(booking, account, contact, responseData).get().getCompanies().get(0).getId();
-                                                    System.out.println("createdCompany"+createdCompany);
                                                     String createdPMSAccount = createPMSAccountForCompanyInSalesforce(booking, account, contact, rate, property, salesforceToken,guestRoom, createdCompany, responseData);
                                                     JsonNode createdPMSAccountNode = objectMapper.readTree(createdPMSAccount);
                                                     pmsAccountResponseId = createdPMSAccountNode.get("id").asText();
@@ -116,11 +114,13 @@ public class MiddlewareCommand implements Command {
                                                         JsonNode createdGuestForBookerNode = objectMapper.readTree(createdGuestForBooker);
                                                         String createdPMSBlockInSalesforce = "";
                                                         if (createdGuestForBookerNode.get("success").asBoolean() == true) {
+                                                            String contactGuestId = getContactDetails(salesforceToken, booking, apiResponse, responseData).getThn__Guest__c();
+                                                            System.out.println("contactIddetail"+contactId);
                                                             if (availabilityBlockMews.isPresent()) {
-                                                                createdPMSBlockInSalesforce = createPMSBlockInSalesforceByGet(booking, account, contact, rate, property, salesforceToken, createdAvailabilityBlock, pmsAccountResponseId,contactId,guestRoom, responseData);
+                                                                createdPMSBlockInSalesforce = createPMSBlockInSalesforceByGet(booking, account, contact, rate, property, salesforceToken, createdAvailabilityBlock, pmsAccountResponseId,contactGuestId,guestRoom, responseData);
                                                                 System.out.println("contactId"+contactId);
                                                             } else {
-                                                                createdPMSBlockInSalesforce = createPMSBlockInSalesforceByCreated(booking, account, contact, rate, property, salesforceToken, createdAvailabilityBlock, pmsAccountResponseId,contactId,guestRoom, responseData);
+                                                                createdPMSBlockInSalesforce = createPMSBlockInSalesforceByCreated(booking, account, contact, rate, property, salesforceToken, createdAvailabilityBlock, pmsAccountResponseId,contactGuestId,guestRoom, responseData);
                                                                 System.out.println("contactId"+contactId);
 
                                                             }
@@ -146,7 +146,7 @@ public class MiddlewareCommand implements Command {
                                                 String updatedGuestRoomWithPmsBlock = updateGuestRoomWithPmsBlockInSalesforce(booking, account, contact, rate, property, salesforceToken, guestRoom, pmsBlockId, responseData);
                                                 if (updatedGuestRoomWithPmsBlock.isEmpty()) {
                                                     apiResponse.setStatus(ResponseStatus.SUCCESS);
-                                                    String updatedBooking = updateBookingInSalesforce(booking, account, contact, rate, property, salesforceToken, responseData, pmsAccountResponseId);
+                                                    String updatedBooking = updateBookingInSalesforce(booking, account, contact, rate, property, salesforceToken, responseData,contactId, pmsAccountResponseId);
                                                     if (updatedBooking.isEmpty()) {
                                                         apiResponse.setStatus(ResponseStatus.SUCCESS);
                                                         apiResponse.setMessage("Process has been completed.");
@@ -417,8 +417,8 @@ public class MiddlewareCommand implements Command {
         return response;
     }
 
-    private String createPMSAccountForCompanyInSalesforce(SalesforceBookingResponse booking, SalesforceAccountResponse account, SalesforceContactResponse contact, SalesforceRateResponse rate, SalesforcePropertyResponse property, SalesforceTokenResponse salesforceToken,SalesforceQueryResponse guestRooms,String companyId, Map<String, Object> responseData) throws Exception {
-        PSMAccountRequest request = this.salesforceController.createPSMAccountPayload(booking, account, contact, rate, property,companyId);
+    private String createPMSAccountForCompanyInSalesforce(SalesforceBookingResponse booking, SalesforceAccountResponse account, SalesforceContactResponse contact, SalesforceRateResponse rate, SalesforcePropertyResponse property, SalesforceTokenResponse salesforceToken,SalesforceQueryResponse guestRooms,Optional<MewsCompanyResponse> createdcompanyId, Map<String, Object> responseData) throws Exception {
+        PSMAccountRequest request = this.salesforceController.createPSMAccountPayload(booking, account, contact, rate, property,createdcompanyId);
         String pmsAccountRequestString = objectMapper.writeValueAsString(request);
         String response = this.salesforceController.addRecordInSalesforce(applicationConfiguration.getSalesforcePMSAccount(), salesforceToken.getAccess_token(), pmsAccountRequestString);
 
@@ -545,8 +545,8 @@ public class MiddlewareCommand implements Command {
         return response;
     }
 
-    private String updateBookingInSalesforce(SalesforceBookingResponse booking, SalesforceAccountResponse account, SalesforceContactResponse contact, SalesforceRateResponse rate, SalesforcePropertyResponse property, SalesforceTokenResponse salesforceToken, Map<String, Object> responseData, String pmsAccountResponseId) throws Exception {
-        SalesforceBookingRequest request = this.salesforceController.createBookingPayload(booking, account, contact, rate, property, pmsAccountResponseId);
+    private String updateBookingInSalesforce(SalesforceBookingResponse booking, SalesforceAccountResponse account, SalesforceContactResponse contact, SalesforceRateResponse rate, SalesforcePropertyResponse property, SalesforceTokenResponse salesforceToken, Map<String, Object> responseData,String contactId, String pmsAccountResponseId) throws Exception {
+        SalesforceBookingRequest request = this.salesforceController.createBookingPayload(booking, account, contact, rate, property, pmsAccountResponseId, contactId);
         String requestString = objectMapper.writeValueAsString(request);
         String bookingId = booking.getId();
         System.out.println("bookingId" + bookingId);
