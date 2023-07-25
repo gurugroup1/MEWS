@@ -55,109 +55,114 @@ public class MiddlewareCommand implements Command {
                 generateLog("**** Mews Middleware Start ****");
                 apiResponse.setBookingId(bookingId);
                 SalesforceTokenResponse salesforceToken = this.responseParser.retrieveSalesforceToken();
-                SalesforceBookingResponse booking = getBookingDetails(salesforceToken, bookingId, apiResponse, responseData);
-                if (booking != null) {
-                    SalesforceQueryResponse guestRoom = getGuestDetails(salesforceToken, bookingId, apiResponse, responseData);
-                    if (guestRoom != null) {
-                        SalesforceAccountResponse account = getAccountDetails(salesforceToken, booking, apiResponse, responseData);
-                        if (account != null) {
-                            SalesforceContactResponse contact = getContactDetails(salesforceToken, booking, apiResponse, responseData);
-                            if (contact != null) {
-                                SalesforceRateResponse rate = getRateDetails(salesforceToken, booking, apiResponse, responseData);
-                                if (rate != null) {
-                                    SalesforcePropertyResponse property = getPropertyDetails(salesforceToken, rate, apiResponse, responseData);
-                                    if (property != null) {
-                                        SalesforceGetPMSBlockResponse pmsBlock = getPSMBlockDetails(salesforceToken, bookingId, apiResponse, responseData);
-                                        if (pmsBlock != null) {
-                                            SalesforceGetPMSAccountResponse pmsAccount = getPSMAccountDetails(salesforceToken, bookingId, apiResponse, responseData);
-                                            if (pmsAccount != null) {
-                                                Optional<MewsGetCompanyResponse> companyMews = isCompanyExistInMews(account, pmsAccount, responseData);
-                                                Optional<MewsUpdateCompanyResponse> updatedCompany = null;
-                                                Optional<MewsCompanyResponse> createdCompany = null;
-                                                if (companyMews.isPresent()) {
-                                                     updatedCompany = updateCompanyInMews(booking, account, contact, companyMews.get(), responseData);
-                                                } else {
-                                                     createdCompany = createCompanyInMews(booking, account, contact, responseData);
-
-                                                }
-                                                Optional<MewsGetBookerResponse> BookerMews = isBookerExistInMews(account, contact, pmsAccount, responseData);
-
-                                                if (BookerMews.isPresent()) {
-                                                    List<MewsGetBookerResponse.Customer> customers = BookerMews.get().getCustomers();
-                                                    MewsGetBookerResponse.Customer firstCustomer = customers.get(0);
-                                                    bookerId = firstCustomer.getId();
-                                                    Optional<MewsUpdateBookerResponse> updatedBooker = updateBookerInMews(booking, account, contact, BookerMews.get(), responseData);
-
-                                                } else {
-                                                    Optional<MewsBookerResponse> createdBooker = createBookerInMews(booking, account, contact, responseData);
-                                                    bookerId = createdBooker.get().getId();
-                                                }
-                                                Optional<MewsGetAvailabilityBlockResponse> availabilityBlockMews = isAvailabilityBlockExistInMews(account, contact, pmsBlock, responseData);
-                                                Optional<MewsAvailabilityBlockResponse> createdAvailabilityBlock = Optional.empty();
-                                                if (availabilityBlockMews.isPresent()) {
-                                                    String updateAvailabilityInMews = updateAvailabilityInMewsByGet(booking, rate, property, availabilityBlockMews, guestRoom, responseData);
-                                                    String updateRatePriceInMewsByGet = updateRatePriceInMewsByGet(booking, availabilityBlockMews, responseData);
-                                                } else {
-                                                    createdAvailabilityBlock = createAvailabilityBlockInMews(booking, contact, rate, property, bookerId, responseData);
-                                                    String updateAvailabilityInMews = updateAvailabilityInMewsByCreated(booking, rate, property, createdAvailabilityBlock, guestRoom, responseData);
-                                                    String updateRatePriceInMewsByCreate = updateRatePriceInMewsByCreated(booking, createdAvailabilityBlock, responseData);
-                                                }
-                                                String pmsAccountResponseId = "";
-                                                String pmsBlockId = "";
-                                                if (pmsAccount.getTotalSize() <= 0 && pmsBlock.getTotalSize() <= 0) {
-                                                    String createdPMSAccount = createPMSAccountForCompanyInSalesforce(booking, account, contact, rate, property, salesforceToken,guestRoom, createdCompany, responseData);
-                                                    JsonNode createdPMSAccountNode = objectMapper.readTree(createdPMSAccount);
-                                                    pmsAccountResponseId = createdPMSAccountNode.get("id").asText();
-                                                    if (createdPMSAccountNode.get("success").asBoolean() == true) {
-                                                        String createdGuestForBooker = createGuestForBookerInSalesforce(booking, account, contact, rate, property, salesforceToken, responseData);
-                                                        JsonNode createdGuestForBookerNode = objectMapper.readTree(createdGuestForBooker);
-                                                        String createdPMSBlockInSalesforce = "";
-                                                        if (createdGuestForBookerNode.get("success").asBoolean() == true) {
-                                                            String contactGuestId = getContactDetails(salesforceToken, booking, apiResponse, responseData).getThn__Guest__c();
-                                                            if (availabilityBlockMews.isPresent()) {
-                                                                createdPMSBlockInSalesforce = createPMSBlockInSalesforceByGet(booking, account, contact, rate, property, salesforceToken, createdAvailabilityBlock, pmsAccountResponseId,contactGuestId,guestRoom, responseData);
-                                                            } else {
-                                                                createdPMSBlockInSalesforce = createPMSBlockInSalesforceByCreated(booking, account, contact, rate, property, salesforceToken, createdAvailabilityBlock, pmsAccountResponseId,contactGuestId,guestRoom, responseData);
-
-                                                            }
-                                                            JsonNode pmsBlockNode = objectMapper.readTree(createdPMSBlockInSalesforce);
-                                                            pmsBlockId = pmsBlockNode.get("id").asText();
-                                                            if (pmsBlockNode.get("success").asBoolean() == true) {
-                                                                String createdMewsBlockInventoriesInSalesforce = createMewsBlockInventoriesInSalesforce(booking, account, contact, rate, property, salesforceToken, pmsBlockId, guestRoom, responseData);
-                                                                JsonNode createdMewsBlockInventoriesNode = objectMapper.readTree(createdMewsBlockInventoriesInSalesforce);
-                                                                if (createdMewsBlockInventoriesNode.get("success").asBoolean() == true) {
-                                                                    String createdPMSBlockRates = createPMSBlockRatesInSalesforce(booking, account, contact, rate, property, salesforceToken, pmsBlockId, guestRoom, responseData);
-//                                                                    JsonNode createdPMSBlockRatesNode = objectMapper.readTree(createdPMSBlockRates);
-//                                                                    if (createdPMSBlockRatesNode.get("success").asBoolean() == true) {
-//                                                                    }
-                                                                }
-
-                                                            }
-                                                        }
-                                                    }
-                                                }else{
-                                                     pmsAccountResponseId = pmsAccount.getRecords().get(0).getId();
-                                                     pmsBlockId = pmsBlock.getRecords().get(0).getId();
-                                                }
-                                                String updatedGuestRoomWithPmsBlock = updateGuestRoomWithPmsBlockInSalesforce(booking, account, contact, rate, property, salesforceToken, guestRoom, pmsBlockId, responseData);
-                                                if (updatedGuestRoomWithPmsBlock.isEmpty()) {
-                                                    apiResponse.setStatus(ResponseStatus.SUCCESS);
-                                                    String updatedBooking = updateBookingInSalesforce(booking, account, contact, rate, property, salesforceToken, responseData, pmsAccountResponseId);
-                                                    if (updatedBooking.isEmpty()) {
-                                                        apiResponse.setStatus(ResponseStatus.SUCCESS);
-                                                        apiResponse.setMessage("Process has been completed.");
-                                                    }
-                                                }
-
-
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
+                SalesforceRestControllerRequest request = salesforceController.createRestControllerPayload(bookingId);
+                String restRequest = objectMapper.writeValueAsString(request);
+                String  asd = salesforceController.restControllerSalesforce(salesforceToken.getAccess_token(), restRequest);
+                System.out.println(asd);
+                responseData.put("Salesforce_Get_Guest_Rooms", asd);
+//                SalesforceBookingResponse booking = getBookingDetails(salesforceToken, bookingId, apiResponse, responseData);
+//                if (booking != null) {
+//                    SalesforceQueryResponse guestRoom = getGuestDetails(salesforceToken, bookingId, apiResponse, responseData);
+//                    if (guestRoom != null) {
+//                        SalesforceAccountResponse account = getAccountDetails(salesforceToken, booking, apiResponse, responseData);
+//                        if (account != null) {
+//                            SalesforceContactResponse contact = getContactDetails(salesforceToken, booking, apiResponse, responseData);
+//                            if (contact != null) {
+//                                SalesforceRateResponse rate = getRateDetails(salesforceToken, booking, apiResponse, responseData);
+//                                if (rate != null) {
+//                                    SalesforcePropertyResponse property = getPropertyDetails(salesforceToken, rate, apiResponse, responseData);
+//                                    if (property != null) {
+//                                        SalesforceGetPMSBlockResponse pmsBlock = getPSMBlockDetails(salesforceToken, bookingId, apiResponse, responseData);
+//                                        if (pmsBlock != null) {
+//                                            SalesforceGetPMSAccountResponse pmsAccount = getPSMAccountDetails(salesforceToken, bookingId, apiResponse, responseData);
+//                                            if (pmsAccount != null) {
+//                                                Optional<MewsGetCompanyResponse> companyMews = isCompanyExistInMews(account, pmsAccount, responseData);
+//                                                Optional<MewsUpdateCompanyResponse> updatedCompany = null;
+//                                                Optional<MewsCompanyResponse> createdCompany = null;
+//                                                if (companyMews.isPresent()) {
+//                                                     updatedCompany = updateCompanyInMews(booking, account, contact, companyMews.get(), responseData);
+//                                                } else {
+//                                                     createdCompany = createCompanyInMews(booking, account, contact, responseData);
+//
+//                                                }
+//                                                Optional<MewsGetBookerResponse> BookerMews = isBookerExistInMews(account, contact, pmsAccount, responseData);
+//
+//                                                if (BookerMews.isPresent()) {
+//                                                    List<MewsGetBookerResponse.Customer> customers = BookerMews.get().getCustomers();
+//                                                    MewsGetBookerResponse.Customer firstCustomer = customers.get(0);
+//                                                    bookerId = firstCustomer.getId();
+//                                                    Optional<MewsUpdateBookerResponse> updatedBooker = updateBookerInMews(booking, account, contact, BookerMews.get(), responseData);
+//
+//                                                } else {
+//                                                    Optional<MewsBookerResponse> createdBooker = createBookerInMews(booking, account, contact, responseData);
+//                                                    bookerId = createdBooker.get().getId();
+//                                                }
+//                                                Optional<MewsGetAvailabilityBlockResponse> availabilityBlockMews = isAvailabilityBlockExistInMews(account, contact, pmsBlock, responseData);
+//                                                Optional<MewsAvailabilityBlockResponse> createdAvailabilityBlock = Optional.empty();
+//                                                if (availabilityBlockMews.isPresent()) {
+//                                                    String updateAvailabilityInMews = updateAvailabilityInMewsByGet(booking, rate, property, availabilityBlockMews, guestRoom, responseData);
+//                                                    String updateRatePriceInMewsByGet = updateRatePriceInMewsByGet(booking, availabilityBlockMews, responseData);
+//                                                } else {
+//                                                    createdAvailabilityBlock = createAvailabilityBlockInMews(booking, contact, rate, property, bookerId, responseData);
+//                                                    String updateAvailabilityInMews = updateAvailabilityInMewsByCreated(booking, rate, property, createdAvailabilityBlock, guestRoom, responseData);
+//                                                    String updateRatePriceInMewsByCreate = updateRatePriceInMewsByCreated(booking, createdAvailabilityBlock, responseData);
+//                                                }
+//                                                String pmsAccountResponseId = "";
+//                                                String pmsBlockId = "";
+//                                                if (pmsAccount.getTotalSize() <= 0 && pmsBlock.getTotalSize() <= 0) {
+//                                                    String createdPMSAccount = createPMSAccountForCompanyInSalesforce(booking, account, contact, rate, property, salesforceToken,guestRoom, createdCompany, responseData);
+//                                                    JsonNode createdPMSAccountNode = objectMapper.readTree(createdPMSAccount);
+//                                                    pmsAccountResponseId = createdPMSAccountNode.get("id").asText();
+//                                                    if (createdPMSAccountNode.get("success").asBoolean() == true) {
+//                                                        String createdGuestForBooker = createGuestForBookerInSalesforce(booking, account, contact, rate, property, salesforceToken, responseData);
+//                                                        JsonNode createdGuestForBookerNode = objectMapper.readTree(createdGuestForBooker);
+//                                                        String createdPMSBlockInSalesforce = "";
+//                                                        if (createdGuestForBookerNode.get("success").asBoolean() == true) {
+//                                                            String contactGuestId = getContactDetails(salesforceToken, booking, apiResponse, responseData).getThn__Guest__c();
+//                                                            if (availabilityBlockMews.isPresent()) {
+//                                                                createdPMSBlockInSalesforce = createPMSBlockInSalesforceByGet(booking, account, contact, rate, property, salesforceToken, createdAvailabilityBlock, pmsAccountResponseId,contactGuestId,guestRoom, responseData);
+//                                                            } else {
+//                                                                createdPMSBlockInSalesforce = createPMSBlockInSalesforceByCreated(booking, account, contact, rate, property, salesforceToken, createdAvailabilityBlock, pmsAccountResponseId,contactGuestId,guestRoom, responseData);
+//
+//                                                            }
+//                                                            JsonNode pmsBlockNode = objectMapper.readTree(createdPMSBlockInSalesforce);
+//                                                            pmsBlockId = pmsBlockNode.get("id").asText();
+//                                                            if (pmsBlockNode.get("success").asBoolean() == true) {
+//                                                                String createdMewsBlockInventoriesInSalesforce = createMewsBlockInventoriesInSalesforce(booking, account, contact, rate, property, salesforceToken, pmsBlockId, guestRoom, responseData);
+//                                                                JsonNode createdMewsBlockInventoriesNode = objectMapper.readTree(createdMewsBlockInventoriesInSalesforce);
+//                                                                if (createdMewsBlockInventoriesNode.get("success").asBoolean() == true) {
+//                                                                    String createdPMSBlockRates = createPMSBlockRatesInSalesforce(booking, account, contact, rate, property, salesforceToken, pmsBlockId, guestRoom, responseData);
+////                                                                    JsonNode createdPMSBlockRatesNode = objectMapper.readTree(createdPMSBlockRates);
+////                                                                    if (createdPMSBlockRatesNode.get("success").asBoolean() == true) {
+////                                                                    }
+//                                                                }
+//
+//                                                            }
+//                                                        }
+//                                                    }
+//                                                }else{
+//                                                     pmsAccountResponseId = pmsAccount.getRecords().get(0).getId();
+//                                                     pmsBlockId = pmsBlock.getRecords().get(0).getId();
+//                                                }
+//                                                String updatedGuestRoomWithPmsBlock = updateGuestRoomWithPmsBlockInSalesforce(booking, account, contact, rate, property, salesforceToken, guestRoom, pmsBlockId, responseData);
+//                                                if (updatedGuestRoomWithPmsBlock.isEmpty()) {
+//                                                    apiResponse.setStatus(ResponseStatus.SUCCESS);
+//                                                    String updatedBooking = updateBookingInSalesforce(booking, account, contact, rate, property, salesforceToken, responseData, pmsAccountResponseId);
+//                                                    if (updatedBooking.isEmpty()) {
+//                                                        apiResponse.setStatus(ResponseStatus.SUCCESS);
+//                                                        apiResponse.setMessage("Process has been completed.");
+//                                                    }
+//                                                }
+//
+//
+//                                            }
+//                                        }
+//                                    }
+//                                }
+//                            }
+//                        }
+//                    }
+//                }
             } else {
                 setFailedStatus(apiResponse, "No booking Id provided in the request body");
             }

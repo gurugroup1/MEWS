@@ -92,6 +92,17 @@ public class ApplicationConfiguration {
     @Value("${mews.apiUrl}")
     private String mewsApiUrl;
 
+    public String getSalesforceRestControllerURL() {
+        return salesforceRestControllerURL;
+    }
+
+    public void setSalesforceRestControllerURL(String salesforceRestControllerURL) {
+        this.salesforceRestControllerURL = salesforceRestControllerURL;
+    }
+
+    @Value("${salesforce_rest_Controller_URL}")
+    private String salesforceRestControllerURL;
+
     @Bean
     public OkHttpClient httpClient() {
         return new OkHttpClient.Builder().build();

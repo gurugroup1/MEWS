@@ -2,6 +2,7 @@ package middleware.services;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import middleware.configurations.ApplicationConfiguration;
+import middleware.models.SalesforceRestControllerRequest;
 import middleware.models.SecretKeyAWS;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import okhttp3.*;
@@ -25,6 +26,29 @@ public class SalesforceConnectorService {
         this.applicationConfiguration = applicationConfiguration;
         this.objectMapper = new ObjectMapper();
         this.httpClient = httpClient;
+    }
+
+    public String restCallOut(String sfAccessToken, String jsonBody) throws IOException {
+        return executeRestCallOut(sfAccessToken, jsonBody);
+    }
+
+    private String executeRestCallOut(String sfAccessToken, String jsonBody) throws IOException {
+        MediaType mediaType = MediaType.parse("application/json");
+        RequestBody body = RequestBody.create(mediaType, jsonBody);
+        Request request = new Request.Builder()
+                .url(String.format(applicationConfiguration.getSalesforceRestControllerURL()))
+                .post(body)
+                .addHeader("Content-Type", "application/json")
+                .addHeader("Authorization", "Bearer " + sfAccessToken)
+                .build();
+        try (Response response = httpClient.newCall(request).execute()) {
+            String responseBody = response.body().string();
+            if (!response.isSuccessful()) {
+                String errorMessage = parseErrorMessage(responseBody);
+                throw new IOException(errorMessage);
+            }
+            return responseBody;
+        }
     }
 
     public String getDataFromSalesforce(String object, String sfAccessToken, String bookingId) throws IOException {
@@ -68,6 +92,8 @@ public class SalesforceConnectorService {
     public String setDataInSalesforce(String object, String sfAccessToken, String jsonBody) throws IOException {
         return executePostSObject(object, sfAccessToken, jsonBody);
     }
+
+
 
     public String updateDataInSalesforce(String object, String sfAccessToken, String jsonBody,String id) throws IOException {
         return executeUpdateSObject(object, sfAccessToken, jsonBody,id);

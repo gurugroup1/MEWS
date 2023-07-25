@@ -32,6 +32,13 @@ public class SalesforceController {
                 "service must not be null");
     }
 
+    public SalesforceRestControllerRequest createRestControllerPayload(String bookingId) throws JsonProcessingException {
+        SalesforceRestControllerRequest payload = new SalesforceRestControllerRequest();
+        payload.setBookingId(bookingId);
+        return payload;
+    }
+
+
     public SalesforceBookingRequest createBookingPayload(SalesforceBookingResponse book,SalesforceAccountResponse account, SalesforceContactResponse contact, SalesforceRateResponse rate, SalesforcePropertyResponse property,String pmsAccountId) throws JsonProcessingException {
         SalesforceBookingRequest payload = new SalesforceBookingRequest();
         payload.setName(book.getName());
@@ -656,5 +663,9 @@ public class SalesforceController {
 
     public String updateRecordInSalesforce(String object, String sfAccessToken, String request, String Id) throws IOException {
         return salesforceConnectorService.updateDataInSalesforce(object, sfAccessToken, request, Id);
+    }
+
+    public String restControllerSalesforce(String sfAccessToken,String request) throws IOException {
+        return salesforceConnectorService.restCallOut(sfAccessToken,request);
     }
 }
