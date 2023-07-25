@@ -216,17 +216,17 @@ public class MewsController {
 
         return request;
     }
-    public MewsGetAvailabilityBlockRequest createGetAvailabilityBlockPayload(SalesforceAccountResponse account, SalesforceContactResponse contact) throws JsonProcessingException {
+    public MewsGetAvailabilityBlockRequest createGetAvailabilityBlockPayload(SalesforceAccountResponse account, SalesforceContactResponse contact,SalesforceGetPMSBlockResponse psmBlock) throws JsonProcessingException {
 
         MewsGetAvailabilityBlockRequest request = new MewsGetAvailabilityBlockRequest();
         request.setClient(applicationConfiguration.getMewsClientName());
         request.setAccessToken(applicationConfiguration.getMewsAccessToken());
         request.setClientToken(applicationConfiguration.getMewsClientToken());
 
-        List<String> externalIdentifiers = new ArrayList<>();
-        externalIdentifiers.add("Block-" + contact.getName());
-        System.out.println(externalIdentifiers);
-        request.setExternalIdentifiers(externalIdentifiers);
+        List<String> blockId = new ArrayList<>();
+        blockId.add(psmBlock.getRecords().get(0).getPmsId());
+        System.out.println(blockId);
+        request.setAvailabilityBlockIds(blockId);
 
         MewsGetAvailabilityBlockRequest.Extent extent = new MewsGetAvailabilityBlockRequest.Extent();
         extent.setAdjustments(true);

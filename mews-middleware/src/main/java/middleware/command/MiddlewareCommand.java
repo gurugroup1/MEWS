@@ -355,7 +355,7 @@ public class MiddlewareCommand implements Command {
     private Optional<MewsGetAvailabilityBlockResponse> isAvailabilityBlockExistInMews(SalesforceAccountResponse account, SalesforceContactResponse contact, SalesforceGetPMSBlockResponse pmsBlock, Map<String, Object> responseData) throws Exception {
         Optional<MewsGetAvailabilityBlockResponse> response = Optional.empty();
         if (pmsBlock.getTotalSize() > 0) {
-            MewsGetAvailabilityBlockRequest request = mewsController.createGetAvailabilityBlockPayload(account, contact);
+            MewsGetAvailabilityBlockRequest request = mewsController.createGetAvailabilityBlockPayload(account, contact,pmsBlock);
             response = this.responseParser.getAvailabilityBlockFromMews(request);
             if (response.isPresent()) {
                 MewsGetAvailabilityBlockResponse result = response.get();
