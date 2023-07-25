@@ -1,17 +1,11 @@
 package middleware.configurations;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import middleware.services.SalesforceConnectorService;
 import okhttp3.OkHttpClient;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.jdbc.datasource.init.DataSourceInitializer;
-import org.springframework.jdbc.datasource.init.ResourceDatabasePopulator;
 
-import javax.sql.DataSource;
 
 @Configuration
 public class ApplicationConfiguration {
@@ -98,14 +92,14 @@ public class ApplicationConfiguration {
     @Value("${mews.apiUrl}")
     private String mewsApiUrl;
 
-    @Bean
-    public DataSourceInitializer dataSourceInitializer(DataSource dataSource) {
-        DataSourceInitializer initializer = new DataSourceInitializer();
-        initializer.setDataSource(dataSource);
-        ResourceDatabasePopulator populator = new ResourceDatabasePopulator();
-        initializer.setDatabasePopulator(populator);
-        return initializer;
-    }
+//    @Bean
+//    public DataSourceInitializer dataSourceInitializer(DataSource dataSource) {
+//        DataSourceInitializer initializer = new DataSourceInitializer();
+//        initializer.setDataSource(dataSource);
+//        ResourceDatabasePopulator populator = new ResourceDatabasePopulator();
+//        initializer.setDatabasePopulator(populator);
+//        return initializer;
+//    }
 
 //    @Bean
 //    public ObjectMapper objectMapper() {
