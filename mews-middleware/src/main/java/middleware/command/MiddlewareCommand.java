@@ -78,6 +78,7 @@ public class MiddlewareCommand implements Command {
                                                     Optional<MewsUpdateCompanyResponse> updatedCompany = updateCompanyInMews(booking, account, contact, companyMews.get(), responseData);
                                                 } else {
                                                     Optional<MewsCompanyResponse> createdCompany = createCompanyInMews(booking, account, contact, responseData);
+
                                                 }
                                                 Optional<MewsGetBookerResponse> BookerMews = isBookerExistInMews(account, contact, pmsAccount, responseData);
 
@@ -103,8 +104,11 @@ public class MiddlewareCommand implements Command {
                                                 }
                                                 String pmsAccountResponseId = "";
                                                 String pmsBlockId = "";
+                                                String companyId = "";
                                                 if (pmsAccount.getTotalSize() <= 0 && pmsBlock.getTotalSize() <= 0) {
-                                                    String createdPMSAccount = createPMSAccountForCompanyInSalesforce(booking, account, contact, rate, property, salesforceToken,guestRoom, responseData);
+                                                    String  createdCompany =createCompanyInMews(booking, account, contact, responseData).get().getCompanies().get(0).getId();
+                                                    System.out.println("createdCompany"+createdCompany);
+                                                    String createdPMSAccount = createPMSAccountForCompanyInSalesforce(booking, account, contact, rate, property, salesforceToken,guestRoom, createdCompany, responseData);
                                                     JsonNode createdPMSAccountNode = objectMapper.readTree(createdPMSAccount);
                                                     pmsAccountResponseId = createdPMSAccountNode.get("id").asText();
                                                     if (createdPMSAccountNode.get("success").asBoolean() == true) {
@@ -413,8 +417,8 @@ public class MiddlewareCommand implements Command {
         return response;
     }
 
-    private String createPMSAccountForCompanyInSalesforce(SalesforceBookingResponse booking, SalesforceAccountResponse account, SalesforceContactResponse contact, SalesforceRateResponse rate, SalesforcePropertyResponse property, SalesforceTokenResponse salesforceToken,SalesforceQueryResponse guestRooms, Map<String, Object> responseData) throws Exception {
-        PSMAccountRequest request = this.salesforceController.createPSMAccountPayload(booking, account, contact, rate, property);
+    private String createPMSAccountForCompanyInSalesforce(SalesforceBookingResponse booking, SalesforceAccountResponse account, SalesforceContactResponse contact, SalesforceRateResponse rate, SalesforcePropertyResponse property, SalesforceTokenResponse salesforceToken,SalesforceQueryResponse guestRooms,String companyId, Map<String, Object> responseData) throws Exception {
+        PSMAccountRequest request = this.salesforceController.createPSMAccountPayload(booking, account, contact, rate, property,companyId);
         String pmsAccountRequestString = objectMapper.writeValueAsString(request);
         String response = this.salesforceController.addRecordInSalesforce(applicationConfiguration.getSalesforcePMSAccount(), salesforceToken.getAccess_token(), pmsAccountRequestString);
 

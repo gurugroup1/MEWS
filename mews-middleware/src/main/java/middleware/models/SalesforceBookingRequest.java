@@ -106,9 +106,17 @@ public class SalesforceBookingRequest {
 //    @JsonProperty("thn__Request_Date__c")
 //    private String requestDate;
 //
-//    @JsonProperty("thn__Reservation_Guest__c")
-//    private String reservationGuest;
-//
+    @JsonProperty("thn__Reservation_Guest__c")
+    private String reservationGuest;
+
+    public String getReservationGuest() {
+        return reservationGuest;
+    }
+
+    public void setReservationGuest(String reservationGuest) {
+        this.reservationGuest = reservationGuest;
+    }
+    //
 //    @JsonProperty("thn__Source__c")
 //    private String source;
 
