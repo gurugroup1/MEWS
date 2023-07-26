@@ -25,6 +25,17 @@ public class StateController {
 
     private Boolean hasCompany;
 
+    public Boolean getHasAvailabilityBlock() {
+        return hasAvailabilityBlock;
+    }
+
+    public void setHasAvailabilityBlock(Boolean hasAvailabilityBlock) {
+        this.hasAvailabilityBlock = hasAvailabilityBlock;
+    }
+
+    private Boolean hasAvailabilityBlock;
+
+
     public SalesforceBookingResponse getBookingData() {
         return bookingData;
     }
@@ -115,6 +126,45 @@ public class StateController {
 
     private MewsGetCompanyResponse MewsCompany;
     private MewsCompanyResponse MewsCompanyCreated;
+
+    public MewsGetBookerResponse getMewsBooker() {
+        return MewsBooker;
+    }
+
+    public void setMewsBooker(MewsGetBookerResponse MewsBooker) {
+        MewsBooker = MewsBooker;
+    }
+
+    public MewsBookerResponse getMewsBookerCreated() {
+        return MewsBookerCreated;
+    }
+
+    public void setMewsBookerCreated(MewsBookerResponse mewsBookerCreated) {
+        MewsBookerCreated = mewsBookerCreated;
+    }
+
+    private MewsGetBookerResponse MewsBooker;
+    private MewsBookerResponse MewsBookerCreated;
+
+    public MewsGetAvailabilityBlockResponse getMewsAvailabilityBlock() {
+        return MewsAvailabilityBlock;
+    }
+
+    public void setMewsAvailabilityBlock(MewsGetAvailabilityBlockResponse mewsAvailabilityBlock) {
+        MewsAvailabilityBlock = mewsAvailabilityBlock;
+    }
+
+    public MewsAvailabilityBlockResponse getMewsAvailabilityBlockCreated() {
+        return MewsAvailabilityBlockCreated;
+    }
+
+    public void setMewsAvailabilityBlockCreated(MewsAvailabilityBlockResponse mewsAvailabilityBlockCreated) {
+        MewsAvailabilityBlockCreated = mewsAvailabilityBlockCreated;
+    }
+
+    private MewsGetAvailabilityBlockResponse MewsAvailabilityBlock;
+    private MewsAvailabilityBlockResponse MewsAvailabilityBlockCreated;
+
 
     public MewsCompanyResponse getMewsCompanyCreated() {
         return MewsCompanyCreated;

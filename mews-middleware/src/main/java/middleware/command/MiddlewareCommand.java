@@ -41,7 +41,52 @@ public class MiddlewareCommand implements Command {
         this.responseParser = responseParser;
     }
 
-    public SalesforceRestControllerResponse processRestRequest(SalesforceController salesforceController, String bookingId, SalesforceTokenResponse salesforceToken,StateController state) {
+
+    @Override
+    public ApiResponse execute(String requestBody) {
+
+        ApiResponse apiResponse = new ApiResponse();
+        Map<String, Object> responseData = new HashMap<>();
+        apiResponse.setData(responseData);
+        try {
+            String bookingId = JsonUtils.getBookingIdFromRequestBody(requestBody);
+            if (bookingId != null) {
+                StateController state = new StateController();
+                generateLog("**** Mews Middleware Start ****");
+                apiResponse.setBookingId(bookingId);
+                SalesforceTokenResponse salesforceToken = this.responseParser.retrieveSalesforceToken();
+                state.setBookingId(bookingId);
+
+                // Get Complete Data from salesforce using rest controller
+                SalesforceRestControllerResponse restResponses = processRestRequest(salesforceController, bookingId, salesforceToken, state);
+                processCompany(state, responseData);
+                processBooker(state, responseData);
+                processAvailabilityBlock(state, responseData);
+
+                if (Objects.equals(restResponses.getStatus(), "Success")) {
+                    responseData.put("Salesforce_Data", restResponses);
+                    setSuccessStatus(apiResponse, "Process has been completed.");
+                } else {
+                    setFailedStatus(apiResponse, "Error in getting initial data from salesforce.");
+                }
+
+            } else {
+                setFailedStatus(apiResponse, "No booking Id provided in the request body");
+            }
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        } catch (Exception e) {
+            setFailedStatus(apiResponse, "An error occurred: " + e.getMessage());
+            generateLog("Response: " + apiResponse);
+            generateLog("**** Mews Middleware Stopped With Exception ****");
+            return apiResponse;
+        }
+        generateLog("Response: " + apiResponse);
+        generateLog("**** Mews Middleware Stopped ****");
+        return apiResponse;
+    }
+
+    public SalesforceRestControllerResponse processRestRequest(SalesforceController salesforceController, String bookingId, SalesforceTokenResponse salesforceToken, StateController state) {
         try {
             SalesforceRestControllerRequest request = salesforceController.createRestControllerPayload(bookingId);
             String restRequest = objectMapper.writeValueAsString(request);
@@ -94,12 +139,11 @@ public class MiddlewareCommand implements Command {
             if (response.isPresent()) {
                 state.setHasCompany(true);
                 state.setMewsCompany(response.get());
-                updateCompanyInMews(state,responseData);
+                updateCompanyInMews(state, responseData);
             }
-        }
-        else {
+        } else {
             state.setHasCompany(false);
-            createCompanyInMews(state,responseData);
+            createCompanyInMews(state, responseData);
         }
         return response;
     }
@@ -125,48 +169,77 @@ public class MiddlewareCommand implements Command {
         return updateCompany;
     }
 
-
-
-    @Override
-    public ApiResponse execute(String requestBody) {
-
-        ApiResponse apiResponse = new ApiResponse();
-        Map<String, Object> responseData = new HashMap<>();
-        apiResponse.setData(responseData);
-        try {
-            String bookingId = JsonUtils.getBookingIdFromRequestBody(requestBody);
-            if (bookingId != null) {
-                StateController state = new StateController();
-                generateLog("**** Mews Middleware Start ****");
-                apiResponse.setBookingId(bookingId);
-                SalesforceTokenResponse salesforceToken = this.responseParser.retrieveSalesforceToken();
-                state.setBookingId(bookingId);
-
-                // Get Complete Data from salesforce using rest controller
-                SalesforceRestControllerResponse restResponses = processRestRequest(salesforceController, bookingId, salesforceToken,state);
-                processCompany(state,responseData);
-
-                if (Objects.equals(restResponses.getStatus(), "Success")) {
-                    responseData.put("Salesforce_Data", restResponses);
-                    setSuccessStatus(apiResponse, "Process has been completed.");
-                } else {
-                    setFailedStatus(apiResponse, "Error in getting initial data from salesforce.");
-                }
-
-            } else {
-                setFailedStatus(apiResponse, "No booking Id provided in the request body");
+    private Optional<MewsGetBookerResponse> processBooker(StateController state, Map<String, Object> responseData) throws Exception {
+        Optional<MewsGetBookerResponse> response = Optional.empty();
+        if (state.getPmsAccountSize() > 1) {
+            MewsGetBookerRequest request = mewsController.createGetBookerPayload(state.getAccountData(), state.getContactData());
+            response = this.responseParser.getBookerFromMews(request);
+            if (response.isPresent()) {
+                state.setMewsBooker(response.get());
+                updateBookerInMews(state, responseData);
             }
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
-        } catch (Exception e) {
-            setFailedStatus(apiResponse, "An error occurred: " + e.getMessage());
-            generateLog("Response: " + apiResponse);
-            generateLog("**** Mews Middleware Stopped With Exception ****");
-            return apiResponse;
+        } else {
+            createBookerInMews(state, responseData);
         }
-        generateLog("Response: " + apiResponse);
-        generateLog("**** Mews Middleware Stopped ****");
-        return apiResponse;
+        return response;
+    }
+
+    private Optional<MewsBookerResponse> createBookerInMews(StateController state, Map<String, Object> responseData) throws Exception {
+        Optional<MewsBookerResponse> createBooker;
+        MewsBookerRequest request = mewsController.createBookerPayload(state.getBookingData(), state.getAccountData(), state.getContactData());
+        createBooker = this.responseParser.addBookerInMews(request);
+        if (createBooker.isPresent()) {
+            state.setMewsBookerCreated(createBooker.get());
+            responseData.put("Mews_Create_Booker", createBooker.get());
+        }
+        return createBooker;
+    }
+
+    private Optional<MewsUpdateBookerResponse> updateBookerInMews(StateController state, Map<String, Object> responseData) throws Exception {
+        Optional<MewsUpdateBookerResponse> updateBooker;
+        MewsUpdateBookerRequest request = mewsController.createUpdateBookerPayload(state.getBookingData(), state.getAccountData(), state.getContactData(), state.getMewsBooker());
+        updateBooker = this.responseParser.updateBookerInMews(request);
+        if (updateBooker.isPresent()) {
+            responseData.put("Mews_Update_Booker", updateBooker.get());
+        }
+        return updateBooker;
+    }
+
+    private Optional<MewsGetAvailabilityBlockResponse> processAvailabilityBlock(StateController state, Map<String, Object> responseData) throws Exception {
+        Optional<MewsGetAvailabilityBlockResponse> response = Optional.empty();
+        if (state.getPmsBlockSize() > 1) {
+            MewsGetAvailabilityBlockRequest request = mewsController.createGetAvailabilityBlockPayload(state.getAccountData(), state.getContactData(), state.getPmsBlockData().get(0));
+            response = this.responseParser.getAvailabilityBlockFromMews(request);
+            if (response.isPresent()) {
+                state.setMewsAvailabilityBlock(response.get());
+                state.setHasAvailabilityBlock(true);
+                updateAvailabilityInMews(state, responseData);
+            }
+        } else {
+            state.setHasAvailabilityBlock(false);
+            createAvailabilityBlockInMews(state, responseData);
+        }
+        return response;
+    }
+
+    private Optional<MewsAvailabilityBlockResponse> createAvailabilityBlockInMews(StateController state, Map<String, Object> responseData) throws Exception {
+        Optional<MewsAvailabilityBlockResponse> createAvailabilityBlock;
+        MewsAvailabilityBlockRequest request = mewsController.createAvailabilityBlockPayload(state.getBookingData(), state.getRateData(), state.getContactData(), state.getPropertyData(), state.getPmsAccountSize() > 0 ? state.getMewsBooker().getCustomers().get(0).getId() : state.getMewsBookerCreated().getId());
+        createAvailabilityBlock = this.responseParser.addAvailabilityBlockInMews(request);
+        if (createAvailabilityBlock.isPresent()) {
+            state.setMewsAvailabilityBlockCreated(createAvailabilityBlock.get());
+            responseData.put("Mews_Create_Availability_Block", createAvailabilityBlock.get());
+        }
+        return createAvailabilityBlock;
+    }
+
+    private String updateAvailabilityInMews(StateController state, Map<String, Object> responseData) throws Exception {
+        MewsUpdateAvailabilityRequest request = mewsController.createUpdateAvailabilityPayload(state.getBookingData(), state.getRateData(), state.getPropertyData(), state.getMewsAvailabilityBlock(), state.getGuestRoomData());
+        String response = mewsController.updateAvailability(request);
+        if (response.equals("{}")) {
+            responseData.put("Mews_Update_Availability", response);
+        }
+        return response;
     }
 
     private void setSuccessStatus(ApiResponse apiResponse, String message) {
