@@ -116,8 +116,6 @@ public class SalesforceGuestRoomResponse {
     @JsonProperty("thn__Sync_Status__c")
     private String syncStatus;
 
-    // Getters and Setters for all properties
-    // ...
 
     public static class Attributes {
         @JsonProperty("type")

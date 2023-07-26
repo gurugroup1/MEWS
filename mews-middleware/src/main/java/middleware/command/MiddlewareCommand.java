@@ -243,15 +243,6 @@ public class MiddlewareCommand implements Command {
         return "response";
     }
 
-    private String updateRatePriceInMewsByCreated(StateController state, Map<String, Object> responseData) throws Exception {
-        MewsUpdateRateRequest request = this.mewsController.createUpdateRatePricePayloadByCreated(state.getBookingData(), state.getMewsAvailabilityBlockCreated());
-        String response = this.mewsController.updateRate(request);
-        if (response.equals("{}")) {
-            responseData.put("Mews_Update_Rate_Price", response);
-        }
-        return response;
-    }
-
     private String updateRatePriceInMewsByGet(StateController state, Map<String, Object> responseData) throws Exception {
         MewsUpdateRateRequest request = this.mewsController.createUpdateRatePricePayloadByGet(state.getBookingData(), state.getMewsAvailabilityBlock());
         String response = this.mewsController.updateRate(request);
@@ -261,14 +252,33 @@ public class MiddlewareCommand implements Command {
         return response;
     }
 
-    private String updateAvailabilityInMews(StateController state, Map<String, Object> responseData) throws Exception {
-        MewsUpdateAvailabilityRequest request = mewsController.createUpdateAvailabilityPayload(state.getBookingData(), state.getRateData(), state.getPropertyData(), state.getMewsAvailabilityBlock(), state.getGuestRoomData());
+    private String updateRatePriceInMewsByCreated(StateController state, Map<String, Object> responseData) throws Exception {
+        MewsUpdateRateRequest request = this.mewsController.createUpdateRatePricePayloadByCreated(state.getBookingData(), state.getMewsAvailabilityBlockCreated());
+        String response = this.mewsController.updateRate(request);
+        if (response.equals("{}")) {
+            responseData.put("Mews_Update_Rate_Price", response);
+        }
+        return response;
+    }
+
+    private String updateAvailabilityInMewsByGet(StateController state, Map<String, Object> responseData) throws Exception {
+        MewsUpdateAvailabilityRequest request = mewsController.createUpdateAvailabilityPayloadByGet(state.getBookingData(), state.getRateData(), state.getPropertyData(), state.getMewsAvailabilityBlock(), state.getGuestRoomData());
         String response = mewsController.updateAvailability(request);
         if (response.equals("{}")) {
             responseData.put("Mews_Update_Availability", response);
         }
         return response;
     }
+
+    private String updateAvailabilityInMewsByCreated(StateController state, Map<String, Object> responseData) throws Exception {
+        MewsUpdateAvailabilityRequest request = mewsController.createUpdateAvailabilityPayload(state.getBookingData(), state.getRateData(), state.getPropertyData(), state.getMewsAvailabilityBlockCreated(), state.getGuestRoomData());
+        String response = mewsController.updateAvailability(request);
+        if (response.equals("{}")) {
+            responseData.put("Mews_Update_Availability", response);
+        }
+        return response;
+    }
+
 
     private void setSuccessStatus(ApiResponse apiResponse, String message) {
         apiResponse.setStatus(ResponseStatus.SUCCESS);
