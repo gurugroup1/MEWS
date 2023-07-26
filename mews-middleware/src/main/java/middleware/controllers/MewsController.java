@@ -347,6 +347,26 @@ public class MewsController {
         return request;
     }
 
+    public MewsUpdateRateRequest createUpdateRatePricePayloadByCreated(SalesforceBookingResponse book,MewsAvailabilityBlockResponse availabilityBlock) throws JsonProcessingException {
+        String blockId = "";
+        MewsUpdateRateRequest request = new MewsUpdateRateRequest();
+        request.setClient(applicationConfiguration.getMewsClientName());
+        request.setAccessToken(applicationConfiguration.getMewsAccessToken());
+        request.setClientToken(applicationConfiguration.getMewsClientToken());
+        List<MewsAvailabilityBlockResponse.AvailabilityBlock> availabilityBlocks = availabilityBlock.getAvailabilityBlocks();
+
+        for (MewsAvailabilityBlockResponse.AvailabilityBlock block : availabilityBlocks) {
+            blockId = block.getRateId();
+        }
+        request.setRateId(blockId);
+        MewsUpdateRateRequest.PriceUpdate priceUpdate = new MewsUpdateRateRequest.PriceUpdate();
+        priceUpdate.setFirstTimeUnitStartUtc(book.getThn__Arrival_Date__c() + "T23:00:00.000Z");
+        priceUpdate.setLastTimeUnitStartUtc(book.getThn__Departure_Date__c() + "T23:00:00.000Z");
+        priceUpdate.setValue(book.getThn__Hotel_Rooms_Amount__c());
+        request.getPriceUpdates().add(priceUpdate);
+
+        return request;
+    }
     public MewsUpdateRateRequest createUpdateRatePricePayloadByGet(SalesforceBookingResponse book,MewsGetAvailabilityBlockResponse availabilityBlock) throws JsonProcessingException {
         String blockId = "";
         MewsUpdateRateRequest request = new MewsUpdateRateRequest();

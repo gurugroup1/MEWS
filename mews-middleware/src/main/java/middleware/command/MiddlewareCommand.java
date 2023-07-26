@@ -62,6 +62,7 @@ public class MiddlewareCommand implements Command {
                 processCompany(state, responseData);
                 processBooker(state, responseData);
                 processAvailabilityBlock(state, responseData);
+                processUpdateInMews(state, responseData);
 
                 if (Objects.equals(restResponses.getStatus(), "Success")) {
                     responseData.put("Salesforce_Data", restResponses);
@@ -213,7 +214,6 @@ public class MiddlewareCommand implements Command {
             if (response.isPresent()) {
                 state.setMewsAvailabilityBlock(response.get());
                 state.setHasAvailabilityBlock(true);
-                updateAvailabilityInMews(state, responseData);
             }
         } else {
             state.setHasAvailabilityBlock(false);
@@ -231,6 +231,34 @@ public class MiddlewareCommand implements Command {
             responseData.put("Mews_Create_Availability_Block", createAvailabilityBlock.get());
         }
         return createAvailabilityBlock;
+    }
+
+    private String processUpdateInMews(StateController state, Map<String, Object> responseData) throws Exception {
+        Optional<MewsGetBookerResponse> response = Optional.empty();
+        if (state.getHasAvailabilityBlock()) {
+            updateRatePriceInMewsByGet(state, responseData);
+        } else {
+            updateRatePriceInMewsByCreated(state, responseData);
+        }
+        return "response";
+    }
+
+    private String updateRatePriceInMewsByCreated(StateController state, Map<String, Object> responseData) throws Exception {
+        MewsUpdateRateRequest request = this.mewsController.createUpdateRatePricePayloadByCreated(state.getBookingData(), state.getMewsAvailabilityBlockCreated());
+        String response = this.mewsController.updateRate(request);
+        if (response.equals("{}")) {
+            responseData.put("Mews_Update_Rate_Price", response);
+        }
+        return response;
+    }
+
+    private String updateRatePriceInMewsByGet(StateController state, Map<String, Object> responseData) throws Exception {
+        MewsUpdateRateRequest request = this.mewsController.createUpdateRatePricePayloadByGet(state.getBookingData(), state.getMewsAvailabilityBlock());
+        String response = this.mewsController.updateRate(request);
+        if (response.equals("{}")) {
+            responseData.put("Mews_Update_Rate_Price", response);
+        }
+        return response;
     }
 
     private String updateAvailabilityInMews(StateController state, Map<String, Object> responseData) throws Exception {
