@@ -10,28 +10,28 @@ public class SalesforceRestControllerResponse {
     private String status;
 
     @JsonProperty("guestRooms")
-    private List<GuestRoom> guestRooms;
+    private List<SalesforceGuestRoomResponse> guestRooms;
 
     @JsonProperty("booking")
-    private Booking booking;
+    private SalesforceBookingResponse booking;
 
     @JsonProperty("rate")
-    private Rate rate;
+    private SalesforceRateResponse rate;
 
     @JsonProperty("contact")
-    private Contact contact;
+    private SalesforceContactResponse contact;
 
     @JsonProperty("property")
-    private Property property;
+    private SalesforcePropertyResponse property;
 
     @JsonProperty("pmsBlock")
-    private List<PMSBlock> pmsBlock;
+    private List<SalesforceGetPMSBlockResponse> pmsBlock;
 
     @JsonProperty("account")
-    private Account account;
+    private SalesforceAccountResponse account;
 
     @JsonProperty("pmsAccount")
-    private PMSAccount pmsAccount;
+    private SalesforceGetPMSAccountResponse pmsAccount;
 
     public String getStatus() {
         return status;
@@ -41,69 +41,70 @@ public class SalesforceRestControllerResponse {
         this.status = status;
     }
 
-    public List<GuestRoom> getGuestRooms() {
+    public List<SalesforceGuestRoomResponse> getGuestRooms() {
         return guestRooms;
     }
 
-    public void setGuestRooms(List<GuestRoom> guestRooms) {
+    public void setGuestRooms(List<SalesforceGuestRoomResponse> guestRooms) {
         this.guestRooms = guestRooms;
     }
 
-    public Booking getBooking() {
+    public SalesforceBookingResponse getBooking() {
         return booking;
     }
 
-    public void setBooking(Booking booking) {
+    public void setBooking(SalesforceBookingResponse booking) {
         this.booking = booking;
     }
 
-    public Rate getRate() {
+    public SalesforceRateResponse getRate() {
         return rate;
     }
 
-    public void setRate(Rate rate) {
+    public void setRate(SalesforceRateResponse rate) {
         this.rate = rate;
     }
 
-    public Contact getContact() {
+    public SalesforceContactResponse getContact() {
         return contact;
     }
 
-    public void setContact(Contact contact) {
+    public void setContact(SalesforceContactResponse contact) {
         this.contact = contact;
     }
 
-    public Property getProperty() {
+    public SalesforcePropertyResponse getProperty() {
         return property;
     }
 
-    public void setProperty(Property property) {
+    public void setProperty(SalesforcePropertyResponse property) {
         this.property = property;
     }
 
-    public List<PMSBlock> getPmsBlock() {
+    public List<SalesforceGetPMSBlockResponse> getPmsBlock() {
         return pmsBlock;
     }
 
-    public void setPmsBlock(List<PMSBlock> pmsBlock) {
+    public void setPmsBlock(List<SalesforceGetPMSBlockResponse> pmsBlock) {
         this.pmsBlock = pmsBlock;
     }
 
-    public Account getAccount() {
+    public SalesforceAccountResponse getAccount() {
         return account;
     }
 
-    public void setAccount(Account account) {
+    public void setAccount(SalesforceAccountResponse account) {
         this.account = account;
     }
 
-    public PMSAccount getPmsAccount() {
+    public SalesforceGetPMSAccountResponse getPmsAccount() {
         return pmsAccount;
     }
 
-    public void setPmsAccount(PMSAccount pmsAccount) {
+    public void setPmsAccount(SalesforceGetPMSAccountResponse pmsAccount) {
         this.pmsAccount = pmsAccount;
     }
+
 
     public static class Attributes {
         @JsonProperty("type")

@@ -61,7 +61,6 @@ public class MewsController {
         mewsCompanyRequest.setBillingCode(account.getBillingAddress());
         mewsCompanyRequest.setAccountingCode(account.getThn__Accounting_Code__c());
         mewsCompanyRequest.setAddress(account.getShippingAddress());
-        // mewsCompanyRequest.setInvoiceDueInterval("");
         mewsCompanyRequest.setTelephone(account.getPhone());
         mewsCompanyRequest.setContacPerson(contact.getFirstName());
         mewsCompanyRequest.setContact(contact.getEmail());
@@ -224,7 +223,7 @@ public class MewsController {
         request.setClientToken(applicationConfiguration.getMewsClientToken());
 
         List<String> blockId = new ArrayList<>();
-        blockId.add(psmBlock.getRecords().get(0).getPmsId());
+//        blockId.add(psmBlock.getRecords().get(0).getPmsId());
         System.out.println(blockId);
         request.setAvailabilityBlockIds(blockId);
 
