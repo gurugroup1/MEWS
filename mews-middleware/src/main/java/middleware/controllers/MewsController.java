@@ -222,7 +222,7 @@ public class MewsController {
         request.setClientToken(applicationConfiguration.getMewsClientToken());
 
         List<String> blockId = new ArrayList<>();
-//        blockId.add(psmBlock.getRecords().get(0).getPmsId());
+        blockId.add(psmBlock.getThn__PMSId__c());
         System.out.println(blockId);
         request.setAvailabilityBlockIds(blockId);
 

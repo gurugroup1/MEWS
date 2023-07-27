@@ -136,7 +136,7 @@ public class MiddlewareCommand implements Command {
     private Optional<MewsGetCompanyResponse> processCompany(StateController state, Map<String, Object> responseData) throws Exception {
         Optional<MewsGetCompanyResponse> response = Optional.empty();
         System.out.println(state.getPmsAccountSize());
-        if (state.getPmsAccountSize() > 1) {
+        if (state.getPmsAccountSize() > 0) {
             MewsGetCompanyRequest request = mewsController.createGetCompanyPayload(state.getAccountData());
             response = this.responseParser.getCompanyFromMews(request);
             if (response.isPresent()) {
@@ -174,7 +174,7 @@ public class MiddlewareCommand implements Command {
 
     private Optional<MewsGetBookerResponse> processBooker(StateController state, Map<String, Object> responseData) throws Exception {
         Optional<MewsGetBookerResponse> response = Optional.empty();
-        if (state.getPmsAccountSize() > 1) {
+        if (state.getPmsAccountSize() > 0) {
             MewsGetBookerRequest request = mewsController.createGetBookerPayload(state.getAccountData(), state.getContactData());
             response = this.responseParser.getBookerFromMews(request);
             if (response.isPresent()) {
@@ -210,7 +210,7 @@ public class MiddlewareCommand implements Command {
 
     private Optional<MewsGetAvailabilityBlockResponse> processAvailabilityBlock(StateController state, Map<String, Object> responseData) throws Exception {
         Optional<MewsGetAvailabilityBlockResponse> response = Optional.empty();
-        if (state.getPmsBlockSize() > 1) {
+        if (state.getPmsBlockSize() > 0) {
             MewsGetAvailabilityBlockRequest request = mewsController.createGetAvailabilityBlockPayload(state.getAccountData(), state.getContactData(), state.getPmsBlockData().get(0));
             response = this.responseParser.getAvailabilityBlockFromMews(request);
             if (response.isPresent()) {

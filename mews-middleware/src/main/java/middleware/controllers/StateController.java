@@ -183,13 +183,7 @@ public class StateController {
     private MewsGetCompanyResponse MewsCompany;
     private MewsCompanyResponse MewsCompanyCreated;
 
-    public MewsGetBookerResponse getMewsBooker() {
-        return MewsBooker;
-    }
 
-    public void setMewsBooker(MewsGetBookerResponse MewsBooker) {
-        MewsBooker = MewsBooker;
-    }
 
     public MewsBookerResponse getMewsBookerCreated() {
         return MewsBookerCreated;
@@ -197,6 +191,14 @@ public class StateController {
 
     public void setMewsBookerCreated(MewsBookerResponse mewsBookerCreated) {
         MewsBookerCreated = mewsBookerCreated;
+    }
+
+    public MewsGetBookerResponse getMewsBooker() {
+        return MewsBooker;
+    }
+
+    public void setMewsBooker(MewsGetBookerResponse mewsBooker) {
+        MewsBooker = mewsBooker;
     }
 
     private MewsGetBookerResponse MewsBooker;
