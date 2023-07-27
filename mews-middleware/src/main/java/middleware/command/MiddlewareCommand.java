@@ -2,7 +2,6 @@ package middleware.command;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import middleware.configurations.ApplicationConfiguration;
 import middleware.controllers.*;
@@ -64,7 +63,7 @@ public class MiddlewareCommand implements Command {
                 processAvailabilityBlock(state, responseData);
                 processUpdateInMews(state, responseData);
                 processCreatedRecordInSalesforce(state, responseData);
-
+                processRecordRecordInSalesforce(state, responseData);
                 if (Objects.equals(restResponses.getStatus(), "Success")) {
                     responseData.put("Salesforce_Data", restResponses);
                     setSuccessStatus(apiResponse, "Process has been completed.");
@@ -417,6 +416,43 @@ public class MiddlewareCommand implements Command {
             if (success != null && success && id != null && !id.isEmpty()) {
                 responseData.put("Salesforce_Post_PMS_Block_Rates", response);
             }
+        }
+        return response;
+    }
+
+
+    private String processRecordRecordInSalesforce(StateController state, Map<String, Object> responseData) throws Exception {
+
+        if (state.getPmsAccountSize() <= 0 && state.getPmsBlockSize() <= 0) {
+            String updatedGuestRoomWithPmsBlock = updateGuestRoomWithPmsBlockInSalesforce(state, responseData);
+            String updatedBooking = updateBookingInSalesforce(state, responseData);
+
+
+        } else {
+
+        }
+        return "response";
+    }
+
+    private String updateGuestRoomWithPmsBlockInSalesforce(StateController state, Map<String, Object> responseData) throws Exception {
+        SalesforceUpdateGuestRoomWithPmsBlock request = this.salesforceController.createUpdateGuestRoomWithPmsBlock(state.getBookingData(), state.getContactData(), state.getCreatedPMSBlock());
+        String requestString = objectMapper.writeValueAsString(request);
+        String guestRoomId = state.getGuestRoomData().get(0).getId();
+        String response = this.salesforceController.updateRecordInSalesforce(applicationConfiguration.getSalesforceGuestRooms(), state.getSalesforceToken(), requestString, guestRoomId);
+
+        if (response.isEmpty()) {
+            responseData.put("Salesforce_Update_Guest_Room_With_PMS_Block", response);
+        }
+        return response;
+    }
+
+    private String updateBookingInSalesforce(StateController state, Map<String, Object> responseData) throws Exception {
+        SalesforceBookingRequest request = this.salesforceController.createBookingPayload(state.getBookingData(), state.getAccountData(), state.getContactData(),
+                state.getRateData(), state.getPropertyData(), state.getCreatedPMSAccount());
+        String requestString = objectMapper.writeValueAsString(request);
+        String response = this.salesforceController.updateRecordInSalesforce(applicationConfiguration.getSalesforceBookingObject(), state.getSalesforceToken(), requestString, state.getBookingId());
+        if (response.isEmpty()) {
+            responseData.put("Salesforce_Update_Booking", response);
         }
         return response;
     }

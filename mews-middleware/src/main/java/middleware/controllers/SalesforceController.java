@@ -435,8 +435,6 @@ public class SalesforceController {
             payload.setThnEnd(book.getThn__Departure_Date__c());
             payload.setThnStart(book.getThn__Arrival_Date__c());
         }
-
-
         return payload;
     }
 
@@ -450,18 +448,15 @@ public class SalesforceController {
             payload.setRoomType(id);
             payload.setStart(book.getThn__Arrival_Date__c());
         }
-
         return payload;
     }
 
-    public SalesforceUpdateGuestRoomWithPmsBlock createUpdateGuestRoomWithPmsBlock(SalesforceBookingResponse book, SalesforceAccountResponse account, SalesforceContactResponse contact, SalesforceRateResponse rate, SalesforcePropertyResponse property, SalesforceQueryResponse guestRoom, String pmsBlockId) throws JsonProcessingException {
+    public SalesforceUpdateGuestRoomWithPmsBlock createUpdateGuestRoomWithPmsBlock(SalesforceBookingResponse book, SalesforceContactResponse contact, String pmsBlockId) throws JsonProcessingException {
         SalesforceUpdateGuestRoomWithPmsBlock payload = new SalesforceUpdateGuestRoomWithPmsBlock();
-
         payload.setName(contact.getName());
         payload.setThn__Pax__c(book.getThn__Pax__c());
         payload.setThn__ReleasedDate__c(book.getThn__Release_Date__c());
         payload.setThn__PMS_Block__c(pmsBlockId);
-
         return payload;
     }
 
