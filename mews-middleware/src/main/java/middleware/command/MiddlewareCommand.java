@@ -57,10 +57,10 @@ public class MiddlewareCommand implements Command {
 
                 // Get Complete Data from salesforce using rest controller
                 SalesforceRestControllerResponse restResponses = processRestRequest(salesforceController, bookingId, salesforceToken, state);
-//                processCompany(state, responseData);
-//                processBooker(state, responseData);
-//                processAvailabilityBlock(state, responseData);
-//                processUpdateInMews(state, responseData);
+                processCompany(state, responseData);
+                processBooker(state, responseData);
+                processAvailabilityBlock(state, responseData);
+                processUpdateInMews(state, responseData);
 
                 if (Objects.equals(restResponses.getStatus(), "Success")) {
                     responseData.put("Salesforce_Data", restResponses);

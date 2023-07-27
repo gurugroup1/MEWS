@@ -316,65 +316,32 @@ public class MewsController {
         request.setServiceId(property.getThn__Mews_Reservation_Service_Id__c());
 
         String blockId = "";
-//        for (SalesforceGuestRoomResponse record : guestRoom) {
-//            List<SalesforceGuestRoomResponse.GuestRoom> guestRoomsList = record.getGuestRooms();
-//            for(SalesforceGuestRoomResponse.GuestRoom guestRoomInstance : guestRoomsList) {
-//                String id = guestRoomInstance.getId();
-//                String spaceArea = guestRoomInstance.getSpaceArea().getId(); // assuming getSpaceArea().getId() is correct
-//                double roomsAmount = guestRoomInstance.getRoomsAmount(); // assuming getRoomsAmount() is correct
-//                String mewsId = guestRoomInstance.getSpaceArea().getMewsId(); // assuming getSpaceArea().getMewsId() is correct
-//                System.out.println("Record ID: " + id);
-//                System.out.println("Space Area: " + spaceArea);
-//                System.out.println("Rooms Amount: " + roomsAmount);
-//                System.out.println("mewsId: " + mewsId);
-//
-//                MewsUpdateAvailabilityRequest.AvailabilityUpdate availabilityUpdate = new MewsUpdateAvailabilityRequest.AvailabilityUpdate();
-//                availabilityUpdate.setFirstTimeUnitStartUtc(book.getThn__Arrival_Date__c() + "T23:00:00.000Z");
-//                availabilityUpdate.setLastTimeUnitStartUtc(book.getThn__Departure_Date__c() + "T23:00:00.000Z");
-//                availabilityUpdate.setResourceCategoryId(mewsId);
-//                List<MewsAvailabilityBlockResponse.AvailabilityBlock> availabilityBlocks = availabilityBlockId.getAvailabilityBlocks();
-//
-//                for (MewsAvailabilityBlockResponse.AvailabilityBlock block : availabilityBlocks) {
-//                    blockId = block.getId();
-//                }
-//                availabilityUpdate.setAvailabilityBlockId(blockId);
-//
-//                MewsUpdateAvailabilityRequest.UnitCountAdjustment unitCountAdjustment = new MewsUpdateAvailabilityRequest.UnitCountAdjustment();
-//                unitCountAdjustment.setValue((int) (-1 * roomsAmount));
-//                availabilityUpdate.setUnitCountAdjustment(unitCountAdjustment);
-//
-//                request.getAvailabilityUpdates().add(availabilityUpdate);
-//            }
-//        }
+        for (SalesforceGuestRoomResponse guestRoomInstance : guestRoom) {
+            String id = guestRoomInstance.getId();
+            String spaceArea = guestRoomInstance.getSpaceArea(); // Assuming getSpaceArea() returns a String representing space area.
+            int roomsAmount = guestRoomInstance.getRoomsAmount(); // Assuming getRoomsAmount() returns the number of rooms as an integer.
+            String mewsId = guestRoomInstance.getSpaceAreaDetails().getMewsId(); // Assuming getSpaceAreaDetails().getMewsId() returns the Mews ID.
+            System.out.println("Record ID: " + id);
+            System.out.println("Space Area: " + spaceArea);
+            System.out.println("Rooms Amount: " + roomsAmount);
+            System.out.println("mewsId: " + mewsId);
+            MewsUpdateAvailabilityRequest.AvailabilityUpdate availabilityUpdate = new MewsUpdateAvailabilityRequest.AvailabilityUpdate();
+            availabilityUpdate.setFirstTimeUnitStartUtc(book.getThn__Arrival_Date__c() + "T23:00:00.000Z");
+            availabilityUpdate.setLastTimeUnitStartUtc(book.getThn__Departure_Date__c() + "T23:00:00.000Z");
+            availabilityUpdate.setResourceCategoryId(mewsId);
+            List<MewsAvailabilityBlockResponse.AvailabilityBlock> availabilityBlocks = availabilityBlockId.getAvailabilityBlocks();
 
+            for (MewsAvailabilityBlockResponse.AvailabilityBlock block : availabilityBlocks) {
+                blockId = block.getId();
+            }
+            availabilityUpdate.setAvailabilityBlockId(blockId);
 
-//        for (SalesforceGuestRoomResponse.GuestRoom record : records) {
-//            String id = record.getId();
-//            String spaceArea = record.getSpaceArea().getId();
-//            double roomsAmount = record.getRoomsAmount();
-//            String mewsId = record.getSpaceArea().getMewsId();
-//            System.out.println("Record ID: " + id);
-//            System.out.println("Space Area: " + spaceArea);
-//            System.out.println("Rooms Amount: " + roomsAmount);
-//            System.out.println("mewsId: " + mewsId);
-//
-//            MewsUpdateAvailabilityRequest.AvailabilityUpdate availabilityUpdate = new MewsUpdateAvailabilityRequest.AvailabilityUpdate();
-//            availabilityUpdate.setFirstTimeUnitStartUtc(book.getThn__Arrival_Date__c() + "T23:00:00.000Z");
-//            availabilityUpdate.setLastTimeUnitStartUtc(book.getThn__Departure_Date__c() + "T23:00:00.000Z");
-//            availabilityUpdate.setResourceCategoryId(mewsId);
-//            List<MewsAvailabilityBlockResponse.AvailabilityBlock> availabilityBlocks = availabilityBlockId.getAvailabilityBlocks();
-//
-//            for (MewsAvailabilityBlockResponse.AvailabilityBlock block : availabilityBlocks) {
-//                blockId = block.getId();
-//            }
-//            availabilityUpdate.setAvailabilityBlockId(blockId);
-//
-//            MewsUpdateAvailabilityRequest.UnitCountAdjustment unitCountAdjustment = new MewsUpdateAvailabilityRequest.UnitCountAdjustment();
-//            unitCountAdjustment.setValue((int) (-1 * roomsAmount));
-//            availabilityUpdate.setUnitCountAdjustment(unitCountAdjustment);
-//
-//            request.getAvailabilityUpdates().add(availabilityUpdate);
-//        }
+            MewsUpdateAvailabilityRequest.UnitCountAdjustment unitCountAdjustment = new MewsUpdateAvailabilityRequest.UnitCountAdjustment();
+            unitCountAdjustment.setValue((int) (-1 * roomsAmount));
+            availabilityUpdate.setUnitCountAdjustment(unitCountAdjustment);
+
+            request.getAvailabilityUpdates().add(availabilityUpdate);
+        }
 
         return request;
     }
@@ -386,37 +353,35 @@ public class MewsController {
         request.setAccessToken(applicationConfiguration.getMewsAccessToken());
         request.setClientToken(applicationConfiguration.getMewsClientToken());
         request.setServiceId(property.getThn__Mews_Reservation_Service_Id__c());
+        String blockId = "";
+        for (SalesforceGuestRoomResponse guestRoomInstance : guestRoom) {
+            String id = guestRoomInstance.getId();
+            String spaceArea = guestRoomInstance.getSpaceArea(); // Assuming getSpaceArea() returns a String representing space area.
+            int roomsAmount = guestRoomInstance.getRoomsAmount(); // Assuming getRoomsAmount() returns the number of rooms as an integer.
+            String mewsId = guestRoomInstance.getSpaceAreaDetails().getMewsId(); // Assuming getSpaceAreaDetails().getMewsId() returns the Mews ID.
+            System.out.println("Record ID: " + id);
+            System.out.println("Space Area: " + spaceArea);
+            System.out.println("Rooms Amount: " + roomsAmount);
+            System.out.println("mewsId: " + mewsId);
+            MewsUpdateAvailabilityRequest.AvailabilityUpdate availabilityUpdate = new MewsUpdateAvailabilityRequest.AvailabilityUpdate();
+            availabilityUpdate.setFirstTimeUnitStartUtc(book.getThn__Arrival_Date__c() + "T23:00:00.000Z");
+            availabilityUpdate.setLastTimeUnitStartUtc(book.getThn__Departure_Date__c() + "T23:00:00.000Z");
+            availabilityUpdate.setResourceCategoryId(mewsId);
 
-//        List<SalesforceGuestRoomResponse.GuestRoom> records = guestRoom.getGuestRooms();
-//        String blockId = "";
-//        for (SalesforceGuestRoomResponse.GuestRoom record : records) {
-//            String id = record.getId();
-//            String spaceArea = record.getSpaceArea().getId();
-//            double roomsAmount = record.getRoomsAmount();
-//            String mewsId = record.getSpaceArea().getMewsId();
-//
-//            System.out.println("Record ID: " + id);
-//            System.out.println("Space Area: " + spaceArea);
-//            System.out.println("Rooms Amount: " + roomsAmount);
-//            System.out.println("mewsId: " + mewsId);
-//
-//            MewsUpdateAvailabilityRequest.AvailabilityUpdate availabilityUpdate = new MewsUpdateAvailabilityRequest.AvailabilityUpdate();
-//            availabilityUpdate.setFirstTimeUnitStartUtc(book.getThn__Arrival_Date__c() + "T23:00:00.000Z");
-//            availabilityUpdate.setLastTimeUnitStartUtc(book.getThn__Departure_Date__c() + "T23:00:00.000Z");
-//            availabilityUpdate.setResourceCategoryId(mewsId);
-//            MewsGetAvailabilityBlockResponse.AvailabilityBlock[] availabilityBlocks = availabilityBlockId.getAvailabilityBlocks();
-//
-//            for (MewsGetAvailabilityBlockResponse.AvailabilityBlock block : availabilityBlocks) {
-//                blockId = block.getId();
-//            }
-//            availabilityUpdate.setAvailabilityBlockId(blockId);
-//
-//            MewsUpdateAvailabilityRequest.UnitCountAdjustment unitCountAdjustment = new MewsUpdateAvailabilityRequest.UnitCountAdjustment();
-//            unitCountAdjustment.setValue((int) (-1 * roomsAmount));
-//            availabilityUpdate.setUnitCountAdjustment(unitCountAdjustment);
-//
-//            request.getAvailabilityUpdates().add(availabilityUpdate);
-//        }
+            MewsGetAvailabilityBlockResponse.AvailabilityBlock[] availabilityBlocks = availabilityBlockId.getAvailabilityBlocks();
+
+            for (MewsGetAvailabilityBlockResponse.AvailabilityBlock block : availabilityBlocks) {
+                blockId = block.getId();
+            }
+
+            availabilityUpdate.setAvailabilityBlockId(blockId);
+
+            MewsUpdateAvailabilityRequest.UnitCountAdjustment unitCountAdjustment = new MewsUpdateAvailabilityRequest.UnitCountAdjustment();
+            unitCountAdjustment.setValue((int) (-1 * roomsAmount));
+            availabilityUpdate.setUnitCountAdjustment(unitCountAdjustment);
+
+            request.getAvailabilityUpdates().add(availabilityUpdate);
+        }
 
         return request;
     }
