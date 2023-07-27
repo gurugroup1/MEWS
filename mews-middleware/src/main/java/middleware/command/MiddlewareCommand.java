@@ -138,10 +138,18 @@ public class MiddlewareCommand implements Command {
 
         MewsGetCompanyRequest request = mewsController.createGetCompanyPayload(state.getAccountData());
         response = this.responseParser.getCompanyFromMews(request);
+        System.out.println(response);
+
         if (response.isPresent()) {
-            state.setHasCompany(true);
-            state.setMewsCompany(response.get());
-            updateCompanyInMews(state, responseData);
+            List<MewsGetCompanyResponse.Company> companies = response.get().getCompanies();
+            if (!companies.isEmpty()) {
+                state.setHasCompany(true);
+                state.setMewsCompany(response.get());
+                updateCompanyInMews(state, responseData);
+            } else {
+                state.setHasCompany(false);
+                createCompanyInMews(state, responseData);
+            }
         } else {
             state.setHasCompany(false);
             createCompanyInMews(state, responseData);
@@ -172,15 +180,20 @@ public class MiddlewareCommand implements Command {
 
     private Optional<MewsGetBookerResponse> processBooker(StateController state, Map<String, Object> responseData) throws Exception {
         Optional<MewsGetBookerResponse> response = Optional.empty();
-//        if (state.getPmsAccountSize() > 0) {
-            MewsGetBookerRequest request = mewsController.createGetBookerPayload(state.getAccountData(), state.getContactData());
-            response = this.responseParser.getBookerFromMews(request);
+
+        MewsGetBookerRequest request = mewsController.createGetBookerPayload(state.getAccountData(), state.getContactData());
+        response = this.responseParser.getBookerFromMews(request);
+        System.out.println(response);
+
         if (response.isPresent()) {
-            state.setMewsBooker(response.get());
-            updateBookerInMews(state, responseData);
-        }
-//        }
-        else {
+            List<MewsGetBookerResponse.Customer> customers = response.get().getCustomers();
+            if (!customers.isEmpty()) {
+                state.setMewsBooker(response.get());
+                updateBookerInMews(state, responseData);
+            } else {
+                createBookerInMews(state, responseData);
+            }
+        } else {
             createBookerInMews(state, responseData);
         }
         return response;

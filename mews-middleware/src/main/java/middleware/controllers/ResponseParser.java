@@ -148,8 +148,6 @@ public class ResponseParser {
         if (response == null || response.isEmpty()) {
             throw new Exception("Empty company response from Mews.");
         }
-
-
         return Optional.ofNullable(parseResponse(response, MewsGetCompanyResponse.class, "Company Response"));
     }
     public Optional<MewsGetBookerResponse> getBookerFromMews(MewsGetBookerRequest payload) throws Exception {
