@@ -10,6 +10,62 @@ public class StateController {
 
     private String bookingId;
 
+    public String getCreatedPMSAccount() {
+        return createdPMSAccount;
+    }
+
+    public void setCreatedPMSAccount(String createdPMSAccount) {
+        this.createdPMSAccount = createdPMSAccount;
+    }
+
+    public String getCreatedGuest() {
+        return createdGuest;
+    }
+
+    public void setCreatedGuest(String createdGuest) {
+        this.createdGuest = createdGuest;
+    }
+
+    public String getCreatedPMSBlock() {
+        return createdPMSBlock;
+    }
+
+    public void setCreatedPMSBlock(String createdPMSBlock) {
+        this.createdPMSBlock = createdPMSBlock;
+    }
+
+    public String getCreatedBlockInventories() {
+        return createdBlockInventories;
+    }
+
+    public void setCreatedBlockInventories(String createdBlockInventories) {
+        this.createdBlockInventories = createdBlockInventories;
+    }
+
+    public String getCreatedPMSBlockRate() {
+        return createdPMSBlockRate;
+    }
+
+    public void setCreatedPMSBlockRate(String createdPMSBlockRate) {
+        this.createdPMSBlockRate = createdPMSBlockRate;
+    }
+
+    private String createdPMSAccount;
+    private String createdGuest;
+    private String createdPMSBlock;
+    private String createdBlockInventories;
+    private String createdPMSBlockRate;
+
+    public String getSalesforceToken() {
+        return salesforceToken;
+    }
+
+    public void setSalesforceToken(String salesforceToken) {
+        this.salesforceToken = salesforceToken;
+    }
+
+    private String salesforceToken;
+
     private Integer pmsAccountSize;
 
     private Integer pmsBlockSize;

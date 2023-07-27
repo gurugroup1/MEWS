@@ -2,6 +2,7 @@ package middleware.command;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import middleware.configurations.ApplicationConfiguration;
 import middleware.controllers.*;
@@ -28,6 +29,7 @@ public class MiddlewareCommand implements Command {
     private final ObjectMapper objectMapper;
     @Autowired
     private final ResponseParser responseParser;
+
     public MiddlewareCommand(Logger logger, ApplicationConfiguration applicationConfiguration, SalesforceConnectorService salesforceConnectorService, MewsConnectorService mewsConnectorService, MewsController mewsController, SecretKeyManagerController secretKeyManagerController, SalesforceController salesforceController, AuthController authController, ObjectMapper objectMapper, ResponseParser responseParser) {
         this.applicationConfiguration = applicationConfiguration;
         this.salesforceConnectorService = salesforceConnectorService;
@@ -61,6 +63,7 @@ public class MiddlewareCommand implements Command {
                 processBooker(state, responseData);
                 processAvailabilityBlock(state, responseData);
                 processUpdateInMews(state, responseData);
+                processCreatedRecordInSalesforce(state, responseData);
 
                 if (Objects.equals(restResponses.getStatus(), "Success")) {
                     responseData.put("Salesforce_Data", restResponses);
@@ -92,6 +95,7 @@ public class MiddlewareCommand implements Command {
             String restResponse = salesforceController.restControllerSalesforce(salesforceToken.getAccess_token(), restRequest);
             SalesforceRestControllerResponse restResponses = objectMapper.readValue(restResponse, SalesforceRestControllerResponse.class);
 
+            state.setSalesforceToken(salesforceToken.getAccess_token());
             SalesforceBookingResponse booking = objectMapper.readValue(objectMapper.writeValueAsString(restResponses.getBooking()), SalesforceBookingResponse.class);
             state.setBookingData(booking);
 
@@ -116,9 +120,13 @@ public class MiddlewareCommand implements Command {
             List<SalesforceGuestRoomResponse> guestRoom = objectMapper.readValue(objectMapper.writeValueAsString(restResponses.getGuestRooms()), new TypeReference<List<SalesforceGuestRoomResponse>>() {
             });
             state.setGuestRoomData(guestRoom);
+
             state.setPmsAccountSize(restResponses.getPmsAccount() == null ? 0 : 1);
+
             state.setPmsBlockSize(restResponses.getPmsBlock().isEmpty() ? 0 : 1);
+
             return objectMapper.readValue(restResponse, SalesforceRestControllerResponse.class);
+
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         } catch (IOException e) {
@@ -272,6 +280,143 @@ public class MiddlewareCommand implements Command {
         String response = mewsController.updateAvailability(request);
         if (response.equals("{}")) {
             responseData.put("Mews_Update_Availability", response);
+        }
+        return response;
+    }
+
+    private String processCreatedRecordInSalesforce(StateController state, Map<String, Object> responseData) throws Exception {
+
+        if (state.getPmsAccountSize() <= 0 && state.getPmsBlockSize() <=0) {
+            String createdPMSAccount = createPMSAccountForCompanyInSalesforce(state , responseData);
+            String createdGuestForBooker = createGuestForBookerInSalesforce(state , responseData);
+            if(state.getHasAvailabilityBlock()){
+                String createdPMSBlockInSalesforceGet = createPMSBlockInSalesforceByGet(state , responseData);
+            }else{
+                String createdPMSBlockInSalesforceCreated = createPMSBlockInSalesforceByCreated(state , responseData);
+            }
+            String createdMewsBlockInventoriesInSalesforce = createMewsBlockInventoriesInSalesforce(state , responseData);
+            String createdPMSBlockRates = createPMSBlockRatesInSalesforce(state , responseData);
+
+        } else {
+
+        }
+        return "response";
+    }
+
+    private String createPMSAccountForCompanyInSalesforce(StateController state, Map<String, Object> responseData) throws Exception {
+        PSMAccountRequest request = this.salesforceController.createPSMAccountPayload(state.getBookingData(), state.getAccountData(), state.getContactData(), state.getRateData(), state.getPropertyData(),state.getMewsCompanyCreated());
+        String pmsAccountRequestString = objectMapper.writeValueAsString(request);
+        String response = this.salesforceController.addRecordInSalesforce(applicationConfiguration.getSalesforcePMSAccount(), state.getSalesforceToken(), pmsAccountRequestString);
+
+        if (response != null && !response.isEmpty()) {
+            ObjectMapper objectMapper = new ObjectMapper();
+            Map<String, Object> responseMap = objectMapper.readValue(response, new TypeReference<Map<String, Object>>() {
+            });
+
+            Boolean success = (Boolean) responseMap.get("success");
+            String id = (String) responseMap.get("id");
+            state.setCreatedPMSAccount(id);
+            if (success != null && success && id != null && !id.isEmpty()) {
+                responseData.put("Salesforce_Post_PMS_Account", response);
+            }
+        }
+        return response;
+    }
+
+    private String createGuestForBookerInSalesforce(StateController state, Map<String, Object> responseData) throws Exception {
+        SalesforceGuestRequest request = this.salesforceController.createGuestBookerPayload(state.getBookingData(), state.getAccountData(), state.getContactData(), state.getRateData(), state.getPropertyData());
+        String pmsAccountRequestString = objectMapper.writeValueAsString(request);
+        String response = this.salesforceController.addRecordInSalesforce(applicationConfiguration.getSalesforceGuest(), state.getSalesforceToken(), pmsAccountRequestString);
+        if (response != null && !response.isEmpty()) {
+            ObjectMapper objectMapper = new ObjectMapper();
+            Map<String, Object> responseMap = objectMapper.readValue(response, new TypeReference<Map<String, Object>>() {
+            });
+
+            Boolean success = (Boolean) responseMap.get("success");
+            String id = (String) responseMap.get("id");
+
+            if (success != null && success && id != null && !id.isEmpty()) {
+                responseData.put("Salesforce_Post_Guest_For_Booker", response);
+            }
+        }
+        return response;
+    }
+
+    private String createPMSBlockInSalesforceByGet(StateController state, Map<String, Object> responseData) throws Exception {
+        SalesforcePSMBlockRequest request = this.salesforceController.createPMSBlockPayloadByGet(state.getBookingData(), state.getAccountData(), state.getContactData(),
+                state.getRateData(), state.getPropertyData(), state.getMewsAvailabilityBlockCreated(), state.getCreatedPMSAccount(),state.getCreatedGuest());
+        String requestString = objectMapper.writeValueAsString(request);
+        String response = this.salesforceController.addRecordInSalesforce(applicationConfiguration.getSalesforcePMSBlock(),state.getSalesforceToken(), requestString);
+        if (response != null && !response.isEmpty()) {
+            ObjectMapper objectMapper = new ObjectMapper();
+            Map<String, Object> responseMap = objectMapper.readValue(response, new TypeReference<Map<String, Object>>() {
+            });
+
+            Boolean success = (Boolean) responseMap.get("success");
+            String id = (String) responseMap.get("id");
+            state.setCreatedPMSBlock(id);
+            if (success != null && success && id != null && !id.isEmpty()) {
+                responseData.put("Salesforce_Post_PMS_Block", response);
+            }
+        }
+        return response;
+    }
+
+    private String createPMSBlockInSalesforceByCreated(StateController state, Map<String, Object> responseData) throws Exception {
+        SalesforcePSMBlockRequest request = this.salesforceController.createPMSBlockPayloadByCreated(state.getBookingData(), state.getAccountData(),
+                state.getContactData(), state.getRateData(), state.getPropertyData(), state.getMewsAvailabilityBlockCreated(), state.getCreatedPMSAccount(),state.getCreatedGuest());
+        String requestString = objectMapper.writeValueAsString(request);
+        String response = this.salesforceController.addRecordInSalesforce(applicationConfiguration.getSalesforcePMSBlock(), state.getSalesforceToken(), requestString);
+        if (response != null && !response.isEmpty()) {
+            ObjectMapper objectMapper = new ObjectMapper();
+            Map<String, Object> responseMap = objectMapper.readValue(response, new TypeReference<Map<String, Object>>() {
+            });
+
+            Boolean success = (Boolean) responseMap.get("success");
+            String id = (String) responseMap.get("id");
+            state.setCreatedPMSBlock(id);
+            if (success != null && success && id != null && !id.isEmpty()) {
+                responseData.put("Salesforce_Post_PMS_Block", response);
+            }
+        }
+        return response;
+    }
+
+    private String createMewsBlockInventoriesInSalesforce(StateController state, Map<String, Object> responseData) throws Exception {
+        SalesforcePMSBlockInventory request = this.salesforceController.createMewsBlockInventoryPayload(state.getBookingData(), state.getAccountData(),
+                state.getContactData(), state.getRateData(), state.getPropertyData(), state.getCreatedPMSBlock(), state.getGuestRoomData());
+        String requestString = objectMapper.writeValueAsString(request);
+        String response = this.salesforceController.addRecordInSalesforce(applicationConfiguration.getSalesforceMewsBlockinventory(), state.getSalesforceToken(), requestString);
+        if (response != null && !response.isEmpty()) {
+            ObjectMapper objectMapper = new ObjectMapper();
+            Map<String, Object> responseMap = objectMapper.readValue(response, new TypeReference<Map<String, Object>>() {
+            });
+
+            Boolean success = (Boolean) responseMap.get("success");
+            String id = (String) responseMap.get("id");
+            state.setCreatedBlockInventories(id);
+            if (success != null && success && id != null && !id.isEmpty()) {
+                responseData.put("Salesforce_Post_Mews_Block_Inventories", response);
+            }
+        }
+        return response;
+    }
+
+    private String createPMSBlockRatesInSalesforce(StateController state, Map<String, Object> responseData) throws Exception {
+        SalesforcePMSBlockRate request = this.salesforceController.createPMSBlockRatesPayload(state.getBookingData(), state.getAccountData(), state.getContactData(), state.getRateData(), state.getPropertyData(), state.getCreatedPMSBlock(), state.getGuestRoomData());
+        String requestString = objectMapper.writeValueAsString(request);
+        String response = this.salesforceController.addRecordInSalesforce(applicationConfiguration.getSalesforcePMSBlockRates(), state.getSalesforceToken(), requestString);
+        if (response != null && !response.isEmpty()) {
+            ObjectMapper objectMapper = new ObjectMapper();
+            Map<String, Object> responseMap = objectMapper.readValue(response, new TypeReference<Map<String, Object>>() {
+            });
+
+            Boolean success = (Boolean) responseMap.get("success");
+            String id = (String) responseMap.get("id");
+            state.setCreatedPMSBlockRate(id);
+            if (success != null && success && id != null && !id.isEmpty()) {
+                responseData.put("Salesforce_Post_PMS_Block_Rates", response);
+            }
         }
         return response;
     }
