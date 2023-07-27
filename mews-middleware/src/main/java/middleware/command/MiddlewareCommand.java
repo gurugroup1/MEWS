@@ -135,15 +135,13 @@ public class MiddlewareCommand implements Command {
 
     private Optional<MewsGetCompanyResponse> processCompany(StateController state, Map<String, Object> responseData) throws Exception {
         Optional<MewsGetCompanyResponse> response = Optional.empty();
-        System.out.println(state.getPmsAccountSize());
-        if (state.getPmsAccountSize() > 0) {
-            MewsGetCompanyRequest request = mewsController.createGetCompanyPayload(state.getAccountData());
-            response = this.responseParser.getCompanyFromMews(request);
-            if (response.isPresent()) {
-                state.setHasCompany(true);
-                state.setMewsCompany(response.get());
-                updateCompanyInMews(state, responseData);
-            }
+
+        MewsGetCompanyRequest request = mewsController.createGetCompanyPayload(state.getAccountData());
+        response = this.responseParser.getCompanyFromMews(request);
+        if (response.isPresent()) {
+            state.setHasCompany(true);
+            state.setMewsCompany(response.get());
+            updateCompanyInMews(state, responseData);
         } else {
             state.setHasCompany(false);
             createCompanyInMews(state, responseData);
@@ -174,14 +172,15 @@ public class MiddlewareCommand implements Command {
 
     private Optional<MewsGetBookerResponse> processBooker(StateController state, Map<String, Object> responseData) throws Exception {
         Optional<MewsGetBookerResponse> response = Optional.empty();
-        if (state.getPmsAccountSize() > 0) {
+//        if (state.getPmsAccountSize() > 0) {
             MewsGetBookerRequest request = mewsController.createGetBookerPayload(state.getAccountData(), state.getContactData());
             response = this.responseParser.getBookerFromMews(request);
-            if (response.isPresent()) {
-                state.setMewsBooker(response.get());
-                updateBookerInMews(state, responseData);
-            }
-        } else {
+        if (response.isPresent()) {
+            state.setMewsBooker(response.get());
+            updateBookerInMews(state, responseData);
+        }
+//        }
+        else {
             createBookerInMews(state, responseData);
         }
         return response;
@@ -226,7 +225,13 @@ public class MiddlewareCommand implements Command {
 
     private Optional<MewsAvailabilityBlockResponse> createAvailabilityBlockInMews(StateController state, Map<String, Object> responseData) throws Exception {
         Optional<MewsAvailabilityBlockResponse> createAvailabilityBlock;
-        MewsAvailabilityBlockRequest request = mewsController.createAvailabilityBlockPayload(state.getBookingData(), state.getRateData(), state.getContactData(), state.getPropertyData(), state.getPmsAccountSize() > 0 ? state.getMewsBooker().getCustomers().get(0).getId() : state.getMewsBookerCreated().getId());
+        MewsAvailabilityBlockRequest request;
+        if(state.getHasCompany()){
+             request = mewsController.createAvailabilityBlockPayload(state.getBookingData(), state.getRateData(), state.getContactData(), state.getPropertyData(), state.getMewsBooker().getCustomers().get(0).getId());
+
+        }else{
+            request = mewsController.createAvailabilityBlockPayload(state.getBookingData(), state.getRateData(), state.getContactData(), state.getPropertyData(), state.getPmsAccountSize() > 0 ? state.getMewsBooker().getCustomers().get(0).getId() : state.getMewsBookerCreated().getId());
+        }
         createAvailabilityBlock = this.responseParser.addAvailabilityBlockInMews(request);
         if (createAvailabilityBlock.isPresent()) {
             state.setMewsAvailabilityBlockCreated(createAvailabilityBlock.get());
@@ -303,7 +308,7 @@ public class MiddlewareCommand implements Command {
     }
 
     private String createPMSAccountForCompanyInSalesforce(StateController state, Map<String, Object> responseData) throws Exception {
-        PSMAccountRequest request = this.salesforceController.createPSMAccountPayload(state.getBookingData(), state.getAccountData(), state.getContactData(), state.getRateData(), state.getPropertyData(),state.getMewsCompanyCreated());
+        PSMAccountRequest request = this.salesforceController.createPSMAccountPayload(state.getBookingData(), state.getAccountData(), state.getContactData(), state.getRateData(), state.getPropertyData(),state.getHasCompany() ? state.getMewsCompany().getCompanies().get(0).getId() : state.getMewsCompanyCreated().getCompanies().get(0).getId());
         String pmsAccountRequestString = objectMapper.writeValueAsString(request);
         String response = this.salesforceController.addRecordInSalesforce(applicationConfiguration.getSalesforcePMSAccount(), state.getSalesforceToken(), pmsAccountRequestString);
 
@@ -419,7 +424,6 @@ public class MiddlewareCommand implements Command {
         }
         return response;
     }
-
 
     private String processUpdateRecordInSalesforce(StateController state, Map<String, Object> responseData) throws Exception {
 

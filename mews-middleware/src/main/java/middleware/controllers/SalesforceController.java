@@ -65,7 +65,7 @@ public class SalesforceController {
         return payload;
     }
 
-    public PSMAccountRequest createPSMAccountPayload(SalesforceBookingResponse book, SalesforceAccountResponse account, SalesforceContactResponse contact, SalesforceRateResponse rate, SalesforcePropertyResponse property, MewsCompanyResponse createdcompanyId) throws JsonProcessingException {
+    public PSMAccountRequest createPSMAccountPayload(SalesforceBookingResponse book, SalesforceAccountResponse account, SalesforceContactResponse contact, SalesforceRateResponse rate, SalesforcePropertyResponse property, String accountPSMId) throws JsonProcessingException {
         PSMAccountRequest payload = new PSMAccountRequest();
         payload.setName(account.getName());
         payload.setCurrencyIsoCode(book.getCurrencyIsoCode());
@@ -100,7 +100,7 @@ public class SalesforceController {
         payload.setSicDescription(account.getSicDesc());
         payload.setStatus(account.getThn__Status__c());
         payload.setTaxId(account.getThn__TaxIdentifier__c());
-        payload.setPmsId(createdcompanyId.getCompanies().get(0).getId());
+        payload.setPmsId(accountPSMId);
         payload.setType(book.getThn__Type__c());
         payload.setUniquePMSKey(rate.getUniquePmsKey());
         payload.setWebsite(account.getWebsite());
