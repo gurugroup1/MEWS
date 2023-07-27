@@ -1,5 +1,6 @@
 package middleware.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 
@@ -8,6 +9,14 @@ public class SalesforceRestControllerResponse {
 
     @JsonProperty("Status")
     private String status;
+
+    public void setGuestRooms(List<SalesforceGuestRoomResponse> guestRooms) {
+        this.guestRooms = guestRooms;
+    }
+
+    public List<SalesforceGuestRoomResponse> getGuestRooms() {
+        return guestRooms;
+    }
 
     @JsonProperty("guestRooms")
     private List<SalesforceGuestRoomResponse> guestRooms;
@@ -41,13 +50,6 @@ public class SalesforceRestControllerResponse {
         this.status = status;
     }
 
-    public List<SalesforceGuestRoomResponse> getGuestRooms() {
-        return guestRooms;
-    }
-
-    public void setGuestRooms(List<SalesforceGuestRoomResponse> guestRooms) {
-        this.guestRooms = guestRooms;
-    }
 
     public SalesforceBookingResponse getBooking() {
         return booking;
@@ -115,30 +117,43 @@ public class SalesforceRestControllerResponse {
 
     }
 
+    @JsonIgnoreProperties(ignoreUnknown = true)
     public static class GuestRoom {
         @JsonProperty("attributes")
-        private Attributes attributes;
+        public Attributes attributes;
 
         @JsonProperty("Id")
-        private String id;
+        public String id;
 
+        @JsonProperty("thn__Space_Area__c")
+        public String spaceArea;
 
-        public Attributes getAttributes() {
-            return attributes;
-        }
+        @JsonProperty("Rooms_amount__c")
+        public int roomsAmount;
 
-        public void setAttributes(Attributes attributes) {
-            this.attributes = attributes;
-        }
+        @JsonProperty("thn__Unit_Price__c")
+        public double unitPrice;
 
-        public String getId() {
-            return id;
-        }
+        @JsonProperty("thn__Unit_Price_excl_Tax__c")
+        public double unitPriceExclTax;
 
-        public void setId(String id) {
-            this.id = id;
+        @JsonProperty("thn__Space_Area__r")
+        public SpaceArea spaceAreaDetails;
+
+        public static class SpaceArea {
+            @JsonProperty("attributes")
+            public Attributes attributes;
+
+            @JsonProperty("Id")
+            public String id;
+
+            @JsonProperty("thn__Mews_Id__c")
+            public String mewsId;
         }
     }
+
+
+
 
     public static class Booking {
         @JsonProperty("thn__Company__c")

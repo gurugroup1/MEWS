@@ -28,8 +28,6 @@ public class MiddlewareCommand implements Command {
     private final ObjectMapper objectMapper;
     @Autowired
     private final ResponseParser responseParser;
-    private String bookingId;
-
     public MiddlewareCommand(Logger logger, ApplicationConfiguration applicationConfiguration, SalesforceConnectorService salesforceConnectorService, MewsConnectorService mewsConnectorService, MewsController mewsController, SecretKeyManagerController secretKeyManagerController, SalesforceController salesforceController, AuthController authController, ObjectMapper objectMapper, ResponseParser responseParser) {
         this.applicationConfiguration = applicationConfiguration;
         this.salesforceConnectorService = salesforceConnectorService;
@@ -59,10 +57,10 @@ public class MiddlewareCommand implements Command {
 
                 // Get Complete Data from salesforce using rest controller
                 SalesforceRestControllerResponse restResponses = processRestRequest(salesforceController, bookingId, salesforceToken, state);
-                processCompany(state, responseData);
-                processBooker(state, responseData);
-                processAvailabilityBlock(state, responseData);
-                processUpdateInMews(state, responseData);
+//                processCompany(state, responseData);
+//                processBooker(state, responseData);
+//                processAvailabilityBlock(state, responseData);
+//                processUpdateInMews(state, responseData);
 
                 if (Objects.equals(restResponses.getStatus(), "Success")) {
                     responseData.put("Salesforce_Data", restResponses);
@@ -115,12 +113,9 @@ public class MiddlewareCommand implements Command {
             List<SalesforceGetPMSBlockResponse> pmsBlock = objectMapper.readValue(objectMapper.writeValueAsString(restResponses.getPmsBlock()), new TypeReference<List<SalesforceGetPMSBlockResponse>>() {
             });
             state.setPmsBlockData(pmsBlock);
-
             List<SalesforceGuestRoomResponse> guestRoom = objectMapper.readValue(objectMapper.writeValueAsString(restResponses.getGuestRooms()), new TypeReference<List<SalesforceGuestRoomResponse>>() {
             });
             state.setGuestRoomData(guestRoom);
-            System.out.println(account);
-            System.out.println(state.getAccountData().getName());
             state.setPmsAccountSize(restResponses.getPmsAccount() == null ? 0 : 1);
             state.setPmsBlockSize(restResponses.getPmsBlock().isEmpty() ? 0 : 1);
             return objectMapper.readValue(restResponse, SalesforceRestControllerResponse.class);
@@ -237,8 +232,10 @@ public class MiddlewareCommand implements Command {
         Optional<MewsGetBookerResponse> response = Optional.empty();
         if (state.getHasAvailabilityBlock()) {
             updateRatePriceInMewsByGet(state, responseData);
+            updateAvailabilityInMewsByGet(state, responseData);
         } else {
             updateRatePriceInMewsByCreated(state, responseData);
+            updateAvailabilityInMewsByCreated(state, responseData);
         }
         return "response";
     }

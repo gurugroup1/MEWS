@@ -1,132 +1,100 @@
 package middleware.models;
-import com.fasterxml.jackson.annotation.JsonProperty;
-
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class SalesforceGuestRoomResponse {
-    @JsonProperty("attributes")
-    private Attributes attributes;
-
-    @JsonProperty("CreatedById")
-    private String createdById;
-
-    @JsonProperty("CreatedDate")
-    private String createdDate;
-
-    @JsonProperty("CurrencyIsoCode")
-    private String currencyIsoCode;
 
     @JsonProperty("Id")
     private String id;
 
-    @JsonProperty("IsDeleted")
-    private boolean isDeleted;
+    @JsonProperty("thn__Space_Area__c")
+    private String spaceArea;
 
-    @JsonProperty("LastModifiedById")
-    private String lastModifiedById;
+    @JsonProperty("Rooms_amount__c")
+    private int roomsAmount;
 
-    @JsonProperty("LastModifiedDate")
-    private String lastModifiedDate;
+    @JsonProperty("thn__Unit_Price__c")
+    private double unitPrice;
 
-    @JsonProperty("LastReferencedDate")
-    private String lastReferencedDate;
+    @JsonProperty("thn__Unit_Price_excl_Tax__c")
+    private double unitPriceExclTax;
 
-    @JsonProperty("LastViewedDate")
-    private String lastViewedDate;
+    @JsonProperty("thn__Space_Area__r")
+    private SpaceArea spaceAreaDetails;
 
-    @JsonProperty("Name")
-    private String name;
+    public String getId() {
+        return id;
+    }
 
-    @JsonProperty("OwnerId")
-    private String ownerId;
+    public void setId(String id) {
+        this.id = id;
+    }
 
-    @JsonProperty("SystemModstamp")
-    private String systemModstamp;
+    public String getSpaceArea() {
+        return spaceArea;
+    }
 
-    @JsonProperty("thn__Booker__c")
-    private String booker;
+    public void setSpaceArea(String spaceArea) {
+        this.spaceArea = spaceArea;
+    }
 
-    @JsonProperty("thn__CurrencyCode__c")
-    private String currencyCode;
+    public int getRoomsAmount() {
+        return roomsAmount;
+    }
 
-    @JsonProperty("thn__EndShoulderDate__c")
-    private String endShoulderDate;
+    public void setRoomsAmount(int roomsAmount) {
+        this.roomsAmount = roomsAmount;
+    }
 
-    @JsonProperty("thn__End__c")
-    private String end;
+    public double getUnitPrice() {
+        return unitPrice;
+    }
 
-    @JsonProperty("thn__First_Name__c")
-    private String firstName;
+    public void setUnitPrice(double unitPrice) {
+        this.unitPrice = unitPrice;
+    }
 
-    @JsonProperty("thn__InventoryBlockType__c")
-    private String inventoryBlockType;
+    public double getUnitPriceExclTax() {
+        return unitPriceExclTax;
+    }
 
-    @JsonProperty("thn__Last_Name__c")
-    private String lastName;
+    public void setUnitPriceExclTax(double unitPriceExclTax) {
+        this.unitPriceExclTax = unitPriceExclTax;
+    }
 
-    @JsonProperty("thn__MYCE_Quote__c")
-    private String myceQuote;
+    public SpaceArea getSpaceAreaDetails() {
+        return spaceAreaDetails;
+    }
 
-    @JsonProperty("thn__PMSAccountCompany__c")
-    private String pmsAccountCompany;
+    public void setSpaceAreaDetails(SpaceArea spaceAreaDetails) {
+        this.spaceAreaDetails = spaceAreaDetails;
+    }
 
-    @JsonProperty("thn__PMSAccountGroup__c")
-    private String pmsAccountGroup;
+    // Constructors, getters, and setters (if not already present)
 
-    @JsonProperty("thn__PMSAccountSource__c")
-    private String pmsAccountSource;
+    public static class SpaceArea {
+        @JsonProperty("Id")
+        public String id;
 
-    @JsonProperty("thn__PMSAccountTravelAgent__c")
-    private String pmsAccountTravelAgent;
+        @JsonProperty("thn__Mews_Id__c")
+        public String mewsId;
 
-    @JsonProperty("thn__PMSId__c")
-    private String pmsId;
+        public String getId() {
+            return id;
+        }
 
-    @JsonProperty("thn__PMS_Block_End_Time__c")
-    private String pmsBlockEndTime;
+        public void setId(String id) {
+            this.id = id;
+        }
 
-    @JsonProperty("thn__PMS_Block_Start_Time__c")
-    private String pmsBlockStartTime;
+        public String getMewsId() {
+            return mewsId;
+        }
 
-    @JsonProperty("thn__PMS_Release_Date_Time__c")
-    private String pmsReleaseDateTime;
+        public void setMewsId(String mewsId) {
+            this.mewsId = mewsId;
+        }
 
-    @JsonProperty("thn__PMS_Status__c")
-    private String pmsStatus;
-
-    @JsonProperty("thn__Property__c")
-    private String property;
-
-    @JsonProperty("thn__Rate__c")
-    private String rate;
-
-    @JsonProperty("thn__SendToPms__c")
-    private boolean sendToPms;
-
-    @JsonProperty("thn__Send_Failed_PMS_Block__c")
-    private boolean sendFailedPmsBlock;
-
-    @JsonProperty("thn__StartShoulderDate__c")
-    private String startShoulderDate;
-
-    @JsonProperty("thn__Start__c")
-    private String start;
-
-    @JsonProperty("thn__Sync_Status__c")
-    private String syncStatus;
-
-
-    public static class Attributes {
-        @JsonProperty("type")
-        private String type;
-
-        @JsonProperty("url")
-        private String url;
-
-        // Getters and Setters for "type" and "url"
-        // ...
-
-        // Note: You may also add other attributes if needed.
+        // Constructors, getters, and setters (if not already present)
     }
 }
