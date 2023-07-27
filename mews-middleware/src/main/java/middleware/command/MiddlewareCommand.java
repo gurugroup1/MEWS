@@ -63,7 +63,7 @@ public class MiddlewareCommand implements Command {
                 processAvailabilityBlock(state, responseData);
                 processUpdateInMews(state, responseData);
                 processCreatedRecordInSalesforce(state, responseData);
-                processRecordRecordInSalesforce(state, responseData);
+                processUpdateRecordInSalesforce(state, responseData);
                 if (Objects.equals(restResponses.getStatus(), "Success")) {
                     responseData.put("Salesforce_Data", restResponses);
                     setSuccessStatus(apiResponse, "Process has been completed.");
@@ -333,7 +333,7 @@ public class MiddlewareCommand implements Command {
 
             Boolean success = (Boolean) responseMap.get("success");
             String id = (String) responseMap.get("id");
-
+            state.setCreatedGuest(id);
             if (success != null && success && id != null && !id.isEmpty()) {
                 responseData.put("Salesforce_Post_Guest_For_Booker", response);
             }
@@ -421,7 +421,7 @@ public class MiddlewareCommand implements Command {
     }
 
 
-    private String processRecordRecordInSalesforce(StateController state, Map<String, Object> responseData) throws Exception {
+    private String processUpdateRecordInSalesforce(StateController state, Map<String, Object> responseData) throws Exception {
 
         if (state.getPmsAccountSize() <= 0 && state.getPmsBlockSize() <= 0) {
             String updatedGuestRoomWithPmsBlock = updateGuestRoomWithPmsBlockInSalesforce(state, responseData);
@@ -448,7 +448,7 @@ public class MiddlewareCommand implements Command {
 
     private String updateBookingInSalesforce(StateController state, Map<String, Object> responseData) throws Exception {
         SalesforceBookingRequest request = this.salesforceController.createBookingPayload(state.getBookingData(), state.getAccountData(), state.getContactData(),
-                state.getRateData(), state.getPropertyData(), state.getCreatedPMSAccount());
+                state.getRateData(), state.getPropertyData(), state.getCreatedPMSAccount(),state.getCreatedGuest());
         String requestString = objectMapper.writeValueAsString(request);
         String response = this.salesforceController.updateRecordInSalesforce(applicationConfiguration.getSalesforceBookingObject(), state.getSalesforceToken(), requestString, state.getBookingId());
         if (response.isEmpty()) {
