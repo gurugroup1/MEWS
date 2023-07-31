@@ -1,28 +1,40 @@
 version: 0.2
+
 phases:
   install:
+    runtime-versions:
+      java: corretto11
     commands:
-      - gradlew clean
-      - echo Logging in to Amazon ECR..
-      - aws -- version
-      - $(aws ecr get-login --region $AWS_DEFAULT_REGION --no-include-email)
-      - REPOSITORY_URI= 898152251180.dkr.ecr.us-east-1.amazonaws.com/mews
-      - COMMIT_HASH=$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | cut -c 1-7)
-      - IMAGE_TAG=build-$(echo $CODEBUILD_BUILD_ID | awk -F:" '{print$2}')
+      - echo "Installing Docker..."
+      - apt-get update -qq
+      - apt-get -qq install docker.io
+      - echo "Docker installed successfully."
+
+  pre_build:
+    commands:
+      - echo "Logging in to Amazon ECR..."
+      - aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 898152251180.dkr.ecr.us-east-1.amazonaws.com
+      - echo "Logged in to Amazon ECR successfully."
+
   build:
     commands:
-      - echo Build started on `date`
-      - echo Building the Docker image...
-      - docker build -t $REPOSITORY_URI:latest $REPOSITORY_URI:$IMAGE_TAG
+      - echo "Building the Spring Boot application..."
+      - ./gradlew build
+
   post_build:
     commands:
-      - echo Build completed on `date`
-      - echo Pushing the DOcker images...
-      - docker push $REPOSITORY_URI:$latest
-      - docker push $REPOSITORY_URI:$IMAGE_TAG
-      - echo Writing image definitions file...
-      - printf '[{"name":"mews","imageUri":"$s"}]' $REPOSITORY_URI:$IMAGE_TAG > imagedefinition.json
+      - echo "Creating Docker image..."
+      - docker build -t mewstest .
+      - echo "Docker image created."
+
+      - echo "Tagging Docker image for ECR..."
+      - docker tag mewstest:latest 898152251180.dkr.ecr.us-east-1.amazonaws.com/mewstest:latest
+      - echo "Docker image tagged."
+
+      - echo "Pushing Docker image to Amazon ECR..."
+      - docker push 898152251180.dkr.ecr.us-east-1.amazonaws.com/mewstest:latest
+      - echo "Docker image pushed."
+
 artifacts:
   files:
-    - imagedefinition.json
-    - mews-middleware-1.0-SNAPSHOT.jar
+    - Dockerfile
