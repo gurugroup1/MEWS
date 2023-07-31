@@ -1,0 +1,28 @@
+version: 0.2
+phases:
+  install:
+    commands:
+      - gradlew clean
+      - echo Logging in to Amazon ECR..
+      - aws -- version
+      - $(aws ecr get-login --region $AWS_DEFAULT_REGION --no-include-email)
+      - REPOSITORY_URI= 898152251180.dkr.ecr.us-east-1.amazonaws.com/mews
+      - COMMIT_HASH=$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | cut -c 1-7)
+      - IMAGE_TAG=build-$(echo $CODEBUILD_BUILD_ID | awk -F:" '{print$2}')
+  build:
+    commands:
+      - echo Build started on `date`
+      - echo Building the Docker image...
+      - docker build -t $REPOSITORY_URI:latest $REPOSITORY_URI:$IMAGE_TAG
+  post_build:
+    commands:
+      - echo Build completed on `date`
+      - echo Pushing the DOcker images...
+      - docker push $REPOSITORY_URI:$latest
+      - docker push $REPOSITORY_URI:$IMAGE_TAG
+      - echo Writing image definitions file...
+      - printf '[{"name":"mews","imageUri":"$s"}]' $REPOSITORY_URI:$IMAGE_TAG > imagedefinition.json
+artifacts:
+  files:
+    - imagedefinition.json
+    - mews-middleware-1.0-SNAPSHOT.jar
