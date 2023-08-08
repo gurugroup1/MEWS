@@ -13,3 +13,17 @@
     <!-- Add other loggers as needed -->
 
 </configuration>
+
+
+<!--<configuration>-->
+<!--    <appender name="FILE" class="ch.qos.logback.core.FileAppender">-->
+<!--        <file>/var/log/myapp/Mews_Ec2_Logs</file> &lt;!&ndash; Specify the path where you want to store the log file &ndash;&gt;-->
+<!--        <layout class="ch.qos.logback.classic.PatternLayout">-->
+<!--            <Pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level [%thread] %logger{36} - %msg %ex{full} %n</Pattern>-->
+<!--        </layout>-->
+<!--    </appender>-->
+
+<!--    <root level="INFO"> &lt;!&ndash; Change the log level as per your requirements &ndash;&gt;-->
+<!--        <appender-ref ref="FILE"/>-->
+<!--    </root>-->
+<!--</configuration>-->

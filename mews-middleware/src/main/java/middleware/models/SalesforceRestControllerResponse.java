@@ -10,6 +10,17 @@ public class SalesforceRestControllerResponse {
     @JsonProperty("Status")
     private String status;
 
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
+    }
+
+    @JsonProperty("Message")
+    private String message;
+
     public void setGuestRooms(List<SalesforceGuestRoomResponse> guestRooms) {
         this.guestRooms = guestRooms;
     }

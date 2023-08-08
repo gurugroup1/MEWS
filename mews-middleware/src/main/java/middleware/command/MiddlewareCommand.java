@@ -58,17 +58,17 @@ public class MiddlewareCommand implements Command {
 
                 // Get Complete Data from salesforce using rest controller
                 SalesforceRestControllerResponse restResponses = processRestRequest(salesforceController, bookingId, salesforceToken, state);
-                processCompany(state, responseData);
-                processBooker(state, responseData);
-                processAvailabilityBlock(state, responseData);
-                processUpdateInMews(state, responseData);
-                processCreatedRecordInSalesforce(state, responseData);
-                processUpdateRecordInSalesforce(state, responseData);
                 if (Objects.equals(restResponses.getStatus(), "Success")) {
+                    processCompany(state, responseData);
+                    processBooker(state, responseData);
+                    processAvailabilityBlock(state, responseData);
+                    processUpdateInMews(state, responseData);
+                    processCreatedRecordInSalesforce(state, responseData);
+                    processUpdateRecordInSalesforce(state, responseData);
                     responseData.put("Salesforce_Data", restResponses);
                     setSuccessStatus(apiResponse, "Process has been completed.");
                 } else {
-                    setFailedStatus(apiResponse, "Error in getting initial data from salesforce.");
+                    setFailedStatus(apiResponse, restResponses.getMessage());
                 }
 
             } else {
@@ -93,38 +93,42 @@ public class MiddlewareCommand implements Command {
             String restRequest = objectMapper.writeValueAsString(request);
             String restResponse = salesforceController.restControllerSalesforce(salesforceToken.getAccess_token(), restRequest);
             SalesforceRestControllerResponse restResponses = objectMapper.readValue(restResponse, SalesforceRestControllerResponse.class);
+            if(restResponses.getStatus().equals("Success")){
+                state.setSalesforceToken(salesforceToken.getAccess_token());
+                SalesforceBookingResponse booking = objectMapper.readValue(objectMapper.writeValueAsString(restResponses.getBooking()), SalesforceBookingResponse.class);
+                state.setBookingData(booking);
 
-            state.setSalesforceToken(salesforceToken.getAccess_token());
-            SalesforceBookingResponse booking = objectMapper.readValue(objectMapper.writeValueAsString(restResponses.getBooking()), SalesforceBookingResponse.class);
-            state.setBookingData(booking);
+                SalesforceAccountResponse account = objectMapper.readValue(objectMapper.writeValueAsString(restResponses.getAccount()), SalesforceAccountResponse.class);
+                state.setAccountData(account);
 
-            SalesforceAccountResponse account = objectMapper.readValue(objectMapper.writeValueAsString(restResponses.getAccount()), SalesforceAccountResponse.class);
-            state.setAccountData(account);
+                SalesforceContactResponse contact = objectMapper.readValue(objectMapper.writeValueAsString(restResponses.getContact()), SalesforceContactResponse.class);
+                state.setContactData(contact);
 
-            SalesforceContactResponse contact = objectMapper.readValue(objectMapper.writeValueAsString(restResponses.getContact()), SalesforceContactResponse.class);
-            state.setContactData(contact);
+                SalesforceRateResponse rate = objectMapper.readValue(objectMapper.writeValueAsString(restResponses.getRate()), SalesforceRateResponse.class);
+                state.setRateData(rate);
 
-            SalesforceRateResponse rate = objectMapper.readValue(objectMapper.writeValueAsString(restResponses.getRate()), SalesforceRateResponse.class);
-            state.setRateData(rate);
+                SalesforcePropertyResponse property = objectMapper.readValue(objectMapper.writeValueAsString(restResponses.getProperty()), SalesforcePropertyResponse.class);
+                state.setPropertyData(property);
 
-            SalesforcePropertyResponse property = objectMapper.readValue(objectMapper.writeValueAsString(restResponses.getProperty()), SalesforcePropertyResponse.class);
-            state.setPropertyData(property);
+                SalesforceGetPMSAccountResponse pmsAccount = objectMapper.readValue(objectMapper.writeValueAsString(restResponses.getPmsAccount()), SalesforceGetPMSAccountResponse.class);
+                state.setPmsAccountData(pmsAccount);
 
-            SalesforceGetPMSAccountResponse pmsAccount = objectMapper.readValue(objectMapper.writeValueAsString(restResponses.getPmsAccount()), SalesforceGetPMSAccountResponse.class);
-            state.setPmsAccountData(pmsAccount);
+                List<SalesforceGetPMSBlockResponse> pmsBlock = objectMapper.readValue(objectMapper.writeValueAsString(restResponses.getPmsBlock()), new TypeReference<List<SalesforceGetPMSBlockResponse>>() {
+                });
+                state.setPmsBlockData(pmsBlock);
+                List<SalesforceGuestRoomResponse> guestRoom = objectMapper.readValue(objectMapper.writeValueAsString(restResponses.getGuestRooms()), new TypeReference<List<SalesforceGuestRoomResponse>>() {
+                });
+                state.setGuestRoomData(guestRoom);
 
-            List<SalesforceGetPMSBlockResponse> pmsBlock = objectMapper.readValue(objectMapper.writeValueAsString(restResponses.getPmsBlock()), new TypeReference<List<SalesforceGetPMSBlockResponse>>() {
-            });
-            state.setPmsBlockData(pmsBlock);
-            List<SalesforceGuestRoomResponse> guestRoom = objectMapper.readValue(objectMapper.writeValueAsString(restResponses.getGuestRooms()), new TypeReference<List<SalesforceGuestRoomResponse>>() {
-            });
-            state.setGuestRoomData(guestRoom);
+                state.setPmsAccountSize(restResponses.getPmsAccount() == null ? 0 : 1);
 
-            state.setPmsAccountSize(restResponses.getPmsAccount() == null ? 0 : 1);
+                state.setPmsBlockSize(restResponses.getPmsBlock().isEmpty() ? 0 : 1);
 
-            state.setPmsBlockSize(restResponses.getPmsBlock().isEmpty() ? 0 : 1);
+
+            }
 
             return objectMapper.readValue(restResponse, SalesforceRestControllerResponse.class);
+
 
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
