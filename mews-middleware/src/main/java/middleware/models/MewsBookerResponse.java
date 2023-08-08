@@ -30,9 +30,6 @@ public class MewsBookerResponse {
     @JsonProperty("LastName")
     private String lastName;
 
-    @JsonProperty("SecondLastName")
-    private String secondLastName;
-
     @JsonProperty("NationalityCode")
     private String nationalityCode;
 
@@ -194,14 +191,6 @@ public class MewsBookerResponse {
 
     public void setLastName(String lastName) {
         this.lastName = lastName;
-    }
-
-    public String getSecondLastName() {
-        return secondLastName;
-    }
-
-    public void setSecondLastName(String secondLastName) {
-        this.secondLastName = secondLastName;
     }
 
     public String getNationalityCode() {

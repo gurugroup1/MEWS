@@ -60,6 +60,17 @@ public class SalesforceRateResponse {
         this.getPrice = getPrice;
     }
 
+    @JsonProperty("thn__UniquePMSKey__c")
+    private String uniquePmsKey;
+
+    public String getUniquePmsKey() {
+        return uniquePmsKey;
+    }
+
+    public void setUniquePmsKey(String uniquePmsKey) {
+        this.uniquePmsKey = uniquePmsKey;
+    }
+
     public String getThn__Mews_Id__c() {
         return thn__Mews_Id__c;
     }

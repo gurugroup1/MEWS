@@ -6,9 +6,9 @@ public class SalesforceBookingRequest {
     @JsonProperty("Name")
     private String name;
 
-//    @JsonProperty("CurrencyIsoCode")
-//    private String currencyIsoCode;
-//
+    @JsonProperty("CurrencyIsoCode")
+    private String currencyIsoCode;
+
 //    @JsonProperty("RecordTypeId")
 //    private String recordTypeId;
 //
@@ -56,10 +56,10 @@ public class SalesforceBookingRequest {
 //
 //    @JsonProperty("thn__Company__c")
 //    private String company;
-//
+
 //    @JsonProperty("thn__Days_until_Arrival__c")
 //    private Double daysUntilArrival;
-//
+
 //    @JsonProperty("thn__Departure_Date__c")
 //    private String departureDate;
 //
@@ -77,10 +77,10 @@ public class SalesforceBookingRequest {
 //
 //    @JsonProperty("thn__Duration__c")
 //    private Double duration;
-//
-//    @JsonProperty("thn__Hotel__c")
-//    private String hotel;
-//
+
+    @JsonProperty("thn__Hotel__c")
+    private String hotel;
+
 //    @JsonProperty("thn__Internal_Notes__c")
 //    private String internalNotes;
 //
@@ -94,8 +94,8 @@ public class SalesforceBookingRequest {
 //    private String mewsGroupId;
 //
 //
-//    @JsonProperty("thn__Pax__c")
-//    private Double pax;
+    @JsonProperty("thn__Pax__c")
+    private Float pax;
 //
 //    @JsonProperty("thn__Probability__c")
 //    private String probability;
@@ -106,15 +106,23 @@ public class SalesforceBookingRequest {
 //    @JsonProperty("thn__Request_Date__c")
 //    private String requestDate;
 //
-//    @JsonProperty("thn__Reservation_Guest__c")
-//    private String reservationGuest;
-//
+    @JsonProperty("thn__Reservation_Guest__c")
+    private String reservationGuest;
+
+    public String getReservationGuest() {
+        return reservationGuest;
+    }
+
+    public void setReservationGuest(String reservationGuest) {
+        this.reservationGuest = reservationGuest;
+    }
+    //
 //    @JsonProperty("thn__Source__c")
 //    private String source;
-//
+
 //    @JsonProperty("thn__Stage__c")
 //    private String stage;
-//
+
 //    @JsonProperty("thn__Structured_Reference__c")
 //    private String structuredReference;
 //
@@ -126,10 +134,10 @@ public class SalesforceBookingRequest {
 //
 //    @JsonProperty("thn__Total_Amount_incl_Tax__c")
 //    private Double totalAmountInclTax;
-//
-//    @JsonProperty("thn__Type__c")
-//    private String type;
-//
+
+    @JsonProperty("thn__Type__c")
+    private String type;
+
 //    @JsonProperty("thn__Hotel_Rooms_Amount__c")
 //    private Double hotelRoomsAmount;
 //
@@ -225,10 +233,10 @@ public class SalesforceBookingRequest {
 //
 //    @JsonProperty("thn__BLOCKED__c")
 //    private Double blocked;
-//
-//    @JsonProperty("thn__Beverage__c")
-//    private String beverage;
-//
+
+    @JsonProperty("thn__Beverage__c")
+    private String beverage;
+
 //    @JsonProperty("thn__CAT_MGR__c")
 //    private String catMgr;
 //
@@ -249,10 +257,10 @@ public class SalesforceBookingRequest {
 //
 //    @JsonProperty("thn__FOOD_REVENUE__c")
 //    private Double foodRevenue;
-//
-//    @JsonProperty("thn__Food__c")
-//    private String food;
-//
+
+    @JsonProperty("thn__Food__c")
+    private String food;
+
 //    @JsonProperty("thn__INSERT_DATE2__c")
 //    private String insertDate2;
 //
@@ -261,10 +269,10 @@ public class SalesforceBookingRequest {
 //
 //    @JsonProperty("thn__MYCE_Quote_Id__c")
 //    private String myceQuoteId;
-//
-//    @JsonProperty("thn__Meeting_Room__c")
-//    private String meetingRoom;
-//
+
+    @JsonProperty("thn__Meeting_Room__c")
+    private String meetingRoom;
+
 //    @JsonProperty("thn__NET_ADR__c")
 //    private Double netADR;
 //
@@ -276,10 +284,10 @@ public class SalesforceBookingRequest {
 //
 //    @JsonProperty("thn__OTHERS__c")
 //    private Double others;
-//
+
 //    @JsonProperty("thn__Other__c")
 //    private String other;
-//
+
 //    @JsonProperty("thn__PICKED_UP_NET_ADR__c")
 //    private Double pickedUpNetADR;
 //
@@ -291,13 +299,13 @@ public class SalesforceBookingRequest {
 //
 //    @JsonProperty("thn__ROOM_RENTAL__c")
 //    private Double roomRental;
-//
-//    @JsonProperty("thn__Room__c")
-//    private String room;
-//
+
+    @JsonProperty("thn__Room__c")
+    private String room;
+
 //    @JsonProperty("thn__SAL_MGR__c")
 //    private String salMgr;
-//
+
 //    @JsonProperty("thn__SOURCE_MARKET__c")
 //    private String sourceMarket;
 //
@@ -327,10 +335,10 @@ public class SalesforceBookingRequest {
 //
 //    @JsonProperty("thn__DX__c")
 //    private String dx;
-//
+
 //    @JsonProperty("thn__INSERT_DATE__c")
 //    private String insertDate;
-//
+
 //    @JsonProperty("thn__OFFER_SENT__c")
 //    private String offerSent;
 //
@@ -339,10 +347,10 @@ public class SalesforceBookingRequest {
 //
 //    @JsonProperty("thn__W1__c")
 //    private Double w1;
-//
+
 //    @JsonProperty("thn__W2__c")
 //    private Double w2;
-//
+
 //    @JsonProperty("thn__W3__c")
 //    private String w3;
 //
@@ -351,16 +359,16 @@ public class SalesforceBookingRequest {
 //
 //    @JsonProperty("thn__Hotels__c")
 //    private String hotels;
-//
-//    @JsonProperty("thn__Resort__c")
-//    private String resort;
-//
+
+    @JsonProperty("thn__Resort__c")
+    private String resort;
+
 //    @JsonProperty("thn__ZT_Count_MR__c")
 //    private Double ztCountMR;
-//
+
 //    @JsonProperty("thn__ZT_Count_QP__c")
 //    private Double ztCountQP;
-//
+
 //    @JsonProperty("thn__Number_Of_Nights__c")
 //    private String numberofNights;
 //
@@ -375,16 +383,16 @@ public class SalesforceBookingRequest {
 //
 //    @JsonProperty("Other_reason_lost_turndown_Cancelled__c")
 //    private String otherReasonLostTurndownCancelled;
-//
+
 //    @JsonProperty("thn__Language__c")
 //    private String language;
-//
+
 //    @JsonProperty("Account_reference__c")
 //    private String accountReference;
-//
-//    @JsonProperty("Origin__c")
-//    private String origin;
-//
+
+    @JsonProperty("Origin__c")
+    private String origin;
+
 //    @JsonProperty("Internal__c")
 //    private String internal;
 //
@@ -424,8 +432,8 @@ public class SalesforceBookingRequest {
 //    @JsonProperty("Package_Amount__c")
 //    private Double packageAmount;
 //
-//    @JsonProperty("Start_time__c")
-//    private String startTime;
+////    @JsonProperty("Start_time__c")
+////    private String startTime;
 //
 //    @JsonProperty("Option_date__c")
 //    private String optionDate;
@@ -438,13 +446,12 @@ public class SalesforceBookingRequest {
 //
 //    @JsonProperty("Discount_Meeting_rooms__c")
 //    private Double discountMeetingRooms;
-//
+
 //    @JsonProperty("Discount_Hotel_rooms__c")
 //    private Double discountHotelRooms;
-//
-//    @JsonProperty("Discount_AV__c")
-//    private Double discountAV;
-//
+
+//thn__Total_Hotel_Room_incl_Tax__c
+
 //    @JsonProperty("Discount_No_AV__c")
 //    private Double discountNoAV;
 //
@@ -452,17 +459,17 @@ public class SalesforceBookingRequest {
 //    private Double discountPackages;
 //
 //
-//    @JsonProperty("Deposit_1_VAT__c")
-//    private Double deposit1VAT;
+////    @JsonProperty("Deposit_1_VAT__c")
+////    private Double deposit1VAT;
 //
 //    @JsonProperty("Deposit_2_VAT__c")
 //    private Double deposit2VAT;
 //
-//    @JsonProperty("Deposit_3_VAT__c")
-//    private Double deposit3VAT;
+////    @JsonProperty("Deposit_3_VAT__c")
+////    private Double deposit3VAT;
 //
-//    @JsonProperty("Deposit_1_Amount__c")
-//    private Double deposit1Amount;
+////    @JsonProperty("Deposit_1_Amount__c")
+////    private Double deposit1Amount;
 //
 //    @JsonProperty("Deposit_2_Amount__c")
 //    private Double deposit2Amount;
@@ -472,13 +479,13 @@ public class SalesforceBookingRequest {
 //
 //    @JsonProperty("PO_Number__c")
 //    private String poNumber;
-//
-//    @JsonProperty("Logo_URL__c")
-//    private String logoURL;
-//
+
+    @JsonProperty("Logo_URL__c")
+    private String logoURL;
+
 //    @JsonProperty("Hotel_Rooms_Amount_inc__c")
 //    private Double hotelRoomsAmountInc;
-//
+
 //    @JsonProperty("Meeting_Rooms_Amount_inc__c")
 //    private Double meetingRoomsAmountInc;
 //
@@ -493,10 +500,10 @@ public class SalesforceBookingRequest {
 //
 //    @JsonProperty("Last_Offer_Generation__c")
 //    private String lastOfferGeneration;
-//
+
 //    @JsonProperty("Rooms_amount_total__c")
 //    private Double roomsAmountTotal;
-//
+
 //    @JsonProperty("ADR_Incl__c")
 //    private Double adrIncl;
 //
@@ -517,34 +524,34 @@ public class SalesforceBookingRequest {
 //
 //    @JsonProperty("Locale_for_Documents__c")
 //    private String localeForDocuments;
-//
+
 //    @JsonProperty("Company_short_name__c")
 //    private String companyShortName;
-//
+
 //    @JsonProperty("thn__Comm_Activity__c")
 //    private String commActivity;
-//
-//    @JsonProperty("thn__Comm_Beverage__c")
-//    private String commBeverage;
-//
-//    @JsonProperty("thn__Comm_Equipment__c")
-//    private String commEquipment;
-//
-//    @JsonProperty("thn__Comm_Food__c")
-//    private String commFood;
-//
-//    @JsonProperty("thn__Comm_Hotel_Rooms__c")
-//    private String commHotelRooms;
-//
-//    @JsonProperty("thn__Comm_Meeting_Rooms__c")
-//    private String commMeetingRooms;
-//
-//    @JsonProperty("thn__Comm_Other__c")
-//    private String commOther;
-//
-//    @JsonProperty("thn__Comm_Package__c")
-//    private String commPackage;
-//
+
+    @JsonProperty("thn__Comm_Beverage__c")
+    private String commBeverage;
+
+    @JsonProperty("thn__Comm_Equipment__c")
+    private String commEquipment;
+
+    @JsonProperty("thn__Comm_Food__c")
+    private String commFood;
+
+    @JsonProperty("thn__Comm_Hotel_Rooms__c")
+    private String commHotelRooms;
+
+    @JsonProperty("thn__Comm_Meeting_Rooms__c")
+    private String commMeetingRooms;
+
+    @JsonProperty("thn__Comm_Other__c")
+    private String commOther;
+
+    @JsonProperty("thn__Comm_Package__c")
+    private String commPackage;
+
 //    @JsonProperty("thn__Commission_to__c")
 //    private String commissionTo;
 //
@@ -568,10 +575,10 @@ public class SalesforceBookingRequest {
 //
 //    @JsonProperty("thn__Total_incl_Tax__c")
 //    private Double totalInclTax;
-//
+
 //    @JsonProperty("thn__Total_Hotel_Room_incl_Tax__c")
 //    private Double totalHotelRoomInclTax;
-//
+
 //    @JsonProperty("thn__Total_Meeting_Room_incl_Tax__c")
 //    private Double totalMeetingRoomInclTax;
 //
@@ -610,17 +617,17 @@ public class SalesforceBookingRequest {
 //    @JsonProperty("thn__InventoryBlockType__c")
 //    private String inventoryBlockType;
 //
-//    @JsonProperty("thn__PMS_Company__c")
-//    private String pmsCompany;
+    @JsonProperty("thn__PMS_Company__c")
+    private String pmsCompany;
+
+    @JsonProperty("thn__PMS_Group__c")
+    private String pmsGroup;
+
+    @JsonProperty("thn__PMS_Source__c")
+    private String pmsSource;
 //
-//    @JsonProperty("thn__PMS_Group__c")
-//    private String pmsGroup;
-//
-//    @JsonProperty("thn__PMS_Source__c")
-//    private String pmsSource;
-//
-//    @JsonProperty("thn__PMS_Travel_Agent__c")
-//    private String pmsTravelAgent;
+    @JsonProperty("thn__PMS_Travel_Agent__c")
+    private String pmsTravelAgent;
 //
 //
 //    @JsonProperty("thn__Guarantee_Code__c")
@@ -628,11 +635,11 @@ public class SalesforceBookingRequest {
 //
 //    @JsonProperty("thn__Dietary_Requirements_Long__c")
 //    private String dietaryRequirementsLong;
-//
+
 //    @JsonProperty("Status__c")
 //    private String status;
-//
-//
+
+
 //    @JsonProperty("thn__Block_Rate__c")
 //    private String blockRate;
 //
@@ -662,13 +669,13 @@ public class SalesforceBookingRequest {
         this.name = name;
     }
 //
-//    public String getCurrencyIsoCode() {
-//        return currencyIsoCode;
-//    }
-//
-//    public void setCurrencyIsoCode(String currencyIsoCode) {
-//        this.currencyIsoCode = currencyIsoCode;
-//    }
+    public String getCurrencyIsoCode() {
+        return currencyIsoCode;
+    }
+
+    public void setCurrencyIsoCode(String currencyIsoCode) {
+        this.currencyIsoCode = currencyIsoCode;
+    }
 //
 //    public String getRecordTypeId() {
 //        return recordTypeId;
@@ -854,13 +861,13 @@ public class SalesforceBookingRequest {
 //        this.duration = duration;
 //    }
 //
-//    public String getHotel() {
-//        return hotel;
-//    }
-//
-//    public void setHotel(String hotel) {
-//        this.hotel = hotel;
-//    }
+    public String getHotel() {
+        return hotel;
+    }
+
+    public void setHotel(String hotel) {
+        this.hotel = hotel;
+    }
 //
 //    public String getInternalNotes() {
 //        return internalNotes;
@@ -894,13 +901,13 @@ public class SalesforceBookingRequest {
 //        this.mewsGroupId = mewsGroupId;
 //    }
 //
-//    public Double getPax() {
-//        return pax;
-//    }
-//
-//    public void setPax(Double pax) {
-//        this.pax = pax;
-//    }
+    public Float getPax() {
+        return pax;
+    }
+
+    public void setPax(Float pax) {
+        this.pax = pax;
+    }
 //
 //    public String getProbability() {
 //        return probability;
@@ -983,13 +990,13 @@ public class SalesforceBookingRequest {
 //        this.totalAmountInclTax = totalAmountInclTax;
 //    }
 //
-//    public String getType() {
-//        return type;
-//    }
-//
-//    public void setType(String type) {
-//        this.type = type;
-//    }
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
 //
 //
 //    public Double getHotelRoomsAmount() {
@@ -1248,13 +1255,13 @@ public class SalesforceBookingRequest {
 //        this.blocked = blocked;
 //    }
 //
-//    public String getBeverage() {
-//        return beverage;
-//    }
-//
-//    public void setBeverage(String beverage) {
-//        this.beverage = beverage;
-//    }
+    public String getBeverage() {
+        return beverage;
+    }
+
+    public void setBeverage(String beverage) {
+        this.beverage = beverage;
+    }
 //
 //    public String getCatMgr() {
 //        return catMgr;
@@ -1312,13 +1319,13 @@ public class SalesforceBookingRequest {
 //        this.foodRevenue = foodRevenue;
 //    }
 //
-//    public String getFood() {
-//        return food;
-//    }
-//
-//    public void setFood(String food) {
-//        this.food = food;
-//    }
+    public String getFood() {
+        return food;
+    }
+
+    public void setFood(String food) {
+        this.food = food;
+    }
 //
 //    public String getInsertDate2() {
 //        return insertDate2;
@@ -1344,13 +1351,13 @@ public class SalesforceBookingRequest {
 //        this.myceQuoteId = myceQuoteId;
 //    }
 //
-//    public String getMeetingRoom() {
-//        return meetingRoom;
-//    }
-//
-//    public void setMeetingRoom(String meetingRoom) {
-//        this.meetingRoom = meetingRoom;
-//    }
+    public String getMeetingRoom() {
+        return meetingRoom;
+    }
+
+    public void setMeetingRoom(String meetingRoom) {
+        this.meetingRoom = meetingRoom;
+    }
 //
 //    public Double getNetADR() {
 //        return netADR;
@@ -1424,13 +1431,13 @@ public class SalesforceBookingRequest {
 //        this.roomRental = roomRental;
 //    }
 //
-//    public String getRoom() {
-//        return room;
-//    }
-//
-//    public void setRoom(String room) {
-//        this.room = room;
-//    }
+    public String getRoom() {
+        return room;
+    }
+
+    public void setRoom(String room) {
+        this.room = room;
+    }
 //
 //    public String getSalMgr() {
 //        return salMgr;
@@ -1584,13 +1591,13 @@ public class SalesforceBookingRequest {
 //        this.hotels = hotels;
 //    }
 //
-//    public String getResort() {
-//        return resort;
-//    }
-//
-//    public void setResort(String resort) {
-//        this.resort = resort;
-//    }
+    public String getResort() {
+        return resort;
+    }
+
+    public void setResort(String resort) {
+        this.resort = resort;
+    }
 //
 //    public Double getZtCountMR() {
 //        return ztCountMR;
@@ -1664,13 +1671,13 @@ public class SalesforceBookingRequest {
 //        this.accountReference = accountReference;
 //    }
 //
-//    public String getOrigin() {
-//        return origin;
-//    }
-//
-//    public void setOrigin(String origin) {
-//        this.origin = origin;
-//    }
+    public String getOrigin() {
+        return origin;
+    }
+
+    public void setOrigin(String origin) {
+        this.origin = origin;
+    }
 //
 //    public String getInternal() {
 //        return internal;
@@ -1906,13 +1913,13 @@ public class SalesforceBookingRequest {
 //        this.poNumber = poNumber;
 //    }
 //
-//    public String getLogoURL() {
-//        return logoURL;
-//    }
-//
-//    public void setLogoURL(String logoURL) {
-//        this.logoURL = logoURL;
-//    }
+    public String getLogoURL() {
+        return logoURL;
+    }
+
+    public void setLogoURL(String logoURL) {
+        this.logoURL = logoURL;
+    }
 //
 //    public Double getHotelRoomsAmountInc() {
 //        return hotelRoomsAmountInc;
@@ -2044,63 +2051,63 @@ public class SalesforceBookingRequest {
 //    public void setCommActivity(String commActivity) {
 //        this.commActivity = commActivity;
 //    }
+
+    public String getCommBeverage() {
+        return commBeverage;
+    }
+
+    public void setCommBeverage(String commBeverage) {
+        this.commBeverage = commBeverage;
+    }
+
+    public String getCommEquipment() {
+        return commEquipment;
+    }
+
+    public void setCommEquipment(String commEquipment) {
+        this.commEquipment = commEquipment;
+    }
+
+    public String getCommFood() {
+        return commFood;
+    }
+
+    public void setCommFood(String commFood) {
+        this.commFood = commFood;
+    }
+
+    public String getCommHotelRooms() {
+        return commHotelRooms;
+    }
+
+    public void setCommHotelRooms(String commHotelRooms) {
+        this.commHotelRooms = commHotelRooms;
+    }
+
+    public String getCommMeetingRooms() {
+        return commMeetingRooms;
+    }
+
+    public void setCommMeetingRooms(String commMeetingRooms) {
+        this.commMeetingRooms = commMeetingRooms;
+    }
 //
-//    public String getCommBeverage() {
-//        return commBeverage;
-//    }
-//
-//    public void setCommBeverage(String commBeverage) {
-//        this.commBeverage = commBeverage;
-//    }
-//
-//    public String getCommEquipment() {
-//        return commEquipment;
-//    }
-//
-//    public void setCommEquipment(String commEquipment) {
-//        this.commEquipment = commEquipment;
-//    }
-//
-//    public String getCommFood() {
-//        return commFood;
-//    }
-//
-//    public void setCommFood(String commFood) {
-//        this.commFood = commFood;
-//    }
-//
-//    public String getCommHotelRooms() {
-//        return commHotelRooms;
-//    }
-//
-//    public void setCommHotelRooms(String commHotelRooms) {
-//        this.commHotelRooms = commHotelRooms;
-//    }
-//
-//    public String getCommMeetingRooms() {
-//        return commMeetingRooms;
-//    }
-//
-//    public void setCommMeetingRooms(String commMeetingRooms) {
-//        this.commMeetingRooms = commMeetingRooms;
-//    }
-//
-//    public String getCommOther() {
-//        return commOther;
-//    }
-//
-//    public void setCommOther(String commOther) {
-//        this.commOther = commOther;
-//    }
-//
-//    public String getCommPackage() {
-//        return commPackage;
-//    }
-//
-//    public void setCommPackage(String commPackage) {
-//        this.commPackage = commPackage;
-//    }
-//
+    public String getCommOther() {
+        return commOther;
+    }
+
+    public void setCommOther(String commOther) {
+        this.commOther = commOther;
+    }
+
+    public String getCommPackage() {
+        return commPackage;
+    }
+
+    public void setCommPackage(String commPackage) {
+        this.commPackage = commPackage;
+    }
+
 //    public String getCommissionTo() {
 //        return commissionTo;
 //    }
@@ -2280,38 +2287,38 @@ public class SalesforceBookingRequest {
 //        this.inventoryBlockType = inventoryBlockType;
 //    }
 //
-//    public String getPmsCompany() {
-//        return pmsCompany;
-//    }
-//
-//    public void setPmsCompany(String pmsCompany) {
-//        this.pmsCompany = pmsCompany;
-//    }
-//
-//    public String getPmsGroup() {
-//        return pmsGroup;
-//    }
-//
-//    public void setPmsGroup(String pmsGroup) {
-//        this.pmsGroup = pmsGroup;
-//    }
-//
-//    public String getPmsSource() {
-//        return pmsSource;
-//    }
-//
-//    public void setPmsSource(String pmsSource) {
-//        this.pmsSource = pmsSource;
-//    }
-//
-//    public String getPmsTravelAgent() {
-//        return pmsTravelAgent;
-//    }
-//
-//    public void setPmsTravelAgent(String pmsTravelAgent) {
-//        this.pmsTravelAgent = pmsTravelAgent;
-//    }
-//
+    public String getPmsCompany() {
+        return pmsCompany;
+    }
+
+    public void setPmsCompany(String pmsCompany) {
+        this.pmsCompany = pmsCompany;
+    }
+
+    public String getPmsGroup() {
+        return pmsGroup;
+    }
+
+    public void setPmsGroup(String pmsGroup) {
+        this.pmsGroup = pmsGroup;
+    }
+
+    public String getPmsSource() {
+        return pmsSource;
+    }
+
+    public void setPmsSource(String pmsSource) {
+        this.pmsSource = pmsSource;
+    }
+
+    public String getPmsTravelAgent() {
+        return pmsTravelAgent;
+    }
+
+    public void setPmsTravelAgent(String pmsTravelAgent) {
+        this.pmsTravelAgent = pmsTravelAgent;
+    }
+
 //
 //
 //    public String getGuaranteeCode() {

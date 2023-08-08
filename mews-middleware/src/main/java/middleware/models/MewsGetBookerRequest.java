@@ -14,11 +14,11 @@ public class MewsGetBookerRequest {
     @JsonProperty("clientToken")
     private String clientToken;
 
-    @JsonProperty("Email")
-    private List<String> email;
-
-    @JsonProperty("Limitation")
+    @JsonProperty("limitation")
     private Limitation limitation;
+
+    @JsonProperty("Emails")
+    private List<String> emails;
 
     public String getClient() {
         return client;
@@ -44,14 +44,6 @@ public class MewsGetBookerRequest {
         this.clientToken = clientToken;
     }
 
-    public List<String> getEmail() {
-        return email;
-    }
-
-    public void setEmail(List<String> emails) {
-        this.email = email;
-    }
-
     public Limitation getLimitation() {
         return limitation;
     }
@@ -60,8 +52,16 @@ public class MewsGetBookerRequest {
         this.limitation = limitation;
     }
 
+    public List<String> getEmails() {
+        return emails;
+    }
+
+    public void setEmails(List<String> emails) {
+        this.emails = emails;
+    }
+
     public static class Limitation {
-        @JsonProperty("Count")
+        @JsonProperty("count")
         private int count;
 
         public int getCount() {

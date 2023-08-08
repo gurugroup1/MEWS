@@ -5,10 +5,7 @@ import okhttp3.OkHttpClient;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.jdbc.datasource.init.DataSourceInitializer;
-import org.springframework.jdbc.datasource.init.ResourceDatabasePopulator;
 
-import javax.sql.DataSource;
 
 @Configuration
 public class ApplicationConfiguration {
@@ -65,6 +62,16 @@ public class ApplicationConfiguration {
     @Value("${salesforce_pms_block_rates}")
     private String salesforcePMSBlockRates;
 
+    public String getSalesforceGuestRooms() {
+        return salesforceGuestRooms;
+    }
+
+    public void setSalesforceGuestRooms(String salesforceGuestRooms) {
+        this.salesforceGuestRooms = salesforceGuestRooms;
+    }
+
+    @Value("${salesforce_guest_rooms}")
+    private String salesforceGuestRooms;
 
     public String getSalesforcePMSAccount() {
         return salesforcePMSAccount;
@@ -85,14 +92,16 @@ public class ApplicationConfiguration {
     @Value("${mews.apiUrl}")
     private String mewsApiUrl;
 
-    @Bean
-    public DataSourceInitializer dataSourceInitializer(DataSource dataSource) {
-        DataSourceInitializer initializer = new DataSourceInitializer();
-        initializer.setDataSource(dataSource);
-        ResourceDatabasePopulator populator = new ResourceDatabasePopulator();
-        initializer.setDatabasePopulator(populator);
-        return initializer;
+    public String getSalesforceRestControllerURL() {
+        return salesforceRestControllerURL;
     }
+
+    public void setSalesforceRestControllerURL(String salesforceRestControllerURL) {
+        this.salesforceRestControllerURL = salesforceRestControllerURL;
+    }
+
+    @Value("${salesforce_rest_Controller_URL}")
+    private String salesforceRestControllerURL;
 
     @Bean
     public OkHttpClient httpClient() {

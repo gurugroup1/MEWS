@@ -2,13 +2,9 @@ package middleware;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.annotation.Bean;
-import org.springframework.jdbc.datasource.init.DataSourceInitializer;
-import org.springframework.jdbc.datasource.init.ResourceDatabasePopulator;
+import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 
-import javax.sql.DataSource;
-
-@SpringBootApplication
+@SpringBootApplication(exclude = DataSourceAutoConfiguration.class)
 public class MiddlewareApplication {
     public static void main(String[] args) {
         SpringApplication.run(MiddlewareApplication.class, args);

@@ -1,7 +1,7 @@
 package middleware.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import middleware.command.BookingCommand;
+import middleware.command.MiddlewareCommand;
 import middleware.command.Invoker;
 import middleware.configurations.ApplicationConfiguration;
 import middleware.services.*;
@@ -28,15 +28,13 @@ public class WebhookController {
     private final SalesforceController salesforceController;
     private final AuthController authController;
     private final ObjectMapper objectMapper;
-
-    private final CacheService cacheService;
-
+    private final ResponseParser responseParser;
     private Invoker invoker;
 
     @Autowired
     public WebhookController(ApplicationContext context, SalesforceConnectorService salesforceConnectorService,
                              MewsConnectorService mewsConnectorService, SecretKeyManagerController secretKeyManagerController,
-                             ApplicationConfiguration applicationConfiguration, ObjectMapper objectMapper, CacheService cacheService) {
+                             ApplicationConfiguration applicationConfiguration, ObjectMapper objectMapper, ResponseParser responseParser) {
         this.context = context;
         this.salesforceConnectorService = salesforceConnectorService;
         this.mewsConnectorService = mewsConnectorService;
@@ -46,13 +44,13 @@ public class WebhookController {
         this.mewsController = new MewsController(this.mewsConnectorService,applicationConfiguration);
         this.salesforceController = new SalesforceController(applicationConfiguration, this.secretKeyManagerController, this.salesforceConnectorService);
         this.authController = new AuthController(applicationConfiguration, this.secretKeyManagerController, this.salesforceConnectorService);
-        this.cacheService = cacheService;
+        this.responseParser = responseParser;
     }
 
     @PostMapping("/booking/")
     public ApiResponse executeProcess(@RequestBody String requestBody) {
         invoker = new Invoker();
-        invoker.setCommand(new BookingCommand(logger, applicationConfiguration, salesforceConnectorService, mewsConnectorService, mewsController, secretKeyManagerController, salesforceController, authController, objectMapper));
+        invoker.setCommand(new MiddlewareCommand(logger, applicationConfiguration, salesforceConnectorService, mewsConnectorService, mewsController, secretKeyManagerController, salesforceController, authController, objectMapper,responseParser));
         return invoker.invoke(requestBody);
     }
 
